@@ -17,11 +17,13 @@ public class MapManager : MonoBehaviour
     {
         SpawnFarm();
         SpawnFarmStorage();
+        var staffManager = GameManager.Instance.StaffManager;
         var chars = characterManager.SpawnCharacter(1, new Vector3(0, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {
             chars[i].SetJob(new Farmer(0.2f));
             chars[i].StartJob();
+            staffManager.AddStaff(chars[i]);
         }
 
     }
@@ -46,22 +48,26 @@ public class MapManager : MonoBehaviour
 
     private void CreateKitchenMap()
     {
+        var staffManager = GameManager.Instance.StaffManager;
         var chars = characterManager.SpawnCharacter(1, new Vector3(18, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {
             chars[i].SetJob(new Chef(5f));
             chars[i].StartJob();
+            staffManager.AddStaff(chars[i]);
         }
         var kitchen = entityManager.GetEntity(EntityConstant.Building.KITCHEN, new Vector3(18, 2.5f, 0));
         var servingTable = entityManager.GetEntity(EntityConstant.Building.SERVING_TABLE, new Vector3(28, -2, 0));
     }
     private void CreateDiningRoom()
     {
+        var staffManager = GameManager.Instance.StaffManager;
         var chars = characterManager.SpawnCharacter(1, new Vector3(40, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {
             chars[0].SetIsLoopingDoJob(false);
             chars[i].SetJob(new Server(2f));
+            staffManager.AddStaff(chars[i]);
         }
         var diningTable = entityManager.GetEntity(EntityConstant.Building.DINING_TABLE, new Vector3(38, 2.5f, 0));
         var diningTable2 = entityManager.GetEntity(EntityConstant.Building.DINING_TABLE, new Vector3(35, -2.5f, 0));
