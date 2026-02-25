@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StaffScreen : MonoBehaviour
+public class StaffScreen : BaseScreen
 {
     
 }
