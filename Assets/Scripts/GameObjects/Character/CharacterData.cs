@@ -18,4 +18,20 @@ public class CharacterData
         Experience = experience;
         Sex = sex;
     }
+
+    public string ToSexText()
+    {
+        if (Sex == Sex.FEMALE)
+        {
+            return "Female";
+        }
+        else if (Sex == Sex.MALE)
+        {
+            return "Male";
+        }
+        else
+        {
+            return "None";
+        }
+    }
 }
