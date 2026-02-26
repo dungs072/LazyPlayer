@@ -1,8 +1,9 @@
 using PolyAndCode.UI;
 using UnityEngine;
-
-public class StaffScreenView 
+using System;
+[Serializable]
+public class StaffScreenView
 {
-    [SerializeField] private RecyclableScrollRect scroller;
-        
+    [SerializeField] public StaffScroller scroller;
+
 }

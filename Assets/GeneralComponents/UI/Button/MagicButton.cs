@@ -50,6 +50,10 @@ namespace BaseEngine
         {
             OnClicked += action;
         }
+        public void RemoveListener(Action action)
+        {
+            OnClicked -= action;
+        }
         private void InitComponents()
         {
             rectTransform = GetComponent<RectTransform>();

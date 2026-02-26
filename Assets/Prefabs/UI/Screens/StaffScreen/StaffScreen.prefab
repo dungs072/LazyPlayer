@@ -50,7 +50,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _recyclableScrollRect: {fileID: 4005936121146766853}
-  _dataLength: 0
 --- !u!1 &1841293096637596603
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,7 +68,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8372752828452038249
 RectTransform:
   m_ObjectHideFlags: 0
@@ -140,6 +139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0133e8f95cee1ce46ae61e54b93f52f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  view:
+    scroller: {fileID: 9144260654033479834}
 --- !u!1001 &3891651689994604001
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,7 +12,8 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
     [SerializeField] private JobHandler jobHandler;
     [SerializeField] private ChatPanel chatPanel;
     [SerializeField] private TMP_Text nameText;
-    private Movement movement;
+    private Movement movement = null;
+    private CharacterData characterData = null;
 
 
     void Awake()
@@ -42,6 +43,11 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
     {
         StopAllCoroutines();
         StartCoroutine(action());
+    }
+
+    public void SetCharacterData(CharacterData data)
+    {
+        characterData = data;
     }
 
 }

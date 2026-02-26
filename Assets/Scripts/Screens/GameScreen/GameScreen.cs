@@ -5,57 +5,37 @@ using System;
 using System.Resources;
 public class GameScreen : BaseScreen
 {
-    [SerializeField] private TMP_Text wheatAmount;
-    [SerializeField] private TMP_Text breadAmount;
-    [SerializeField] private TMP_Text moneyAmount;
-    [SerializeField] private Button preButton;
-    [SerializeField] private Button nextButton;
-    private int currentMapIndex = 0;
+    [SerializeField] private GameScreenView view = new();
+
 
     private void Awake()
     {
-        ResourcesManager.OnResourceAmountChanged += SetResourcesAmount;
-        preButton.onClick.AddListener(OnPreButtonClicked);
-        nextButton.onClick.AddListener(OnNextButtonClicked);
+        ResourcesManager.OnResourceAmountChanged += view.SetResourcesAmount;
+        view.preButton.AddListener(OnPreButtonClicked);
+        view.nextButton.AddListener(OnNextButtonClicked);
     }
     private void OnDestroy()
     {
-        ResourcesManager.OnResourceAmountChanged -= SetResourcesAmount;
-        preButton.onClick.RemoveListener(OnPreButtonClicked);
-        nextButton.onClick.RemoveListener(OnNextButtonClicked);
-    }
-    private void Start()
-    {
-        currentMapIndex = 0;
-    }
-
-    public void SetResourcesAmount(string resourceName, int amount)
-    {
-        if (resourceName == "wheat")
-        {
-            wheatAmount.text = amount.ToString();
-        }
-        if (resourceName == "bread")
-        {
-            breadAmount.text = amount.ToString();
-        }
-        if (resourceName == "money")
-        {
-            moneyAmount.text = amount.ToString();
-        }
+        ResourcesManager.OnResourceAmountChanged -= view.SetResourcesAmount;
+        view.preButton.RemoveListener(OnPreButtonClicked);
+        view.nextButton.RemoveListener(OnNextButtonClicked);
     }
     public void OnPreButtonClicked()
     {
-        if (currentMapIndex == 0) return;
+        if (view.currentMapIndex == 0) return;
+        GamePlugin.BlockInput(true);
         var cameraController = GameManager.Instance.CameraController;
         cameraController.MovePreviousMap();
-        currentMapIndex--;
+        view.currentMapIndex--;
+        GamePlugin.BlockInput(false);
     }
     public void OnNextButtonClicked()
     {
-        if (currentMapIndex == MapConstant.TOTAL_MAPS - 1) return;
+        if (view.currentMapIndex == MapConstant.TOTAL_MAPS - 1) return;
+        GamePlugin.BlockInput(true);
         var cameraController = GameManager.Instance.CameraController;
         cameraController.MoveNextMap();
-        currentMapIndex++;
+        view.currentMapIndex++;
+        GamePlugin.BlockInput(false);
     }
 }
