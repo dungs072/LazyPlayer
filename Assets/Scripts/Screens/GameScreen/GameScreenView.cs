@@ -14,8 +14,10 @@ public class GameScreenView
     [HideInInspector]
     public int currentMapIndex = 0;
 
-    public void SetResourcesAmount(string resourceName, int amount)
+    public void SetResourcesAmount(ResourceAmountChangedEvent e)
     {
+        var resourceName = e.name;
+        var amount = e.amount;
         if (resourceName == "wheat")
         {
             wheatAmount.text = amount.ToString();

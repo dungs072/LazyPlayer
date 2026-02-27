@@ -13,10 +13,10 @@ public class Chef : BaseWorker
 
     public override IEnumerator DoJobAsync()
     {
-        var entityManager = GameManager.Instance.EntityManager;
-        var resourcesManager = GameManager.Instance.ResourcesManager;
-        var foodDictionary = GameManager.Instance.FoodDictionary;
-        var foodOrderManager = GameManager.Instance.FoodOrderManager;
+        var entityManager = GameManager.Instance.GamePlay.EntityManager;
+        var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
+        var foodDictionary = GameManager.Instance.GamePlay.FoodDictionary;
+        var foodOrderManager = GameManager.Instance.GamePlay.FoodOrderManager;
         var breadRecipe = foodDictionary.GetRecipeData("bread");
         var canCook = resourcesManager.IsAvailableToCreateFood(breadRecipe.GetIngredients());
         if (canCook)

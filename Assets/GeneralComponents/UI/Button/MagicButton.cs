@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -37,14 +39,19 @@ namespace BaseEngine
         [SerializeField] private float bubbleDownDuration = 0.5f;
 
         private RectTransform rectTransform;
-        private Coroutine pointerDownAnim;
         private bool isClicking = false;
+        private CancellationTokenSource cts;
 
         void Awake()
         {
             InitComponents();
             InitButtonState();
             IncreaseHitArea();
+        }
+        void OnDestroy()
+        {
+            cts?.Cancel();
+            cts?.Dispose();
         }
         public void AddListener(Action action)
         {
@@ -87,56 +94,61 @@ namespace BaseEngine
         public void OnPointerDown(PointerEventData eventData)
         {
             if (isClicking) return;
+
             isClicking = true;
-            StopAllCoroutines();
-            transform.DOKill();
-            pointerDownAnim = null;
+
+            KillAllAsync();
+
             if (buttonType == ButtonType.SCALE)
             {
-                pointerDownAnim = StartCoroutine(PlayPointerDownAnim());
+                PlayPointerDownAnim(cts.Token).Forget();
             }
-
         }
-        private IEnumerator PlayPointerDownAnim()
+        private async UniTask PlayPointerDownAnim(CancellationToken token)
         {
             if (buttonType == ButtonType.SCALE)
             {
-                var scaleDownAnim = transform.DOScale(scaleDownFactor, scaleDuration);
-                yield return scaleDownAnim.WaitForCompletion();
+                var tween = transform.DOScale(scaleDownFactor, scaleDuration);
+                await tween
+                    .AsyncWaitForCompletion()
+                    .AsUniTask()
+                    .AttachExternalCancellation(token);
             }
         }
-
         public void OnPointerUp(PointerEventData eventData)
         {
-
-            StartCoroutine(HandleButtonClicked(eventData));
+            HandleButtonClicked(eventData, cts.Token).Forget();
         }
-        private IEnumerator HandleButtonClicked(PointerEventData eventData)
+        private async UniTask HandleButtonClicked(PointerEventData eventData, CancellationToken token)
         {
-            if (pointerDownAnim != null)
-            {
-                yield return pointerDownAnim;
-            }
-            yield return PlayPointerUpAnim();
+            await PlayPointerUpAnim(token);
+
             isClicking = false;
+
             var canClick = true;
+
             if (isClickedOnHitArea && !IsPointerOverUI(eventData))
             {
                 canClick = false;
             }
+
             if (!canClick)
             {
                 InitButtonState();
-                yield break;
+                return;
             }
+
             OnClicked?.Invoke();
         }
-        private IEnumerator PlayPointerUpAnim()
+        private async UniTask PlayPointerUpAnim(CancellationToken token)
         {
             if (buttonType == ButtonType.SCALE)
             {
-                var scaleDownAnim = transform.DOScale(scaleUpFactor, scaleDuration);
-                yield return scaleDownAnim.WaitForCompletion();
+                var tween = transform.DOScale(scaleUpFactor, scaleDuration);
+                await tween
+                    .AsyncWaitForCompletion()
+                    .AsUniTask()
+                    .AttachExternalCancellation(token);
             }
         }
         private bool IsPointerOverUI(PointerEventData eventData)
@@ -145,6 +157,18 @@ namespace BaseEngine
             rectTransform,
             eventData.position,
             eventData.enterEventCamera);
+        }
+        private void KillAllAsync()
+        {
+            if (cts != null)
+            {
+                cts.Cancel();
+                cts.Dispose();
+            }
+
+            cts = new CancellationTokenSource();
+
+            transform.DOKill();
         }
     }
 

@@ -28,9 +28,9 @@ public class Server : BaseWorker
 
     public override IEnumerator DoJobAsync()
     {
-        var entityManager = GameManager.Instance.EntityManager;
-        var resourcesManager = GameManager.Instance.ResourcesManager;
-        var foodOrderManager = GameManager.Instance.FoodOrderManager;
+        var entityManager = GameManager.Instance.GamePlay.EntityManager;
+        var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
+        var foodOrderManager = GameManager.Instance.GamePlay.FoodOrderManager;
         var servingTable = entityManager.GetActiveEntity(Building.SERVING_TABLE);
         var orderTable = entityManager.GetActiveEntity(Building.ORDER_TABLE);
         var order = foodOrderManager.GetOldestFoodOrder();

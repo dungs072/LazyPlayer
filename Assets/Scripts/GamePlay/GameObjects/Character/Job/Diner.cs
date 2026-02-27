@@ -16,9 +16,9 @@ public class Diner : BaseWorker
 
     public override IEnumerator DoJobAsync()
     {
-        var entityManager = GameManager.Instance.EntityManager;
-        var foodOrderManager = GameManager.Instance.FoodOrderManager;
-        var tableOrderManager = GameManager.Instance.TableOrderManager;
+        var entityManager = GameManager.Instance.GamePlay.EntityManager;
+        var foodOrderManager = GameManager.Instance.GamePlay.FoodOrderManager;
+        var tableOrderManager = GameManager.Instance.GamePlay.TableOrderManager;
         diningTable = entityManager.GetAvailableDiningTable(Building.DINING_TABLE);
         if (diningTable == null)
         {
@@ -55,7 +55,7 @@ public class Diner : BaseWorker
     {
         chatPanel.ShowChat("Yummy!");
         yield return new WaitForSeconds(eatDuration);
-        var resourcesManager = GameManager.Instance.ResourcesManager;
+        var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
         resourcesManager.AddResource("money", 5);
         var pedestrian = new Pedestrian();
         switchableJob.SetJob(pedestrian);

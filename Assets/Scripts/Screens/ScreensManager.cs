@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 public class ScreensManager : MonoBehaviour
 {
     [SerializeField] private List<BaseScreen> screens;
@@ -31,22 +32,22 @@ public class ScreensManager : MonoBehaviour
         }
     }
 
-    public IEnumerator OpenScreen<T>(ScreenData screenData = null) where T : BaseScreen
+    public async UniTask OpenScreen<T>(ScreenData screenData = null) where T : BaseScreen
     {
         if (screenDictionary.TryGetValue(typeof(T), out var screen))
         {
-            yield return screen.OpenAsync(screenData);
+            await screen.OpenAsync(screenData);
         }
         else
         {
             Debug.LogError($"Screen of type {typeof(T)} not found in ScreensManager.");
         }
     }
-    public IEnumerator CloseScreen<T>() where T : BaseScreen
+    public async UniTask CloseScreen<T>() where T : BaseScreen
     {
         if (screenDictionary.TryGetValue(typeof(T), out var screen))
         {
-            yield return screen.CloseAsync();
+            await screen.CloseAsync();
         }
         else
         {

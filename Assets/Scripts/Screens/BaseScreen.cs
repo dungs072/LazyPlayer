@@ -1,4 +1,5 @@
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class BaseScreen : MonoBehaviour
@@ -10,13 +11,13 @@ public class BaseScreen : MonoBehaviour
         return screenData as T;
     }
 
-    public virtual IEnumerator OpenAsync(ScreenData screenData = null)
+    public virtual async UniTask OpenAsync(ScreenData screenData = null)
     {
         this.screenData = screenData;
         gameObject.SetActive(true);
         PrepareData();
         PrepareFadeIn();
-        yield return FadeInAsync();
+        await FadeInAsync();
     }
     /// <summary>
     /// Prepare the screen data here, this will be called before OpenAsync, so the screen will be ready when it opens
@@ -36,16 +37,16 @@ public class BaseScreen : MonoBehaviour
     /// <summary>
     /// Play the fade in animation here, this will be called after OpenAsync, so the screen will be active when it plays
     /// </summary>
-    public virtual IEnumerator FadeInAsync()
+    public virtual async UniTask FadeInAsync()
     {
         // play animation here
-        yield return null;
+        await UniTask.NextFrame();
     }
 
 
-    public IEnumerator CloseAsync()
+    public async UniTask CloseAsync()
     {
-        yield return null;
+        await UniTask.Yield();
         gameObject.SetActive(false);
     }
 }

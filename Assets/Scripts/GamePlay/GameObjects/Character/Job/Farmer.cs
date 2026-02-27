@@ -13,7 +13,7 @@ public class Farmer : BaseWorker
 
     public override IEnumerator DoJobAsync()
     {
-        var entityManager = GameManager.Instance.EntityManager;
+        var entityManager = GameManager.Instance.GamePlay.EntityManager;
         Plot plot = entityManager.GetEmptyPlot(Building.PLOT);
         while (plot != null)
         {
@@ -29,7 +29,7 @@ public class Farmer : BaseWorker
             plot = entityManager.GetHarvestablePlot(Building.PLOT);
         }
         var storage = entityManager.GetActiveEntity(Building.FARM_STORAGE);
-        var resourcesManager = GameManager.Instance.ResourcesManager;
+        var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
         while (plot != null)
         {
             yield return movement.Move(plot.transform.position);

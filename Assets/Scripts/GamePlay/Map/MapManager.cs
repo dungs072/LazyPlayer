@@ -6,8 +6,8 @@ public class MapManager : MonoBehaviour
     private CharacterManager characterManager;
     private void Start()
     {
-        entityManager = GameManager.Instance.EntityManager;
-        characterManager = GameManager.Instance.CharacterManager;
+        entityManager = GameManager.Instance.GamePlay.EntityManager;
+        characterManager = GameManager.Instance.GamePlay.CharacterManager;
         CreateFarmMap();
         CreateKitchenMap();
         CreateDiningRoom();
@@ -17,7 +17,7 @@ public class MapManager : MonoBehaviour
     {
         SpawnFarm();
         SpawnFarmStorage();
-        var staffManager = GameManager.Instance.StaffManager;
+        var staffManager = GameManager.Instance.GamePlay.StaffManager;
         var chars = characterManager.SpawnCharacter(1, new Vector3(0, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {
@@ -48,7 +48,7 @@ public class MapManager : MonoBehaviour
 
     private void CreateKitchenMap()
     {
-        var staffManager = GameManager.Instance.StaffManager;
+        var staffManager = GameManager.Instance.GamePlay.StaffManager;
         var chars = characterManager.SpawnCharacter(1, new Vector3(18, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {
@@ -61,7 +61,7 @@ public class MapManager : MonoBehaviour
     }
     private void CreateDiningRoom()
     {
-        var staffManager = GameManager.Instance.StaffManager;
+        var staffManager = GameManager.Instance.GamePlay.StaffManager;
         var chars = characterManager.SpawnCharacter(1, new Vector3(40, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {

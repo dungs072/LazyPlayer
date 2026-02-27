@@ -6,14 +6,22 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
+        EventBus.Subscribe<PreButtonClickedEvent>(MovePreviousMap);
+        EventBus.Subscribe<NextButtonClickedEvent>(MoveNextMap);
     }
 
-    public void MoveNextMap()
+    private void OnDestroy()
+    {
+        EventBus.Unsubscribe<PreButtonClickedEvent>(MovePreviousMap);
+        EventBus.Unsubscribe<NextButtonClickedEvent>(MoveNextMap);
+    }
+
+    public void MoveNextMap(NextButtonClickedEvent e)
     {
         mainCamera.transform.position += new Vector3(MapConstant.MAP_WIDTH, 0, 0);
     }
 
-    public void MovePreviousMap()
+    public void MovePreviousMap(PreButtonClickedEvent e)
     {
         mainCamera.transform.position += new Vector3(-MapConstant.MAP_WIDTH, 0, 0);
     }

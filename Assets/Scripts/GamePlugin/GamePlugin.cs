@@ -5,9 +5,17 @@ using UnityEngine.EventSystems;
 // only pure class c# is allowed
 public class GamePlugin
 {
+    private static EventSystem eventSystem;
+    public void Init()
+    {
+        eventSystem = EventSystem.current;
+    }
+
     public static void BlockInput(bool block = true)
     {
-        EventSystem.current.enabled = !block;
+        if (eventSystem != null)
+        {
+            eventSystem.enabled = !block;
+        }
     }
 }
-

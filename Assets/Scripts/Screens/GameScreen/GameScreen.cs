@@ -10,13 +10,13 @@ public class GameScreen : BaseScreen
 
     private void Awake()
     {
-        ResourcesManager.OnResourceAmountChanged += view.SetResourcesAmount;
+        EventBus.Subscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
         view.preButton.AddListener(OnPreButtonClicked);
         view.nextButton.AddListener(OnNextButtonClicked);
     }
     private void OnDestroy()
     {
-        ResourcesManager.OnResourceAmountChanged -= view.SetResourcesAmount;
+        EventBus.Unsubscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
         view.preButton.RemoveListener(OnPreButtonClicked);
         view.nextButton.RemoveListener(OnNextButtonClicked);
     }
@@ -24,8 +24,7 @@ public class GameScreen : BaseScreen
     {
         if (view.currentMapIndex == 0) return;
         GamePlugin.BlockInput(true);
-        var cameraController = GameManager.Instance.CameraController;
-        cameraController.MovePreviousMap();
+        EventBus.Publish(new PreButtonClickedEvent());
         view.currentMapIndex--;
         GamePlugin.BlockInput(false);
     }
@@ -33,8 +32,7 @@ public class GameScreen : BaseScreen
     {
         if (view.currentMapIndex == MapConstant.TOTAL_MAPS - 1) return;
         GamePlugin.BlockInput(true);
-        var cameraController = GameManager.Instance.CameraController;
-        cameraController.MoveNextMap();
+        EventBus.Publish(new NextButtonClickedEvent());
         view.currentMapIndex++;
         GamePlugin.BlockInput(false);
     }

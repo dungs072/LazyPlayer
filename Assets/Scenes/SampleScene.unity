@@ -374,15 +374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869b0bfbe975a554caee95c58ed5dd22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <EntityManager>k__BackingField: {fileID: 2025385783}
-  <CharacterManager>k__BackingField: {fileID: 454364414}
-  <ResourcesManager>k__BackingField: {fileID: 1409567390}
-  <MapManager>k__BackingField: {fileID: 191906964}
-  <CameraController>k__BackingField: {fileID: 1409567391}
-  <FoodDictionary>k__BackingField: {fileID: 1995639603}
-  <FoodOrderManager>k__BackingField: {fileID: 949514794}
-  <TableOrderManager>k__BackingField: {fileID: 1794441667}
-  <StaffManager>k__BackingField: {fileID: 1413505364}
+  <GamePlay>k__BackingField: {fileID: 2095119890}
   <ScreensManager>k__BackingField: {fileID: 166512129}
 --- !u!1 &519420028
 GameObject:
@@ -746,7 +738,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000019073486
+      value: -0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1320,8 +1312,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2095119889}
+  - component: {fileID: 2095119890}
   m_Layer: 0
-  m_Name: GameLogic
+  m_Name: GamePlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1350,6 +1343,27 @@ Transform:
   - {fileID: 1413505363}
   m_Father: {fileID: 518393845}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2095119890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095119888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8298618a4f682f4da0be893dd69cc1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <EntityManager>k__BackingField: {fileID: 2025385783}
+  <CharacterManager>k__BackingField: {fileID: 454364414}
+  <ResourcesManager>k__BackingField: {fileID: 1409567390}
+  <MapManager>k__BackingField: {fileID: 191906964}
+  <CameraController>k__BackingField: {fileID: 1409567391}
+  <FoodDictionary>k__BackingField: {fileID: 1995639603}
+  <FoodOrderManager>k__BackingField: {fileID: 949514794}
+  <TableOrderManager>k__BackingField: {fileID: 1794441667}
+  <StaffManager>k__BackingField: {fileID: 1413505364}
 --- !u!1001 &1118157070348367945
 PrefabInstance:
   m_ObjectHideFlags: 0

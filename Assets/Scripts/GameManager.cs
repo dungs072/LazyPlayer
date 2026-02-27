@@ -1,19 +1,10 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [field: Header("Game Logic")]
-    [field: SerializeField] public EntityManager EntityManager { get; private set; }
-    [field: SerializeField] public CharacterManager CharacterManager { get; private set; }
-    [field: SerializeField] public ResourcesManager ResourcesManager { get; private set; }
-    [field: SerializeField] public MapManager MapManager { get; private set; }
-    [field: SerializeField] public CameraController CameraController { get; private set; }
-    [field: SerializeField] public FoodDictionary FoodDictionary { get; private set; }
-    [field: SerializeField] public FoodOrderManager FoodOrderManager { get; private set; }
-    [field: SerializeField] public TableOrderManager TableOrderManager { get; private set; }
-    [field: SerializeField] public StaffManager StaffManager { get; private set; }
 
-    [field: Header("UI")]
+    [field: SerializeField] public GamePlay GamePlay { get; private set; }
     [field: SerializeField] public ScreensManager ScreensManager { get; private set; }
 
 
@@ -29,5 +20,10 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
+        new GamePlugin().Init();
+    }
+    private void Start()
+    {
+        ScreensManager.OpenScreen<GameScreen>().Forget();
     }
 }

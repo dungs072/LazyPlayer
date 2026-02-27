@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 public class ResourcesManager : MonoBehaviour
 {
-    public static event Action<string, int> OnResourceAmountChanged;
     private Dictionary<string, int> resources = new();
 
     private void Start()
@@ -17,7 +16,7 @@ public class ResourcesManager : MonoBehaviour
     public void SetResourceAmount(string resourceName, int amount)
     {
         resources[resourceName] = amount;
-        OnResourceAmountChanged?.Invoke(resourceName, amount);
+        EventBus.Publish(new ResourceAmountChangedEvent { name = resourceName, amount = amount });
     }
     public void AddResource(string resourceName, int amount)
     {
