@@ -11,6 +11,10 @@ public class BaseWorker
     protected ChatPanel chatPanel;
     private JobData jobData;
     protected int currentStepIndex = 0;
+    public virtual string JobName()
+    {
+        return "BaseWorker";
+    }
     public void SetMovement(Movement movement)
     {
         this.movement = movement;

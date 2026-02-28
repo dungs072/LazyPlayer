@@ -1,10 +1,20 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class StaffManager : MonoBehaviour
 {
     private List<Character> staffs = new();
 
+
+    void Awake()
+    {
+        QueryBus.Subscribe<GetStaffDataList, IReadOnlyList<CharacterData>>(query => GetStaffDataList());
+    }
+    public IReadOnlyList<CharacterData> GetStaffDataList()
+    {
+        return staffs.Select(s => s.CharacterData).ToList().AsReadOnly();
+    }
     public void AddStaffAndSetData(Character character)
     {
         staffs.Add(character);

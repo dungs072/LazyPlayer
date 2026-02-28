@@ -6,10 +6,11 @@ public class StaffScroller : MonoBehaviour, IRecyclableScrollRectDataSource
 {
     [SerializeField] private RecyclableScrollRect _recyclableScrollRect;
 
-    private List<CharacterData> _contactList = new();
-    public void SetData(List<CharacterData> data)
+    private IReadOnlyList<CharacterData> _contactList = new List<CharacterData>();
+    public void SetData(IReadOnlyList<CharacterData> data)
     {
         _contactList = data;
+        _recyclableScrollRect.DataSource = this;
         _recyclableScrollRect.ReloadData();
     }
 

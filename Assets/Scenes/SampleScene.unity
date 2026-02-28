@@ -738,7 +738,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000015258789
+      value: -0.000019073486
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1495,6 +1495,10 @@ PrefabInstance:
     - target: {fileID: 6447221447538980395, guid: 71bf5a783ecc2114080ebf41cdabe88d, type: 3}
       propertyPath: m_Name
       value: GameScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 6447221447538980395, guid: 71bf5a783ecc2114080ebf41cdabe88d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6592653943590784903, guid: 71bf5a783ecc2114080ebf41cdabe88d, type: 3}
       propertyPath: m_Pivot.x

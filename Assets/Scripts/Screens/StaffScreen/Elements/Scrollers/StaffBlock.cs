@@ -8,6 +8,7 @@ public class StaffBlock : MonoBehaviour, ICell
     [SerializeField] private TMP_Text ageText;
     [SerializeField] private TMP_Text sexText;
     [SerializeField] private TMP_Text expText;
+    [SerializeField] private TMP_Text jobText;
 
 
 
@@ -18,6 +19,7 @@ public class StaffBlock : MonoBehaviour, ICell
         SetAge(data.Age.ToString());
         SetSex(data.ToSexText());
         SetExp(data.Experience.ToString());
+        SetJob(data.JobName);
     }
 
     public void SetIndex(string index)
@@ -41,5 +43,9 @@ public class StaffBlock : MonoBehaviour, ICell
     public void SetExp(string exp)
     {
         expText.text = "Exp: " + exp;
+    }
+    public void SetJob(string job)
+    {
+        jobText.text = "Job: " + job;
     }
 }

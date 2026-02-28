@@ -15,6 +15,7 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
     private Movement movement = null;
     private CharacterData characterData = null;
 
+    public CharacterData CharacterData => characterData;
 
     void Awake()
     {
@@ -47,6 +48,8 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
 
     public void SetCharacterData(CharacterData data)
     {
+        var worker = jobHandler.Worker;
+        data.JobName = worker != null ? worker.JobName() : "Unemployed";
         characterData = data;
     }
 

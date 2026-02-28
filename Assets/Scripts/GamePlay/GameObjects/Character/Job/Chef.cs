@@ -10,6 +10,10 @@ public class Chef : BaseWorker
     {
         this.workDuration = workDuration;
     }
+    public override string JobName()
+    {
+        return "Chef";
+    }
 
     public override IEnumerator DoJobAsync()
     {

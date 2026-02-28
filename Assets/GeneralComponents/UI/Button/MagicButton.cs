@@ -41,6 +41,7 @@ namespace BaseEngine
         private RectTransform rectTransform;
         private bool isClicking = false;
         private CancellationTokenSource cts;
+        private Func<UniTask> OnClickedAsync;
 
         void Awake()
         {
@@ -57,9 +58,17 @@ namespace BaseEngine
         {
             OnClicked += action;
         }
+        public void AddListener(Func<UniTask> action)
+        {
+            OnClickedAsync += action;
+        }
         public void RemoveListener(Action action)
         {
             OnClicked -= action;
+        }
+        public void RemoveListener(Func<UniTask> action)
+        {
+            OnClickedAsync -= action;
         }
         private void InitComponents()
         {
@@ -139,6 +148,7 @@ namespace BaseEngine
             }
 
             OnClicked?.Invoke();
+            OnClickedAsync?.Invoke().Forget();
         }
         private async UniTask PlayPointerUpAnim(CancellationToken token)
         {

@@ -5,9 +5,9 @@ using static EntityConstant;
 public class Pedestrian : BaseWorker
 {
     private float workDuration = 2f;
-    public Pedestrian() : base()
+    public override string JobName()
     {
-
+        return "Pedestrian";
     }
 
     public override IEnumerator DoJobAsync()

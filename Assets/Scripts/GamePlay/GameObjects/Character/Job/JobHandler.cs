@@ -11,7 +11,7 @@ public class JobHandler
     private BaseWorker worker;
     private Movement movement;
 
-
+    public BaseWorker Worker => worker;
     public void Init(Movement movement)
     {
         this.movement = movement;

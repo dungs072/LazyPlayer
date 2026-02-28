@@ -32,7 +32,7 @@ public class ScreensManager : MonoBehaviour
         }
     }
 
-    public async UniTask OpenScreen<T>(ScreenData screenData = null) where T : BaseScreen
+    public async UniTask OpenScreenAsync<T>(ScreenData screenData = null) where T : BaseScreen
     {
         if (screenDictionary.TryGetValue(typeof(T), out var screen))
         {
@@ -43,7 +43,7 @@ public class ScreensManager : MonoBehaviour
             Debug.LogError($"Screen of type {typeof(T)} not found in ScreensManager.");
         }
     }
-    public async UniTask CloseScreen<T>() where T : BaseScreen
+    public async UniTask CloseScreenAsync<T>() where T : BaseScreen
     {
         if (screenDictionary.TryGetValue(typeof(T), out var screen))
         {

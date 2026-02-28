@@ -11,6 +11,7 @@ public class CharacterData
     public int Age { get; set; }
     public int Experience { get; set; }
     public Sex Sex { get; set; }
+    public string JobName { get; set; }
     public CharacterData(string name, int age, int experience, Sex sex)
     {
         Name = name;

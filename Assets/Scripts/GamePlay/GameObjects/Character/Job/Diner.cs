@@ -6,8 +6,9 @@ public class Diner : BaseWorker
 {
     private float eatDuration = 5f;
     private DiningTable diningTable;
-    public Diner() : base()
+    public override string JobName()
     {
+        return "Diner";
     }
     public void DoJob()
     {

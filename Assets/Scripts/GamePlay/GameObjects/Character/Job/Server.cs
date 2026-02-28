@@ -18,6 +18,10 @@ public class Server : BaseWorker
     {
         FoodOrderManager.OnFoodOrderAdded -= HandleFoodOrderAdded;
     }
+    public override string JobName()
+    {
+        return "Server";
+    }
 
     private void HandleFoodOrderAdded()
     {

@@ -21,9 +21,10 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
         new GamePlugin().Init();
+        new ScreenPlugin(ScreensManager);
     }
     private void Start()
     {
-        ScreensManager.OpenScreen<GameScreen>().Forget();
+        ScreenPlugin.OpenScreenAsync<GameScreen>().Forget();
     }
 }

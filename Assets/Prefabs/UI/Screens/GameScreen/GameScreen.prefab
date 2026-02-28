@@ -930,6 +930,7 @@ MonoBehaviour:
     moneyAmount: {fileID: 581974101195757384}
     preButton: {fileID: 1148506748096260585}
     nextButton: {fileID: 1948460294193817116}
+    staffButton: {fileID: 453071319814797526}
     currentMapIndex: 0
 --- !u!1 &6701794191599953226
 GameObject:
@@ -1318,6 +1319,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ba5282c57550e2439abde68eff50ed9, type: 3}
+--- !u!114 &453071319814797526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7864021412775368647, guid: 3ba5282c57550e2439abde68eff50ed9, type: 3}
+  m_PrefabInstance: {fileID: 7740346596821364497}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51046f9b44be27b4ea96d398457b7da5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5298888133870471808 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2513662350084613521, guid: 3ba5282c57550e2439abde68eff50ed9, type: 3}

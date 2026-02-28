@@ -3,5 +3,5 @@ using UnityEngine;
 
 public class StaffScreenData : ScreenData
 {
-    public List<CharacterData> dataList;
+    public IReadOnlyList<CharacterData> dataList;
 }
