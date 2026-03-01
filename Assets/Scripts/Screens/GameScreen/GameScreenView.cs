@@ -12,6 +12,7 @@ public class GameScreenView
     [SerializeField] public MagicButton preButton;
     [SerializeField] public MagicButton nextButton;
     [SerializeField] public MagicButton staffButton;
+    [SerializeField] public MagicButton builderButton;
     [HideInInspector]
     public int currentMapIndex = 0;
 

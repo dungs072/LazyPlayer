@@ -1,2 +1,4 @@
 //! be cautious when using reference types
-public struct GetStaffDataList { }
+public struct GetStaffDataListQuery { }
+
+public struct GetBuildingDataListQuery { }

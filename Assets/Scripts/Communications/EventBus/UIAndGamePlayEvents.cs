@@ -10,4 +10,6 @@ public struct ResourceAmountChangedEvent
     public string name;
     public int amount;
 }
+public struct DestroyCurrentBuildingEvent { }
+public struct BuildCurrentBuildingEvent { }
 

@@ -9,7 +9,7 @@ public class StaffManager : MonoBehaviour
 
     void Awake()
     {
-        QueryBus.Subscribe<GetStaffDataList, IReadOnlyList<CharacterData>>(query => GetStaffDataList());
+        QueryBus.Subscribe<GetStaffDataListQuery, IReadOnlyList<CharacterData>>(query => GetStaffDataList());
     }
     public IReadOnlyList<CharacterData> GetStaffDataList()
     {

@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Diagnostics;
+
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using FoodType = ResourceConstant.Food.FoodType;
 public enum PlotState
 {
     EMPTY,
@@ -34,13 +33,13 @@ public class Plot : BuildableEntity
         }
         currentCropId = cropId;
         this.harvestedAmount = harvestedAmount;
-        StartCoroutine(Grow());
+        GrowAsync().Forget();
     }
 
-    private IEnumerator Grow()
+    private async UniTask GrowAsync()
     {
         SwitchState(PlotState.GROWING);
-        yield return new WaitForSeconds(growthTime);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(growthTime));
         SwitchState(PlotState.READY);
     }
 

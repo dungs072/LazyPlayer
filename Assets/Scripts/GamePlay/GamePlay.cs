@@ -13,4 +13,5 @@ public class GamePlay : MonoBehaviour
     [field: SerializeField] public FoodOrderManager FoodOrderManager { get; private set; }
     [field: SerializeField] public TableOrderManager TableOrderManager { get; private set; }
     [field: SerializeField] public StaffManager StaffManager { get; private set; }
+    [field: SerializeField] public BuildingSystem BuildingSystem { get; private set; }
 }

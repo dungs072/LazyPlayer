@@ -24,7 +24,8 @@ public class EntityManager : MonoBehaviour
             for (var i = 0; i < pool.Count; i++)
             {
                 var plot = pool[i] as Plot;
-                if (plot != null && plot.gameObject.activeSelf && plot.IsEmpty)
+                if (plot != null && plot.gameObject.activeSelf && plot.IsEmpty
+                && plot.BuildingState == BuildingState.READY)
                 {
                     return plot;
                 }
@@ -39,7 +40,8 @@ public class EntityManager : MonoBehaviour
             for (var i = 0; i < pool.Count; i++)
             {
                 var plot = pool[i] as Plot;
-                if (plot != null && plot.gameObject.activeSelf && plot.IsReady)
+                if (plot != null && plot.gameObject.activeSelf && plot.IsReady
+                 && plot.BuildingState == BuildingState.READY)
                 {
                     return plot;
                 }
@@ -54,7 +56,8 @@ public class EntityManager : MonoBehaviour
             for (var i = 0; i < pool.Count; i++)
             {
                 var diningTable = pool[i] as DiningTable;
-                if (diningTable != null && diningTable.gameObject.activeSelf && diningTable.IsAvailable)
+                if (diningTable != null && diningTable.gameObject.activeSelf &&
+                diningTable.IsAvailable && diningTable.BuildingState == BuildingState.READY)
                 {
                     return diningTable;
                 }
@@ -65,6 +68,9 @@ public class EntityManager : MonoBehaviour
 
     void Awake()
     {
+        //! fix here
+        QueryBus.Subscribe<GetBuildingDataListQuery, IReadOnlyList<BuildableEntity>>(query => GetBuildingDataList());
+        QueryBus.Subscribe<GetEntityQuery, Entity>(query => GetEntity(query.entityName, query.position));
         foreach (var entity in entities)
         {
             if (!entityDictPrefabs.ContainsKey(entity.EntityName))
@@ -76,6 +82,14 @@ public class EntityManager : MonoBehaviour
                 Debug.LogWarning($"Duplicate entity name detected: {entity.EntityName}. Skipping.");
             }
         }
+    }
+    //! fix here
+    private IReadOnlyList<BuildableEntity> GetBuildingDataList()
+    {
+        return entityDictPrefabs.Where(kv => kv.Value is BuildableEntity)
+                           .Select(kv => kv.Value as BuildableEntity)
+                           .ToList()
+                           .AsReadOnly();
     }
 
 
