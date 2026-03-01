@@ -3,6 +3,20 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+public struct CellGrid
+{
+    public int Row;
+    public int Column;
+    public bool IsOccupied;
+
+    public CellGrid(int row, int column, bool isOccupied)
+    {
+        Row = row;
+        Column = column;
+        IsOccupied = isOccupied;
+    }
+}
+
 public class GridSystem : MonoBehaviour
 {
     [SerializeField] private int _rowCount;
@@ -16,7 +30,7 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private bool _showText = true;
     [SerializeField] private float _maxDrawDistance = 50f; // Only draw text when camera is close
 
-    private int[][] _grid;
+    private CellGrid[][] _grid;
 
 #if UNITY_EDITOR
     private static GUIStyle _cachedTextStyle; // Cache style to avoid creating every frame
@@ -24,10 +38,14 @@ public class GridSystem : MonoBehaviour
 
     void Awake()
     {
-        _grid = new int[_rowCount][];
+        _grid = new CellGrid[_rowCount][];
         for (int i = 0; i < _rowCount; i++)
         {
-            _grid[i] = new int[_columnCount];
+            _grid[i] = new CellGrid[_columnCount];
+            for (int j = 0; j < _columnCount; j++)
+            {
+                _grid[i][j] = new CellGrid(i, j, false);
+            }
         }
 
         QueryBus.Subscribe<GetSnapGridPositionQuery, Vector3>(query => GetSnapGridPosition(query.position));
@@ -173,5 +191,47 @@ public class GridSystem : MonoBehaviour
         // Get snapped position
         Vector2 cellPos = GetCellPosition(row, column);
         return transform.position + new Vector3(cellPos.x, cellPos.y, 0);
+    }
+
+    public void SetCellOccupied(Vector3 position, float widthSize, float heightSize)
+    {
+        // Convert world position to local position
+        Vector3 localPos = position - transform.position;
+
+        // Calculate total grid dimensions
+        float totalWidth = _columnCount * _cellSize.x + (_columnCount - 1) * _spacing.x;
+        float totalHeight = _rowCount * _cellSize.y + (_rowCount - 1) * _spacing.y;
+
+        // Calculate offset to center the grid
+        float offsetX = -totalWidth / 2;
+        float offsetY = -totalHeight / 2;
+
+        // Calculate the center cell
+        int centerColumn = Mathf.RoundToInt((localPos.x - offsetX) / (_cellSize.x + _spacing.x));
+        int centerRow = Mathf.RoundToInt((localPos.y - offsetY) / (_cellSize.y + _spacing.y));
+
+        // Calculate how many cells the object occupies
+        int cellsWidth = Mathf.CeilToInt(widthSize / (_cellSize.x + _spacing.x));
+        int cellsHeight = Mathf.CeilToInt(heightSize / (_cellSize.y + _spacing.y));
+
+        // Calculate the range of cells to mark as occupied
+        int startColumn = centerColumn - cellsWidth / 2;
+        int endColumn = centerColumn + (cellsWidth - 1) / 2;
+        int startRow = centerRow - cellsHeight / 2;
+        int endRow = centerRow + (cellsHeight - 1) / 2;
+
+        // Mark cells as occupied
+        for (int row = startRow; row <= endRow; row++)
+        {
+            for (int col = startColumn; col <= endColumn; col++)
+            {
+                // Check if cell is within grid bounds
+                if (row >= 0 && row < _rowCount && col >= 0 && col < _columnCount)
+                {
+                    // Create new struct with updated IsOccupied value
+                    _grid[row][col] = new CellGrid(row, col, true);
+                }
+            }
+        }
     }
 }

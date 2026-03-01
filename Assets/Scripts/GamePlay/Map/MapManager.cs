@@ -36,14 +36,16 @@ public class MapManager : MonoBehaviour
         for (int i = 0; i < 6; i++)
         {
             var position = new Vector3(basePos.x + i * xOffset, basePos.y + row * yOffset, 0);
-            var farm = entityManager.GetEntity(EntityConstant.Building.PLOT, position);
+            var gridPosition = QueryBus.Query<GetSnapGridPositionQuery, Vector3>(new GetSnapGridPositionQuery { position = position });
+            var farm = entityManager.GetEntity(EntityConstant.Building.PLOT, gridPosition);
             row = (i + 1) % 2;
         }
 
     }
     private void SpawnFarmStorage()
     {
-        var storage = entityManager.GetEntity(EntityConstant.Building.FARM_STORAGE, new Vector3(-5, 2, 0));
+        var gridPosition = QueryBus.Query<GetSnapGridPositionQuery, Vector3>(new GetSnapGridPositionQuery { position = new Vector3(-5, 2, 0) });
+        var storage = entityManager.GetEntity(EntityConstant.Building.FARM_STORAGE, gridPosition);
     }
 
     private void CreateKitchenMap()
