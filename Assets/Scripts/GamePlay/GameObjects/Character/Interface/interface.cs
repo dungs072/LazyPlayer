@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 public interface ISwitchableJob
 {
@@ -7,5 +9,5 @@ public interface ISwitchableJob
 }
 public interface IDoable
 {
-    void DoJobAsync(Func<IEnumerator> action);
+    void DoJobAsync(Func<CancellationToken, UniTask> action);
 }
