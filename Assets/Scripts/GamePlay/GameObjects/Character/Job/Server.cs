@@ -43,12 +43,10 @@ public class Server : BaseWorker
         {
             foodOrderManager.RemoveFoodOrder();
             await movement.Move(cancellationToken, servingTable.transform.position);
-            if (cancellationToken.IsCancellationRequested) return; 
-            
+               
             resourcesManager.ConsumeFood(order.foodAmounts);
             await movement.Move(cancellationToken, order.diningTable.transform.position);
-            if (cancellationToken.IsCancellationRequested) return; 
-            
+               
             order.diner.EatFood();
             var orderLeft = foodOrderManager.GetOldestFoodOrder();
             if (orderLeft != null)
@@ -65,8 +63,7 @@ public class Server : BaseWorker
         else
         {
             await movement.Move(cancellationToken, orderTable.transform.position);
-            if (cancellationToken.IsCancellationRequested) return; 
-            
+               
             var orderLeft = foodOrderManager.GetOldestFoodOrder();
             if (orderLeft != null)
             {

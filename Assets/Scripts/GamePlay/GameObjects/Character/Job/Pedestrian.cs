@@ -19,8 +19,7 @@ public class Pedestrian : BaseWorker
         {
             // Move from start to end
             await movement.Move(cancellationToken, endPos);
-            if (cancellationToken.IsCancellationRequested) return; 
-            await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
+               await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
             if (cancellationToken.IsCancellationRequested) return; 
 
             // Random walk after reaching end
@@ -29,16 +28,13 @@ public class Pedestrian : BaseWorker
                 float randomX = Random.value > 0.5f ? startPos.x : startPos.x + 10f; // 2 verticals: 65 and 75
                 var randomPos = GetRandomVerticalPosition(randomX);
                 await movement.Move(cancellationToken, randomPos);
-                if (cancellationToken.IsCancellationRequested) return; 
-                
+                       
                 await UniTask.WaitForSeconds(Random.Range(0.5f, 2f), cancellationToken: cancellationToken);
-                if (cancellationToken.IsCancellationRequested) return; 
-            }
+                   }
 
             // Move back to start
             await movement.Move(cancellationToken, startPos);
-            if (cancellationToken.IsCancellationRequested) return; 
-            
+               
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
             if (cancellationToken.IsCancellationRequested) return; 
 
@@ -48,11 +44,9 @@ public class Pedestrian : BaseWorker
                 float randomX = Random.value > 0.5f ? startPos.x : startPos.x + 10f; // 2 verticals: 65 and 75
                 var randomPos = GetRandomVerticalPosition(randomX);
                 await movement.Move(cancellationToken, randomPos);
-                if (cancellationToken.IsCancellationRequested) return; 
-                
+                       
                 await UniTask.WaitForSeconds(Random.Range(0.5f, 2f), cancellationToken: cancellationToken);
-                if (cancellationToken.IsCancellationRequested) return; 
-            }
+                   }
             randomVar = Random.Range(0f, 1f);
         }
         var diner = new Diner();

@@ -21,11 +21,9 @@ public class Farmer : BaseWorker
         while (plot != null)
         {
             await movement.Move(cancellationToken, plot.transform.position);
-            if (cancellationToken.IsCancellationRequested) return; 
             
             plot.PlantCrop("wheat", 10);
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
-            if (cancellationToken.IsCancellationRequested) return; 
             
             plot = entityManager.GetEmptyPlot(Building.PLOT);
         }
@@ -33,7 +31,6 @@ public class Farmer : BaseWorker
         while (plot == null)
         {
             await DoNothing(cancellationToken);
-            if (cancellationToken.IsCancellationRequested) return; 
             
             plot = entityManager.GetHarvestablePlot(Building.PLOT);
         }
@@ -42,14 +39,11 @@ public class Farmer : BaseWorker
         while (plot != null)
         {
             await movement.Move(cancellationToken, plot.transform.position);
-            if (cancellationToken.IsCancellationRequested) return; 
             
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
-            if (cancellationToken.IsCancellationRequested) return; 
             
             var harvestedCrop = plot.Harvest();
             await movement.Move(cancellationToken, storage.transform.position);
-            if (cancellationToken.IsCancellationRequested) return; 
             
             resourcesManager.AddResource(harvestedCrop.Item1, harvestedCrop.Item2);
             plot = entityManager.GetHarvestablePlot(Building.PLOT);
@@ -59,8 +53,6 @@ public class Farmer : BaseWorker
     {
         var randomPos = GetRandomPositionInFarmMap();
         await movement.Move(cancellationToken, randomPos);
-        if (cancellationToken.IsCancellationRequested) return; 
-        
         await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
     }
     public override void FinishCurrentStep()

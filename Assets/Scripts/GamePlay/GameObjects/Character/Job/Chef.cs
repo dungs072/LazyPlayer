@@ -27,28 +27,21 @@ public class Chef : BaseWorker
         {
             var kitchen = entityManager.GetActiveEntity(Building.KITCHEN);
             await movement.Move(cancellationToken, kitchen.transform.position);
-            if (cancellationToken.IsCancellationRequested) return; 
-            
+               
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
-            if (cancellationToken.IsCancellationRequested) return; 
-            
+               
             resourcesManager.ConsumeResources(breadRecipe.GetIngredients());
             var servingTable = entityManager.GetActiveEntity(Building.SERVING_TABLE);
             await movement.Move(cancellationToken, servingTable.transform.position);
-            if (cancellationToken.IsCancellationRequested) return; 
-            
             resourcesManager.AddResource("bread", 1);
             foodOrderManager.ReadyToServeFood();
         }
-
-        await UniTask.Yield();
     }
     private async UniTask DoNothing(CancellationToken cancellationToken)
     {
         var randomPos = GetRandomPositionInScreen();
         await movement.Move(cancellationToken, randomPos);
-        if (cancellationToken.IsCancellationRequested) return; 
-        
+       
         await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
     }
     public override void FinishCurrentStep()

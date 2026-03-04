@@ -38,6 +38,6 @@ public class JobHandler
         {
             await worker.DoJobAsync(cancellationToken);
         }
-        while (!cancellationToken.IsCancellationRequested && isLooping);
+        while (isLooping);
     }
 }

@@ -36,8 +36,7 @@ public class Diner : BaseWorker
         else
         {
             await movement.Move(cancellationToken, targetPos.Value);
-            if (cancellationToken.IsCancellationRequested) return; 
-            
+               
             chatPanel.ShowChat("x1 bread");
             foodOrderManager.AddFoodOrder(new FoodOrder()
             {
@@ -58,8 +57,7 @@ public class Diner : BaseWorker
     {
         chatPanel.ShowChat("Yummy!");
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
-        if (cancellationToken.IsCancellationRequested) return; 
-        
+       
         var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
         resourcesManager.AddResource("money", 5);
         var pedestrian = new Pedestrian();
