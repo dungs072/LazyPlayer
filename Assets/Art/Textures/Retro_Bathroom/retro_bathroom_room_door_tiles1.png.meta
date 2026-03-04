@@ -922,7 +922,39 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      retro_bathroom_room_door_tiles1_0: 22095256962547472
+      retro_bathroom_room_door_tiles1_1: 4002187162037783464
+      retro_bathroom_room_door_tiles1_10: -1964200965095668663
+      retro_bathroom_room_door_tiles1_11: 1694978262672374260
+      retro_bathroom_room_door_tiles1_12: 785704436723930228
+      retro_bathroom_room_door_tiles1_13: -7196473866437195962
+      retro_bathroom_room_door_tiles1_14: -2120508989746791139
+      retro_bathroom_room_door_tiles1_15: 8002684789154794034
+      retro_bathroom_room_door_tiles1_16: -6115773879543746173
+      retro_bathroom_room_door_tiles1_17: 6787645880150903947
+      retro_bathroom_room_door_tiles1_18: 2201895781725795856
+      retro_bathroom_room_door_tiles1_19: -3449595942556301898
+      retro_bathroom_room_door_tiles1_2: -233363981563616117
+      retro_bathroom_room_door_tiles1_20: 2062675711948079285
+      retro_bathroom_room_door_tiles1_21: -198706495142538538
+      retro_bathroom_room_door_tiles1_22: 7894651815776679649
+      retro_bathroom_room_door_tiles1_23: 7141785513421639652
+      retro_bathroom_room_door_tiles1_24: -7528228401718159626
+      retro_bathroom_room_door_tiles1_25: 8206050657645941028
+      retro_bathroom_room_door_tiles1_26: -5219744674521401772
+      retro_bathroom_room_door_tiles1_27: 3067398961195708295
+      retro_bathroom_room_door_tiles1_28: 985664124575537584
+      retro_bathroom_room_door_tiles1_29: -750224120681967071
+      retro_bathroom_room_door_tiles1_3: -1677896279975344815
+      retro_bathroom_room_door_tiles1_30: 3838219010388661120
+      retro_bathroom_room_door_tiles1_31: -3129965189616889608
+      retro_bathroom_room_door_tiles1_4: -8959506305690538147
+      retro_bathroom_room_door_tiles1_5: -2580164993838532710
+      retro_bathroom_room_door_tiles1_6: 6503484514430164565
+      retro_bathroom_room_door_tiles1_7: 5936270170544448850
+      retro_bathroom_room_door_tiles1_8: -4111584224872984881
+      retro_bathroom_room_door_tiles1_9: -2679820234345179901
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

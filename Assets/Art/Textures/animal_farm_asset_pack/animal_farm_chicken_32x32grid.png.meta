@@ -822,7 +822,35 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      animal_farm_chicken_32x32grid_0: 7081887235019168591
+      animal_farm_chicken_32x32grid_1: 4398122001330722318
+      animal_farm_chicken_32x32grid_10: 7839364601830330275
+      animal_farm_chicken_32x32grid_11: -3296099302952416021
+      animal_farm_chicken_32x32grid_12: 804098343897937744
+      animal_farm_chicken_32x32grid_13: -8882969473885431092
+      animal_farm_chicken_32x32grid_14: 995525062303358292
+      animal_farm_chicken_32x32grid_15: 7582359343737940968
+      animal_farm_chicken_32x32grid_16: -8179696727410798561
+      animal_farm_chicken_32x32grid_17: 5286338161373162685
+      animal_farm_chicken_32x32grid_18: -2216551451760789843
+      animal_farm_chicken_32x32grid_19: -4452961125836010732
+      animal_farm_chicken_32x32grid_2: 3328316305790375219
+      animal_farm_chicken_32x32grid_20: -8774482920597180882
+      animal_farm_chicken_32x32grid_21: 212806048291764887
+      animal_farm_chicken_32x32grid_22: 900656403966943166
+      animal_farm_chicken_32x32grid_23: 6838536448605596277
+      animal_farm_chicken_32x32grid_24: -8216850718973893151
+      animal_farm_chicken_32x32grid_25: -1955101796012728244
+      animal_farm_chicken_32x32grid_26: -7408322063359289880
+      animal_farm_chicken_32x32grid_27: -8454821686465877537
+      animal_farm_chicken_32x32grid_3: 5097639993211458776
+      animal_farm_chicken_32x32grid_4: 2260352355337280956
+      animal_farm_chicken_32x32grid_5: -4689945018286153094
+      animal_farm_chicken_32x32grid_6: 9074496334312678359
+      animal_farm_chicken_32x32grid_7: 7508892260182419476
+      animal_farm_chicken_32x32grid_8: -3503234959464199051
+      animal_farm_chicken_32x32grid_9: 6979321470464043500
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

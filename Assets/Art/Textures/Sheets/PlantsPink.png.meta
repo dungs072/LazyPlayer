@@ -547,7 +547,24 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      PlantsPink_0: 6102583736339108018
+      PlantsPink_1: -3691449837896664048
+      PlantsPink_10: 1590214665897312913
+      PlantsPink_11: -9069836158666635889
+      PlantsPink_12: -2621245578763615548
+      PlantsPink_13: 3922703567951959284
+      PlantsPink_14: -7475296412178527357
+      PlantsPink_15: -7382269479818878214
+      PlantsPink_16: -8189907981398214016
+      PlantsPink_2: -1756856105512527482
+      PlantsPink_3: -6284461976511991528
+      PlantsPink_4: 5519394080700422064
+      PlantsPink_5: 409484751306095704
+      PlantsPink_6: -5226387980976130426
+      PlantsPink_7: -8588644687528872042
+      PlantsPink_8: -2140687788408379252
+      PlantsPink_9: -1561938791947516283
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

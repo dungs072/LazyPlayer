@@ -947,7 +947,40 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      50sdiner_room_door_tiles2_0: 5218073109626170313
+      50sdiner_room_door_tiles2_1: -2868997308196042038
+      50sdiner_room_door_tiles2_10: 70664292542796695
+      50sdiner_room_door_tiles2_11: -6877293493789208933
+      50sdiner_room_door_tiles2_12: -5171626466037400255
+      50sdiner_room_door_tiles2_13: -8350827506441449957
+      50sdiner_room_door_tiles2_14: 2188577498440778983
+      50sdiner_room_door_tiles2_15: -7418056570997517636
+      50sdiner_room_door_tiles2_16: -63096396939171697
+      50sdiner_room_door_tiles2_17: -7801189805801227994
+      50sdiner_room_door_tiles2_18: 4628342569438464157
+      50sdiner_room_door_tiles2_19: -6810912106759225254
+      50sdiner_room_door_tiles2_2: -5928036845186944054
+      50sdiner_room_door_tiles2_20: -7685091575205875258
+      50sdiner_room_door_tiles2_21: 5675669025531096011
+      50sdiner_room_door_tiles2_22: 693945681409694298
+      50sdiner_room_door_tiles2_23: 4271020086914451553
+      50sdiner_room_door_tiles2_24: -2657460437314285501
+      50sdiner_room_door_tiles2_25: 3881506794111229480
+      50sdiner_room_door_tiles2_26: 3649175358033592994
+      50sdiner_room_door_tiles2_27: -4013992827773055346
+      50sdiner_room_door_tiles2_28: 2140726983538283640
+      50sdiner_room_door_tiles2_29: 7016230954975251924
+      50sdiner_room_door_tiles2_3: 5605461847148905256
+      50sdiner_room_door_tiles2_30: -2958674994505604160
+      50sdiner_room_door_tiles2_31: -3994491485844079333
+      50sdiner_room_door_tiles2_32: 898537929797508218
+      50sdiner_room_door_tiles2_4: 1965302097775094320
+      50sdiner_room_door_tiles2_5: -6585373650682486736
+      50sdiner_room_door_tiles2_6: 8226036800714296807
+      50sdiner_room_door_tiles2_7: 4183838564791157697
+      50sdiner_room_door_tiles2_8: 9051718315398698760
+      50sdiner_room_door_tiles2_9: -5044775491354512572
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

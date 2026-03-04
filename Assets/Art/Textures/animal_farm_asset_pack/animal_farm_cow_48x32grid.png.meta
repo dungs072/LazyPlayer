@@ -647,7 +647,28 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      animal_farm_cow_48x32grid_0: -3611972478965018730
+      animal_farm_cow_48x32grid_1: 535845447635223411
+      animal_farm_cow_48x32grid_10: -6407674417925778816
+      animal_farm_cow_48x32grid_11: -3782572046354460107
+      animal_farm_cow_48x32grid_12: -6421211208198118720
+      animal_farm_cow_48x32grid_13: -9455232199909842
+      animal_farm_cow_48x32grid_14: 1798862557640618829
+      animal_farm_cow_48x32grid_15: 499308066996875090
+      animal_farm_cow_48x32grid_16: 2366214626641175970
+      animal_farm_cow_48x32grid_17: 4325656455826821389
+      animal_farm_cow_48x32grid_18: 827737797700868396
+      animal_farm_cow_48x32grid_19: 7696086926066293798
+      animal_farm_cow_48x32grid_2: 2816703881074265267
+      animal_farm_cow_48x32grid_20: 2400807397737901536
+      animal_farm_cow_48x32grid_3: -8391824729490640475
+      animal_farm_cow_48x32grid_4: 8156604564442862412
+      animal_farm_cow_48x32grid_5: 6649985302189752393
+      animal_farm_cow_48x32grid_6: 5571286029041784533
+      animal_farm_cow_48x32grid_7: -2113660284055448001
+      animal_farm_cow_48x32grid_8: -1292792401278081113
+      animal_farm_cow_48x32grid_9: -1388682487159100279
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
