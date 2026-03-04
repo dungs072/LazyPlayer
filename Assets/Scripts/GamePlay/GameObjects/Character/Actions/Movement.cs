@@ -1,17 +1,17 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
     
-    
-    public IEnumerator Move(Vector3 position)
+    public async UniTask Move(CancellationToken cancellationToken, Vector3 position)
     {
         while (transform.position != position)
         {
             transform.position = Vector3.MoveTowards(transform.position, position, Time.deltaTime * speed);
-            yield return null;
+            await UniTask.NextFrame(PlayerLoopTiming.Update,cancellationToken);
         }
-    }
+    }   
 }

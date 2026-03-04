@@ -397,7 +397,18 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Veggies_0: 6205565189636279346
+      Veggies_1: 478288733005568584
+      Veggies_10: -7509131494276611408
+      Veggies_2: 7694450150383205056
+      Veggies_3: 3129569571661603621
+      Veggies_4: 4074009577763911729
+      Veggies_5: 7327595429916029517
+      Veggies_6: 4830978245183638759
+      Veggies_7: -1061689002231634474
+      Veggies_8: 6807549018223051320
+      Veggies_9: 6661282937888598949
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1072,7 +1072,45 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      50sdiner_room_door_tiles3_0: 3755788518877391898
+      50sdiner_room_door_tiles3_1: -928780217177294655
+      50sdiner_room_door_tiles3_10: 347957329960961637
+      50sdiner_room_door_tiles3_11: 4311529369404942064
+      50sdiner_room_door_tiles3_12: -4957847471848619316
+      50sdiner_room_door_tiles3_13: 7993953338019535560
+      50sdiner_room_door_tiles3_14: -4270651003006657170
+      50sdiner_room_door_tiles3_15: 7366456331994550958
+      50sdiner_room_door_tiles3_16: 7878812839041320634
+      50sdiner_room_door_tiles3_17: -2506042507216730879
+      50sdiner_room_door_tiles3_18: 183189907049044088
+      50sdiner_room_door_tiles3_19: 2844027695536907824
+      50sdiner_room_door_tiles3_2: -7217702999937785052
+      50sdiner_room_door_tiles3_20: 3564971934973273341
+      50sdiner_room_door_tiles3_21: 4740203023918469852
+      50sdiner_room_door_tiles3_22: -5417349858719318086
+      50sdiner_room_door_tiles3_23: -1496703219103593981
+      50sdiner_room_door_tiles3_24: 7236915268286595321
+      50sdiner_room_door_tiles3_25: -2610152994302720758
+      50sdiner_room_door_tiles3_26: 2279871638448422476
+      50sdiner_room_door_tiles3_27: -7339906888598137020
+      50sdiner_room_door_tiles3_28: 700513025295255823
+      50sdiner_room_door_tiles3_29: 7217727959455085560
+      50sdiner_room_door_tiles3_3: -5468676625490106162
+      50sdiner_room_door_tiles3_30: 749015268820748806
+      50sdiner_room_door_tiles3_31: -4552543491423785080
+      50sdiner_room_door_tiles3_32: -4252656199939340402
+      50sdiner_room_door_tiles3_33: -8818816236843831797
+      50sdiner_room_door_tiles3_34: 3964089360008952074
+      50sdiner_room_door_tiles3_35: -5897633501435168047
+      50sdiner_room_door_tiles3_36: -4150295099677044867
+      50sdiner_room_door_tiles3_37: -5082133163752661321
+      50sdiner_room_door_tiles3_4: -2185826646191081964
+      50sdiner_room_door_tiles3_5: -2004590005913021728
+      50sdiner_room_door_tiles3_6: 3727848638066866497
+      50sdiner_room_door_tiles3_7: -5989938261064160222
+      50sdiner_room_door_tiles3_8: -7384095066251059653
+      50sdiner_room_door_tiles3_9: 5130921312166455046
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

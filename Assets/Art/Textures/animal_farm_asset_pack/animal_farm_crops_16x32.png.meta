@@ -1272,7 +1272,53 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      animal_farm_crops_16x32_0: 5250483480221852296
+      animal_farm_crops_16x32_1: 6330181235358955310
+      animal_farm_crops_16x32_10: 5126506097236774899
+      animal_farm_crops_16x32_11: -1670932099349356753
+      animal_farm_crops_16x32_12: -1842577929449565226
+      animal_farm_crops_16x32_13: -8868521367140092794
+      animal_farm_crops_16x32_14: -2320403787463550138
+      animal_farm_crops_16x32_15: -4026236211506335962
+      animal_farm_crops_16x32_16: 4149084820089643613
+      animal_farm_crops_16x32_17: -6537615157011261033
+      animal_farm_crops_16x32_18: -6123162300998207011
+      animal_farm_crops_16x32_19: -1986857935558455637
+      animal_farm_crops_16x32_2: -5822381385794177716
+      animal_farm_crops_16x32_20: -6744356244917042662
+      animal_farm_crops_16x32_21: 1699582622520158575
+      animal_farm_crops_16x32_22: -1753550764464337387
+      animal_farm_crops_16x32_23: -7819126698776730566
+      animal_farm_crops_16x32_24: 7683896248679356525
+      animal_farm_crops_16x32_25: -1476754565830973182
+      animal_farm_crops_16x32_26: -8097930208503368427
+      animal_farm_crops_16x32_27: -8463179694750565809
+      animal_farm_crops_16x32_28: 589526648489300360
+      animal_farm_crops_16x32_29: -3336663175007586169
+      animal_farm_crops_16x32_3: -2704957363787251630
+      animal_farm_crops_16x32_30: 1206440049090040866
+      animal_farm_crops_16x32_31: -4330145192961229549
+      animal_farm_crops_16x32_32: 2748148743436569241
+      animal_farm_crops_16x32_33: 7353791887271424420
+      animal_farm_crops_16x32_34: 2103426179135138080
+      animal_farm_crops_16x32_35: -4671274003989535496
+      animal_farm_crops_16x32_36: 5400872953753352105
+      animal_farm_crops_16x32_37: 6594905492150065702
+      animal_farm_crops_16x32_38: -4474380624641520458
+      animal_farm_crops_16x32_39: 1554524155495624076
+      animal_farm_crops_16x32_4: -3183407562624569254
+      animal_farm_crops_16x32_40: -282408828292290017
+      animal_farm_crops_16x32_41: -512303980068121124
+      animal_farm_crops_16x32_42: -2624392842807863727
+      animal_farm_crops_16x32_43: 5512631629428380953
+      animal_farm_crops_16x32_44: -5630689238356476382
+      animal_farm_crops_16x32_45: 1063470662463224089
+      animal_farm_crops_16x32_5: 4169627301756328782
+      animal_farm_crops_16x32_6: -196503516794367875
+      animal_farm_crops_16x32_7: -8122386360579468840
+      animal_farm_crops_16x32_8: -1450777040912161850
+      animal_farm_crops_16x32_9: -9045009223682485461
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
