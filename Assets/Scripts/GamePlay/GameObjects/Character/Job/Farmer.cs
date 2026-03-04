@@ -1,7 +1,6 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using static EntityConstant;
-using FoodType = ResourceConstant.Food.FoodType;
 using Building = EntityConstant.Building;
 public class Farmer : BaseWorker
 {
@@ -15,40 +14,54 @@ public class Farmer : BaseWorker
         return "Farmer";
     }
 
-    public override IEnumerator DoJobAsync()
+    public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         var entityManager = GameManager.Instance.GamePlay.EntityManager;
         Plot plot = entityManager.GetEmptyPlot(Building.PLOT);
         while (plot != null)
         {
-            yield return movement.Move(plot.transform.position);
+            await movement.Move(cancellationToken, plot.transform.position);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             plot.PlantCrop("wheat", 10);
-            yield return new WaitForSeconds(workDuration);
+            await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             plot = entityManager.GetEmptyPlot(Building.PLOT);
         }
         plot = entityManager.GetHarvestablePlot(Building.PLOT);
         while (plot == null)
         {
-            yield return DoNothing();
+            await DoNothing(cancellationToken);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             plot = entityManager.GetHarvestablePlot(Building.PLOT);
         }
         var storage = entityManager.GetActiveEntity(Building.FARM_STORAGE);
         var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
         while (plot != null)
         {
-            yield return movement.Move(plot.transform.position);
-            yield return new WaitForSeconds(workDuration);
+            await movement.Move(cancellationToken, plot.transform.position);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
+            await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             var harvestedCrop = plot.Harvest();
-            yield return movement.Move(storage.transform.position);
+            await movement.Move(cancellationToken, storage.transform.position);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             resourcesManager.AddResource(harvestedCrop.Item1, harvestedCrop.Item2);
             plot = entityManager.GetHarvestablePlot(Building.PLOT);
         }
     }
-    private IEnumerator DoNothing()
+    private async UniTask DoNothing(CancellationToken cancellationToken)
     {
         var randomPos = GetRandomPositionInFarmMap();
-        yield return movement.Move(randomPos);
-        yield return new WaitForSeconds(1.5f);
+        await movement.Move(cancellationToken, randomPos);
+        if (cancellationToken.IsCancellationRequested) return; 
+        
+        await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
     }
     public override void FinishCurrentStep()
     {

@@ -1,4 +1,5 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using static EntityConstant;
 
@@ -15,7 +16,7 @@ public class Diner : BaseWorker
         doable.DoJobAsync(DoJobAsync);
     }
 
-    public override IEnumerator DoJobAsync()
+    public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         var entityManager = GameManager.Instance.GamePlay.EntityManager;
         var foodOrderManager = GameManager.Instance.GamePlay.FoodOrderManager;
@@ -24,18 +25,19 @@ public class Diner : BaseWorker
         if (diningTable == null)
         {
             tableOrderManager.AddTableOrder(new TableOrder() { diner = this });
-            yield break;
+            return;
         }
         var targetPos = diningTable.GetAvailableSeat();
         diningTable.OccupySeat(transform);
         if (targetPos == null)
         {
             Debug.Log("No available seat found for diner");
-            yield break;
         }
         else
         {
-            yield return movement.Move(targetPos.Value);
+            await movement.Move(cancellationToken, targetPos.Value);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             chatPanel.ShowChat("x1 bread");
             foodOrderManager.AddFoodOrder(new FoodOrder()
             {
@@ -52,10 +54,12 @@ public class Diner : BaseWorker
     {
         doable.DoJobAsync(EatFoodAsync);
     }
-    private IEnumerator EatFoodAsync()
+    private async UniTask EatFoodAsync(CancellationToken cancellationToken)
     {
         chatPanel.ShowChat("Yummy!");
-        yield return new WaitForSeconds(eatDuration);
+        await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
+        if (cancellationToken.IsCancellationRequested) return; 
+        
         var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
         resourcesManager.AddResource("money", 5);
         var pedestrian = new Pedestrian();

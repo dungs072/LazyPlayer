@@ -1,6 +1,6 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using static EntityConstant;
 
 public class Pedestrian : BaseWorker
 {
@@ -10,7 +10,7 @@ public class Pedestrian : BaseWorker
         return "Pedestrian";
     }
 
-    public override IEnumerator DoJobAsync()
+    public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         var startPos = new Vector3(65, -8, 0);
         var endPos = new Vector3(65, 8, 0);
@@ -18,29 +18,40 @@ public class Pedestrian : BaseWorker
         while (randomVar < 0.5f)
         {
             // Move from start to end
-            yield return movement.Move(endPos);
-            yield return new WaitForSeconds(workDuration);
+            await movement.Move(cancellationToken, endPos);
+            if (cancellationToken.IsCancellationRequested) return; 
+            await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
+            if (cancellationToken.IsCancellationRequested) return; 
 
             // Random walk after reaching end
             for (int i = 0; i < Random.Range(1, 4); i++)
             {
                 float randomX = Random.value > 0.5f ? startPos.x : startPos.x + 10f; // 2 verticals: 65 and 75
                 var randomPos = GetRandomVerticalPosition(randomX);
-                yield return movement.Move(randomPos);
-                yield return new WaitForSeconds(Random.Range(0.5f, 2f));
+                await movement.Move(cancellationToken, randomPos);
+                if (cancellationToken.IsCancellationRequested) return; 
+                
+                await UniTask.WaitForSeconds(Random.Range(0.5f, 2f), cancellationToken: cancellationToken);
+                if (cancellationToken.IsCancellationRequested) return; 
             }
 
             // Move back to start
-            yield return movement.Move(startPos);
-            yield return new WaitForSeconds(workDuration);
+            await movement.Move(cancellationToken, startPos);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
+            await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
+            if (cancellationToken.IsCancellationRequested) return; 
 
             // Random walk after reaching start
             for (int i = 0; i < Random.Range(1, 4); i++)
             {
                 float randomX = Random.value > 0.5f ? startPos.x : startPos.x + 10f; // 2 verticals: 65 and 75
                 var randomPos = GetRandomVerticalPosition(randomX);
-                yield return movement.Move(randomPos);
-                yield return new WaitForSeconds(Random.Range(0.5f, 2f));
+                await movement.Move(cancellationToken, randomPos);
+                if (cancellationToken.IsCancellationRequested) return; 
+                
+                await UniTask.WaitForSeconds(Random.Range(0.5f, 2f), cancellationToken: cancellationToken);
+                if (cancellationToken.IsCancellationRequested) return; 
             }
             randomVar = Random.Range(0f, 1f);
         }

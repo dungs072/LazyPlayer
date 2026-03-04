@@ -1,9 +1,7 @@
-using System.Collections;
-using UnityEngine;
-using static EntityConstant;
-using FoodType = ResourceConstant.Food.FoodType;
+using System.Threading;
 using Building = EntityConstant.Building;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+
 public class Server : BaseWorker
 {
     private float workDuration = 2f;
@@ -30,7 +28,7 @@ public class Server : BaseWorker
     }
 
 
-    public override IEnumerator DoJobAsync()
+    public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         var entityManager = GameManager.Instance.GamePlay.EntityManager;
         var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
@@ -38,15 +36,19 @@ public class Server : BaseWorker
         var servingTable = entityManager.GetActiveEntity(Building.SERVING_TABLE);
         var orderTable = entityManager.GetActiveEntity(Building.ORDER_TABLE);
         var order = foodOrderManager.GetOldestFoodOrder();
-        if (order == null) yield break;
+        if (order == null) return;
         //! race conditions
         isWorking = true;
         if (resourcesManager.IsAvailableFood(order.foodAmounts))
         {
             foodOrderManager.RemoveFoodOrder();
-            yield return movement.Move(servingTable.transform.position);
+            await movement.Move(cancellationToken, servingTable.transform.position);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             resourcesManager.ConsumeFood(order.foodAmounts);
-            yield return movement.Move(order.diningTable.transform.position);
+            await movement.Move(cancellationToken, order.diningTable.transform.position);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             order.diner.EatFood();
             var orderLeft = foodOrderManager.GetOldestFoodOrder();
             if (orderLeft != null)
@@ -56,13 +58,15 @@ public class Server : BaseWorker
             }
             else
             {
-                yield return movement.Move(orderTable.transform.position);
+                await movement.Move(cancellationToken, orderTable.transform.position);
                 isWorking = false;
             }
         }
         else
         {
-            yield return movement.Move(orderTable.transform.position);
+            await movement.Move(cancellationToken, orderTable.transform.position);
+            if (cancellationToken.IsCancellationRequested) return; 
+            
             var orderLeft = foodOrderManager.GetOldestFoodOrder();
             if (orderLeft != null)
             {
