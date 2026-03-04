@@ -172,7 +172,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FarmTilesOrange_0: -7059319609659620493
+      FarmTilesOrange_1: 8401150879603399288
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

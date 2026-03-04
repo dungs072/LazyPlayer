@@ -822,7 +822,35 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      AnimalPack_0: 2628489990699370894
+      AnimalPack_1: -8655262652309698489
+      AnimalPack_10: 4805522026969307224
+      AnimalPack_11: 4202326583428305225
+      AnimalPack_12: 2783513064877049526
+      AnimalPack_13: -7787904835470902906
+      AnimalPack_14: 2804294140043564853
+      AnimalPack_15: -6717332165104275131
+      AnimalPack_16: -574315262897862714
+      AnimalPack_17: -1281439374908768202
+      AnimalPack_18: 6813318546130817142
+      AnimalPack_19: -5093600173624783069
+      AnimalPack_2: -423283811172228680
+      AnimalPack_20: 3736345976038229784
+      AnimalPack_21: 8373649452392000624
+      AnimalPack_22: 7340419037807241083
+      AnimalPack_23: -7958266545831481602
+      AnimalPack_24: 9173521016054814580
+      AnimalPack_25: -106606482217616813
+      AnimalPack_26: -812192145978849499
+      AnimalPack_27: -1557416273999008625
+      AnimalPack_3: 8009685638168155534
+      AnimalPack_4: 1179168075505548160
+      AnimalPack_5: 9218913738909797711
+      AnimalPack_6: 1712424920664040889
+      AnimalPack_7: -5549783956329587525
+      AnimalPack_8: -165622117965579525
+      AnimalPack_9: -5865302277949696399
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

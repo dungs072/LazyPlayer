@@ -1097,7 +1097,46 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      clean_publicbathroom_door_tiles_0: -5940202111353302915
+      clean_publicbathroom_door_tiles_1: -8846034477502386419
+      clean_publicbathroom_door_tiles_10: -1363218563031607801
+      clean_publicbathroom_door_tiles_11: 2951842493327989279
+      clean_publicbathroom_door_tiles_12: 3023817840604826211
+      clean_publicbathroom_door_tiles_13: 8533103980066640032
+      clean_publicbathroom_door_tiles_14: 3350507574704557323
+      clean_publicbathroom_door_tiles_15: 2927590276026536344
+      clean_publicbathroom_door_tiles_16: -4058174115466970482
+      clean_publicbathroom_door_tiles_17: -6558854068165511696
+      clean_publicbathroom_door_tiles_18: 5624940496308730261
+      clean_publicbathroom_door_tiles_19: 4927081759989877539
+      clean_publicbathroom_door_tiles_2: 4744691589597779592
+      clean_publicbathroom_door_tiles_20: 2232898931783997247
+      clean_publicbathroom_door_tiles_21: 1188418267035514608
+      clean_publicbathroom_door_tiles_22: -1773980257183232410
+      clean_publicbathroom_door_tiles_23: 3448713103891026461
+      clean_publicbathroom_door_tiles_24: -4338456692215744870
+      clean_publicbathroom_door_tiles_25: -813926347112382217
+      clean_publicbathroom_door_tiles_26: -7467172481842797425
+      clean_publicbathroom_door_tiles_27: 1398147421780404205
+      clean_publicbathroom_door_tiles_28: 6168714442672424788
+      clean_publicbathroom_door_tiles_29: 7315608789109773578
+      clean_publicbathroom_door_tiles_3: 3180308995887780402
+      clean_publicbathroom_door_tiles_30: -510503300052554083
+      clean_publicbathroom_door_tiles_31: 8552003328983268473
+      clean_publicbathroom_door_tiles_32: -7237983649876745971
+      clean_publicbathroom_door_tiles_33: -5967533432576085143
+      clean_publicbathroom_door_tiles_34: 4383305477411129237
+      clean_publicbathroom_door_tiles_35: -6886798504099906364
+      clean_publicbathroom_door_tiles_36: 635359458757856698
+      clean_publicbathroom_door_tiles_37: -4024278568972946578
+      clean_publicbathroom_door_tiles_38: 111061356594099354
+      clean_publicbathroom_door_tiles_4: -7142626043621675696
+      clean_publicbathroom_door_tiles_5: 8222788143585261481
+      clean_publicbathroom_door_tiles_6: -2178654854459850837
+      clean_publicbathroom_door_tiles_7: 4934697811012293451
+      clean_publicbathroom_door_tiles_8: -758113463221564138
+      clean_publicbathroom_door_tiles_9: -7828518288411540139
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

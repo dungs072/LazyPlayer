@@ -447,7 +447,20 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      animal_farm_environment_itemst_0: -8026706788776837051
+      animal_farm_environment_itemst_1: 305720129920354925
+      animal_farm_environment_itemst_10: 2854223109335846366
+      animal_farm_environment_itemst_11: 7817952669305366598
+      animal_farm_environment_itemst_12: -3348983046192262603
+      animal_farm_environment_itemst_2: -4506351795614158395
+      animal_farm_environment_itemst_3: -7502469040937041161
+      animal_farm_environment_itemst_4: -6130312097450605186
+      animal_farm_environment_itemst_5: 4191327578883468982
+      animal_farm_environment_itemst_6: 7659487260019724811
+      animal_farm_environment_itemst_7: 3928955515514697150
+      animal_farm_environment_itemst_8: -7845242484266443267
+      animal_farm_environment_itemst_9: -2676035443981149818
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

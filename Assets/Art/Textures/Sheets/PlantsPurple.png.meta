@@ -547,7 +547,24 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      PlantsPurple_0: 4851315269742162767
+      PlantsPurple_1: -8704093312739074419
+      PlantsPurple_10: 5195148951598833530
+      PlantsPurple_11: 3314390642173013492
+      PlantsPurple_12: 7140625887231011755
+      PlantsPurple_13: -2401026892650439384
+      PlantsPurple_14: -7724311886540645064
+      PlantsPurple_15: -8716502731212468969
+      PlantsPurple_16: 3426135853344831437
+      PlantsPurple_2: -3324593935009478346
+      PlantsPurple_3: 4468701434233653239
+      PlantsPurple_4: 1875950292306479565
+      PlantsPurple_5: -3501750092800668080
+      PlantsPurple_6: 3295040404840157857
+      PlantsPurple_7: -1919343763460039984
+      PlantsPurple_8: -9036989234572125483
+      PlantsPurple_9: 3867549123542536577
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
