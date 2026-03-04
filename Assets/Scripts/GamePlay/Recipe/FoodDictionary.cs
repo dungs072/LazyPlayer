@@ -10,7 +10,7 @@ public class FoodDictionary : MonoBehaviour
     private readonly Dictionary<string, RecipeData> recipeDictionary = new();
     private readonly Dictionary<string, IngredientData> ingredientDictionary = new();
 
-    void Awake()
+    public void Initialize1()
     {
         for (int i = 0; i < Recipes.Length; i++)
         {

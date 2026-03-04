@@ -4,7 +4,7 @@ public class MapManager : MonoBehaviour
 {
     private EntityManager entityManager;
     private CharacterManager characterManager;
-    private void Start()
+    public void Initialize2()
     {
         entityManager = GameManager.Instance.GamePlay.EntityManager;
         characterManager = GameManager.Instance.GamePlay.CharacterManager;

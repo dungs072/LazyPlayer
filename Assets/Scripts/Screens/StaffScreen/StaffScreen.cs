@@ -5,7 +5,7 @@ using UnityEngine;
 public class StaffScreen : BaseScreen
 {
     [SerializeField] private StaffScreenView view = new();
-    void Awake()
+    public override void Initialize1()
     {
         view.closeButton.AddListener(HandleCloseButtonClicked);
     }

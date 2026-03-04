@@ -6,7 +6,7 @@ public class BuildingEditorScreen : BaseScreen
 {
     [SerializeField] private BuildingEditorScreenView view;
 
-    private void Awake()
+    public override void Initialize1()
     {
         view.closeButton.AddListener(HandleCloseButtonClicked);
         view.rotateButton.AddListener(HandleRotateButtonClicked);

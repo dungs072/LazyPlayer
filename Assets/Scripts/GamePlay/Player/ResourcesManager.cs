@@ -5,7 +5,7 @@ public class ResourcesManager : MonoBehaviour
 {
     private Dictionary<string, int> resources = new();
 
-    private void Start()
+    public void Initialize1()
     {
         // Initialize resources with default values
         SetResourceAmount("wheat", 0);

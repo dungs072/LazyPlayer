@@ -4,7 +4,7 @@ using UnityEngine;
 public class BuildingSystem : MonoBehaviour
 {
     private BuildableEntity currentBuildableEntity;
-    void Awake()
+    public void Initialize1()
     {
         EventBus.Subscribe<SpawnEntityEvent>(Build);
         EventBus.Subscribe<DestroyCurrentBuildingEvent>(DestroyCurrentBuilding);

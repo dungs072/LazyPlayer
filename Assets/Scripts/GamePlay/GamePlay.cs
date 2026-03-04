@@ -14,4 +14,20 @@ public class GamePlay : MonoBehaviour
     [field: SerializeField] public TableOrderManager TableOrderManager { get; private set; }
     [field: SerializeField] public StaffManager StaffManager { get; private set; }
     [field: SerializeField] public BuildingSystem BuildingSystem { get; private set; }
+
+    public void Initialize1()
+    {
+        EntityManager.Initialize1();
+        ResourcesManager.Initialize1();
+        FoodDictionary.Initialize1();
+        TableOrderManager.Initialize1();
+        StaffManager.Initialize1();
+        BuildingSystem.Initialize1();
+    }
+
+    public void Initialize2()
+    {
+        MapManager.Initialize2();
+        CameraController.Initialize2();
+    }
 }
