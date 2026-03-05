@@ -29,4 +29,21 @@ public class StaffScreen : BaseScreen
         await ScreenPlugin.CloseScreenAsync<StaffScreen>();
         GamePlugin.BlockInput(false);
     }
+
+    public override void PrepareFadeIn()
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public override UniTask FadeInAsync()
+    {
+        //throw new System.NotImplementedException();
+        return UniTask.CompletedTask;
+    }
+
+    public override UniTask FadeOutAsync()
+    {
+        //throw new System.NotImplementedException();
+        return UniTask.CompletedTask;
+    }
 }
