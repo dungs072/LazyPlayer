@@ -34,10 +34,10 @@ public class JobHandler
 
     public async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        do
-        {
-            await worker.DoJobAsync(cancellationToken);
-        }
-        while (isLooping);
+        await worker.DoJobAsync(cancellationToken);
+        // do
+        // {
+        // }
+        // while (isLooping);
     }
 }
