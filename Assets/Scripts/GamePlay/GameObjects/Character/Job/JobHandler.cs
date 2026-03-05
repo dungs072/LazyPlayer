@@ -1,7 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+
 [Serializable]
 public class JobHandler
 {
@@ -31,12 +32,12 @@ public class JobHandler
         isLooping = isLoopingDoJob;
     }
 
-    public IEnumerator DoJobAsync()
+    public async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         do
         {
-            yield return worker.DoJobAsync();
+            await worker.DoJobAsync(cancellationToken);
         }
-        while (isLooping);
+        while (!cancellationToken.IsCancellationRequested && isLooping);
     }
 }

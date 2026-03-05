@@ -1,6 +1,6 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using static EntityConstant;
 
 public class BaseWorker
 {
@@ -54,8 +54,8 @@ public class BaseWorker
         }
     }
 
-    public virtual IEnumerator DoJobAsync()
+    public virtual async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        yield return null;
+        await UniTask.Yield();
     }
 }

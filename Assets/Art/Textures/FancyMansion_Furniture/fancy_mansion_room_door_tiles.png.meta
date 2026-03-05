@@ -1072,7 +1072,45 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      fancy_mansion_room_door_tiles_0: -8830328111237040492
+      fancy_mansion_room_door_tiles_1: -4531178302594680012
+      fancy_mansion_room_door_tiles_10: 9039238047720048096
+      fancy_mansion_room_door_tiles_11: -4903006826528558700
+      fancy_mansion_room_door_tiles_12: -2553272651541734351
+      fancy_mansion_room_door_tiles_13: -6894173104348681035
+      fancy_mansion_room_door_tiles_14: 6807484488102637941
+      fancy_mansion_room_door_tiles_15: 3333546114041122740
+      fancy_mansion_room_door_tiles_16: -1609400255583890453
+      fancy_mansion_room_door_tiles_17: -6135849688215586390
+      fancy_mansion_room_door_tiles_18: 4492001927569832068
+      fancy_mansion_room_door_tiles_19: -188592890790021792
+      fancy_mansion_room_door_tiles_2: 6548916469715926177
+      fancy_mansion_room_door_tiles_20: 52684776330235078
+      fancy_mansion_room_door_tiles_21: 4310480822033144060
+      fancy_mansion_room_door_tiles_22: -2841140078629463042
+      fancy_mansion_room_door_tiles_23: -8624839445942103591
+      fancy_mansion_room_door_tiles_24: -8923632361875165853
+      fancy_mansion_room_door_tiles_25: 1545752659085669993
+      fancy_mansion_room_door_tiles_26: -5445847095265215364
+      fancy_mansion_room_door_tiles_27: 266859335313333306
+      fancy_mansion_room_door_tiles_28: 5681812153460605807
+      fancy_mansion_room_door_tiles_29: -1940365121976987984
+      fancy_mansion_room_door_tiles_3: -1107264127232539260
+      fancy_mansion_room_door_tiles_30: 1140295661065011130
+      fancy_mansion_room_door_tiles_31: -864067932808105189
+      fancy_mansion_room_door_tiles_32: -7693839524382406629
+      fancy_mansion_room_door_tiles_33: -1420156066621446038
+      fancy_mansion_room_door_tiles_34: -7546167096960142742
+      fancy_mansion_room_door_tiles_35: 1461740521982490801
+      fancy_mansion_room_door_tiles_36: 3019944088812673081
+      fancy_mansion_room_door_tiles_37: 5785853303221837558
+      fancy_mansion_room_door_tiles_4: -4049132464587911994
+      fancy_mansion_room_door_tiles_5: 5255824773778346923
+      fancy_mansion_room_door_tiles_6: 4178432375288537647
+      fancy_mansion_room_door_tiles_7: -8448696328808689677
+      fancy_mansion_room_door_tiles_8: 7382406162906937572
+      fancy_mansion_room_door_tiles_9: 321788988952969366
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

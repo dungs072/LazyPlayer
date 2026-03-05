@@ -1,7 +1,7 @@
 using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using static EntityConstant;
-using FoodType = ResourceConstant.Food.FoodType;
 using Building = EntityConstant.Building;
 public class Chef : BaseWorker
 {
@@ -15,7 +15,7 @@ public class Chef : BaseWorker
         return "Chef";
     }
 
-    public override IEnumerator DoJobAsync()
+    public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         var entityManager = GameManager.Instance.GamePlay.EntityManager;
         var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
@@ -26,21 +26,25 @@ public class Chef : BaseWorker
         if (canCook)
         {
             var kitchen = entityManager.GetActiveEntity(Building.KITCHEN);
-            yield return movement.Move(kitchen.transform.position);
-            yield return new WaitForSeconds(workDuration);
+            await movement.Move(cancellationToken, kitchen.transform.position);
+               
+            await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
+               
             resourcesManager.ConsumeResources(breadRecipe.GetIngredients());
             var servingTable = entityManager.GetActiveEntity(Building.SERVING_TABLE);
-            yield return movement.Move(servingTable.transform.position);
+            await movement.Move(cancellationToken, servingTable.transform.position);
             resourcesManager.AddResource("bread", 1);
             foodOrderManager.ReadyToServeFood();
         }
-        yield return null;
+        
+        await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken);
     }
-    private IEnumerator DoNothing()
+    private async UniTask DoNothing(CancellationToken cancellationToken)
     {
         var randomPos = GetRandomPositionInScreen();
-        yield return movement.Move(randomPos);
-        yield return new WaitForSeconds(1.5f);
+        await movement.Move(cancellationToken, randomPos);
+       
+        await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
     }
     public override void FinishCurrentStep()
     {

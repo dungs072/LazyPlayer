@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Jobs;
 using UnityEngine;
 using System;
-
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 
 [RequireComponent(typeof(Movement))]
@@ -17,6 +15,8 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
 
     public CharacterData CharacterData => characterData;
 
+    private CancellationTokenSource currentCTS = null;
+
     void Awake()
     {
         movement = GetComponent<Movement>();
@@ -25,8 +25,10 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
     }
     public void StartJob()
     {
-        StopAllCoroutines();
-        StartCoroutine(jobHandler.DoJobAsync());
+        currentCTS?.Cancel();
+        currentCTS?.Dispose();
+        currentCTS = new CancellationTokenSource();
+        jobHandler.DoJobAsync(currentCTS.Token).Forget();
     }
 
     public void SetJob(BaseWorker worker)
@@ -40,10 +42,12 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
         jobHandler.SetIsLoopingDoJob(isLoopingDoJob);
     }
 
-    public void DoJobAsync(Func<IEnumerator> action)
+    public void DoJobAsync(Func<CancellationToken, UniTask> action)
     {
-        StopAllCoroutines();
-        StartCoroutine(action());
+        currentCTS?.Cancel();
+        currentCTS?.Dispose();
+        currentCTS = new CancellationTokenSource();
+        action(currentCTS.Token).Forget();
     }
 
     public void SetCharacterData(CharacterData data)
@@ -53,4 +57,10 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
         characterData = data;
     }
 
+    private void OnDestroy()
+    {
+        currentCTS?.Cancel();
+        currentCTS?.Dispose();
+        currentCTS = null;
+    }
 }
