@@ -15,13 +15,14 @@ public class DashboardScreen : BaseScreen
 
     private async UniTask HandleStartGameButtonClicked()
     {
-        PrepareFadeIn();
-        await FadeInAsync();
+        await FadeOutAsync();
+        await ScreenPlugin.CloseScreenAsync<DashboardScreen>();
+        await ScreenPlugin.OpenScreenAsync<GameScreen>();
     }
 
     private async UniTask HandleOptionsButtonClicked()
     {
-        await UniTask.CompletedTask;
+        await UniTask.Yield();
     }
 
     public override void PrepareData()
@@ -41,6 +42,6 @@ public class DashboardScreen : BaseScreen
 
     public override async UniTask FadeOutAsync()
     {
-        await UniTask.CompletedTask;
+        await view.FadeOutAsync();
     }
 }
