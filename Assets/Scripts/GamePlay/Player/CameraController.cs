@@ -3,7 +3,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private Camera mainCamera;
-    private void Start()
+    public void Initialize2()
     {
         mainCamera = Camera.main;
         EventBus.Subscribe<PreButtonClickedEvent>(MovePreviousMap);

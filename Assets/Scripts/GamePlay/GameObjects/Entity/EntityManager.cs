@@ -66,7 +66,7 @@ public class EntityManager : MonoBehaviour
         return null;
     }
 
-    void Awake()
+    public void Initialize1()
     {
         //! fix here
         QueryBus.Subscribe<GetBuildingDataListQuery, IReadOnlyList<BuildableEntity>>(query => GetBuildingDataList());

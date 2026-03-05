@@ -4,9 +4,7 @@ using System.Collections.Generic;
 public class GameScreen : BaseScreen
 {
     [SerializeField] private GameScreenView view = new();
-
-
-    private void Awake()
+    public override void Initialize1()
     {
         EventBus.Subscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
         view.preButton.AddListener(OnPreButtonClicked);

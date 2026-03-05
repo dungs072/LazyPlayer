@@ -7,7 +7,7 @@ public class StaffManager : MonoBehaviour
     private List<Character> staffs = new();
 
 
-    void Awake()
+    public void Initialize1()
     {
         QueryBus.Subscribe<GetStaffDataListQuery, IReadOnlyList<CharacterData>>(query => GetStaffDataList());
     }

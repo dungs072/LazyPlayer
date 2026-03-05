@@ -22,9 +22,14 @@ public class GameManager : MonoBehaviour
         }
         new GamePlugin().Init();
         new ScreenPlugin(ScreensManager);
+        
+        GamePlay.Initialize1();
+        ScreensManager.Initialize1();
     }
     private void Start()
     {
         ScreenPlugin.OpenScreenAsync<GameScreen>().Forget();
+        
+        GamePlay.Initialize2();
     }
 }

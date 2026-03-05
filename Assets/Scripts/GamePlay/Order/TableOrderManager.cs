@@ -9,7 +9,7 @@ public class TableOrderManager : MonoBehaviour
 {
     public List<TableOrder> tableOrders = new();
 
-    void Awake()
+    public void Initialize1()
     {
         DiningTable.OnAvailableDiningTable += HandleAvailableDiningTable;
     }

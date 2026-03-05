@@ -6,7 +6,7 @@ public class BuilderScreen : BaseScreen
 {
     [SerializeField] private BuilderScreenView view;
 
-    void Awake()
+    public override void Initialize1()
     {
         view.closeButton.AddListener(HandleCloseButtonClicked);
     }

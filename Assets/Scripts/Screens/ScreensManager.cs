@@ -7,11 +7,12 @@ public class ScreensManager : MonoBehaviour
 {
     [SerializeField] private List<BaseScreen> screens;
     Dictionary<Type, BaseScreen> screenDictionary;
-    private void Awake()
+    public void Initialize1()
     {
         screenDictionary = new Dictionary<Type, BaseScreen>();
         foreach (var screen in screens)
         {
+            screen.Initialize1();
             screenDictionary.Add(screen.GetType(), screen);
             screen.gameObject.SetActive(false);
         }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BaseScreen : MonoBehaviour
 {
+    public virtual void Initialize1() {}
+    
     protected ScreenData screenData;
 
     protected T GetScreenData<T>() where T : ScreenData
