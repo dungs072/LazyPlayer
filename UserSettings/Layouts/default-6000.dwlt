@@ -389,9 +389,9 @@ MonoBehaviour:
       x: 0
       y: 21
       width: 332
-      height: 318.33334
+      height: 318
     m_Scale: {x: 0.34583333, y: 0.34583333}
-    m_Translation: {x: 166, y: 159.16667}
+    m_Translation: {x: 166, y: 159}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
@@ -399,12 +399,12 @@ MonoBehaviour:
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
       x: -480
-      y: -460.24097
+      y: -459.75903
       width: 960
-      height: 920.48193
+      height: 919.51807
     m_MinimalGUI: 1
   m_defaultScale: 0.34583333
-  m_LastWindowPixelSize: {x: 332, y: 339.33334}
+  m_LastWindowPixelSize: {x: 332, y: 339}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -1056,9 +1056,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -1.5587786, y: 1.7786843, z: 0.02632336}
+    m_Target: {x: -4.7693005, y: 0.47775847, z: 0.05959586}
     speed: 2
-    m_Value: {x: 5.4912596, y: 2.7582395, z: -0.3086735}
+    m_Value: {x: -1.5587786, y: 1.7786843, z: 0.02632336}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1108,9 +1108,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 7.3673134
+    m_Target: 4.040059
     speed: 2
-    m_Value: 13.011241
+    m_Value: 7.3673134
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1279,7 +1279,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 360}
     m_SelectedIDs: f2c00000
     m_LastClickedID: 49394
-    m_ExpandedIDs: 0000000018ed00001aed00001ced00001eed000020ed000022ed000024ed0000
+    m_ExpandedIDs: 00000000eac50000ecc50000eec50000f0c50000f2c50000f4c50000f6c50000f8c50000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1308,7 +1308,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000018ed00001aed00001ced00001eed000020ed000022ed000024ed0000
+    m_ExpandedIDs: 00000000eac50000ecc50000eec50000f0c50000f2c50000f4c50000f6c50000f8c50000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

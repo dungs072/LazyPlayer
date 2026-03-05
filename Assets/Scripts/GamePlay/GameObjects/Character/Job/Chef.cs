@@ -36,6 +36,8 @@ public class Chef : BaseWorker
             resourcesManager.AddResource("bread", 1);
             foodOrderManager.ReadyToServeFood();
         }
+        
+        await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken);
     }
     private async UniTask DoNothing(CancellationToken cancellationToken)
     {
