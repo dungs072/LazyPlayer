@@ -42,6 +42,7 @@ namespace BaseEngine
         private bool isClicking = false;
         private CancellationTokenSource cts;
         private Func<UniTask> OnClickedAsync;
+        public RectTransform RectTransform => rectTransform;
 
         void Awake()
         {
