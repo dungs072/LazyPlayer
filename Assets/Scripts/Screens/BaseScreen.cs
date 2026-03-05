@@ -2,7 +2,8 @@ using System.Collections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class BaseScreen : MonoBehaviour
+
+public abstract class BaseScreen : MonoBehaviour
 {
     public virtual void Initialize1() {}
     
@@ -25,30 +26,21 @@ public class BaseScreen : MonoBehaviour
     /// Prepare the screen data here, this will be called before OpenAsync, so the screen will be ready when it opens
     /// </summary>
 
-    public virtual void PrepareData()
-    {
-        // prepare data here
-    }
+    public abstract void PrepareData();
     /// <summary>
     /// Prepare the screen for fade in animation, this will be called before OpenAsync, so the screen will be ready when it opens
     /// </summary>
-    public virtual void PrepareFadeIn()
-    {
-        // prepare animation here
-    }
+    public abstract void PrepareFadeIn();
     /// <summary>
     /// Play the fade in animation here, this will be called after OpenAsync, so the screen will be active when it plays
     /// </summary>
-    public virtual async UniTask FadeInAsync()
-    {
-        // play animation here
-        await UniTask.NextFrame();
-    }
+    public abstract UniTask FadeInAsync();  
 
 
     public async UniTask CloseAsync()
     {
-        await UniTask.Yield();
+        await FadeOutAsync();
         gameObject.SetActive(false);
     }
+    public abstract UniTask FadeOutAsync();
 }
