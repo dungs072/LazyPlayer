@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   increasePercentHitArea: 0.1
-  isClickedOnHitArea: 1
+  isClickedOnHitArea: 0
   buttonType: 1
   scaleDownFactor: 0.9
   scaleUpFactor: 1
