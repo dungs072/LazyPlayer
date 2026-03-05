@@ -23,7 +23,7 @@ namespace BaseEngine
     {
         private Action OnClicked;
         [SerializeField] private float increasePercentHitArea = 0.1f;
-        [SerializeField] private bool isClickedOnHitArea = true;
+        [SerializeField] private bool isClickedOnHitArea = false;
         [SerializeField] private ButtonType buttonType = ButtonType.NONE;
         // for scale button only
         [Header("Scale button")]
