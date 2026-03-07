@@ -84,7 +84,7 @@ public class EntityManager : MonoBehaviour
         }
         QueryBus.Subscribe<GetActiveEntityQuery, Entity>(query => GetActiveEntity(query.entityName));
         QueryBus.Subscribe<GetEmptyPlotQuery, Plot>(query => GetEmptyPlot(query.entityName));
-        QueryBus.Subscribe<GetHarvestablePlotQuery, Plot>(query => GetEmptyPlot(query.entityName));
+        QueryBus.Subscribe<GetHarvestablePlotQuery, Plot>(query => GetHarvestablePlot(query.entityName));
     }
     //! fix here
     private IReadOnlyList<BuildableEntity> GetBuildingDataList()
