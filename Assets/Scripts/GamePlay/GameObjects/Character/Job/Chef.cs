@@ -46,10 +46,6 @@ public class Chef : BaseWorker
        
         await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
     }
-    public override void FinishCurrentStep()
-    {
-        currentStepIndex++;
-    }
 
     private Vector3 GetRandomPositionInScreen()
     {

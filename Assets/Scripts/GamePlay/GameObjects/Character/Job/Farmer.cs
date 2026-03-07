@@ -55,10 +55,6 @@ public class Farmer : BaseWorker
         await movement.Move(cancellationToken, randomPos);
         await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
     }
-    public override void FinishCurrentStep()
-    {
-        currentStepIndex++;
-    }
 
     private Vector3 GetRandomPositionInFarmMap()
     {

@@ -9,8 +9,6 @@ public class BaseWorker
     protected IDoable doable;
     protected Transform transform;
     protected ChatPanel chatPanel;
-    private JobData jobData;
-    protected int currentStepIndex = 0;
     public virtual string JobName()
     {
         return "BaseWorker";
@@ -35,25 +33,7 @@ public class BaseWorker
     {
         this.doable = doable;
     }
-
-    public StepData GetStepData()
-    {
-        if (currentStepIndex == jobData.Steps.Length)
-        {
-            return null;
-        }
-        return jobData.Steps[currentStepIndex];
-    }
-
-    public virtual void FinishCurrentStep()
-    {
-        currentStepIndex++;
-        if (currentStepIndex >= jobData.Steps.Length)
-        {
-            currentStepIndex = 0;
-        }
-    }
-
+    
     public virtual async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         await UniTask.Yield();
