@@ -23,6 +23,9 @@ public class GamePlay : MonoBehaviour
         TableOrderManager.Initialize1();
         StaffManager.Initialize1();
         BuildingSystem.Initialize1();
+        
+        var jobFactory = new JobFactory(EntityManager, ResourcesManager, FoodDictionary, FoodOrderManager, TableOrderManager);
+        MapManager.Initialize1(EntityManager, CharacterManager, StaffManager, jobFactory);
     }
 
     public void Initialize2()

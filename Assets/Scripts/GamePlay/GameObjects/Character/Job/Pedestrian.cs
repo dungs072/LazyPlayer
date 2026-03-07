@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Pedestrian : BaseWorker
 {
+    private JobFactory jobFactory;
+    public Pedestrian(JobFactory jobFactory)
+    {
+        this.jobFactory = jobFactory;
+    }
+    
     private float workDuration = 2f;
     public override string JobName()
     {
@@ -30,7 +36,7 @@ public class Pedestrian : BaseWorker
                 await movement.Move(cancellationToken, randomPos);
                        
                 await UniTask.WaitForSeconds(Random.Range(0.5f, 2f), cancellationToken: cancellationToken);
-                   }
+            }
 
             // Move back to start
             await movement.Move(cancellationToken, startPos);
@@ -46,10 +52,10 @@ public class Pedestrian : BaseWorker
                 await movement.Move(cancellationToken, randomPos);
                        
                 await UniTask.WaitForSeconds(Random.Range(0.5f, 2f), cancellationToken: cancellationToken);
-                   }
+            }
             randomVar = Random.Range(0f, 1f);
         }
-        var diner = new Diner();
+        var diner = jobFactory.CreateDiner();
         switchableJob.SetJob(diner);
         diner.DoJob();
 
