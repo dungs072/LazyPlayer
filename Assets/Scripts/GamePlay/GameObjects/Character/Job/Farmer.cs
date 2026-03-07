@@ -4,13 +4,11 @@ using UnityEngine;
 using Building = EntityConstant.Building;
 public class Farmer : BaseWorker
 {
-    private ResourcesManager resourcesManager;
     private float workDuration = 2f;
     
-    public Farmer(float workDuration, ResourcesManager resourcesManager) : base()
+    public Farmer(float workDuration) : base()
     {
         this.workDuration = workDuration;
-        this.resourcesManager = resourcesManager;
     }
     public override string JobName()
     {
@@ -48,7 +46,7 @@ public class Farmer : BaseWorker
             var harvestedCrop = plot.Harvest();
             await movement.Move(cancellationToken, storage.transform.position);
             
-            resourcesManager.AddResource(harvestedCrop.Item1, harvestedCrop.Item2);
+            EventBus.Publish(new AddResourceEvent(harvestedCrop.Item1, harvestedCrop.Item2));
             plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery(Building.PLOT)); 
         }
     }
