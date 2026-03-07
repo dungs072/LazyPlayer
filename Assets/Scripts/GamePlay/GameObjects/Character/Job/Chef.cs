@@ -5,16 +5,14 @@ using UnityEngine;
 using Building = EntityConstant.Building;
 public class Chef : BaseWorker
 {
-    private EntityManager entityManager;
     private ResourcesManager resourcesManager;
     private FoodDictionary foodDictionary;
     private FoodOrderManager foodOrderManager;
     
     private float workDuration = 5f;
-    public Chef(float workDuration, EntityManager entityManager, ResourcesManager resourcesManager, FoodDictionary foodDictionary, FoodOrderManager foodOrderManager) : base()
+    public Chef(float workDuration, ResourcesManager resourcesManager, FoodDictionary foodDictionary, FoodOrderManager foodOrderManager) : base()
     {
         this.workDuration = workDuration;
-        this.entityManager = entityManager;
         this.resourcesManager = resourcesManager;
         this.foodDictionary = foodDictionary;
         this.foodOrderManager = foodOrderManager;
@@ -30,13 +28,13 @@ public class Chef : BaseWorker
         var canCook = resourcesManager.IsAvailableToCreateFood(breadRecipe.GetIngredients());
         if (canCook)
         {
-            var kitchen = entityManager.GetActiveEntity(Building.KITCHEN);
+            var kitchen = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.KITCHEN));
             await movement.Move(cancellationToken, kitchen.transform.position);
                
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
                
             resourcesManager.ConsumeResources(breadRecipe.GetIngredients());
-            var servingTable = entityManager.GetActiveEntity(Building.SERVING_TABLE);
+            var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.SERVING_TABLE));
             await movement.Move(cancellationToken, servingTable.transform.position);
             resourcesManager.AddResource("bread", 1);
             foodOrderManager.ReadyToServeFood();
