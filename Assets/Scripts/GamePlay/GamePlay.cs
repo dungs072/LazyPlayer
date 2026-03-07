@@ -23,6 +23,7 @@ public class GamePlay : MonoBehaviour
         TableOrderManager.Initialize1();
         StaffManager.Initialize1();
         BuildingSystem.Initialize1();
+        MapManager.Initialize1(EntityManager, CharacterManager, StaffManager);
     }
 
     public void Initialize2()
