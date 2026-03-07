@@ -82,6 +82,9 @@ public class EntityManager : MonoBehaviour
                 Debug.LogWarning($"Duplicate entity name detected: {entity.EntityName}. Skipping.");
             }
         }
+        QueryBus.Subscribe<GetActiveEntityQuery, Entity>(query => GetActiveEntity(query.entityName));
+        QueryBus.Subscribe<GetEmptyPlotQuery, Plot>(query => GetEmptyPlot(query.entityName));
+        QueryBus.Subscribe<GetHarvestablePlotQuery, Plot>(query => GetEmptyPlot(query.entityName));
     }
     //! fix here
     private IReadOnlyList<BuildableEntity> GetBuildingDataList()

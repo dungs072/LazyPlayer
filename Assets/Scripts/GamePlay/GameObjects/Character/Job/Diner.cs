@@ -1,19 +1,18 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UnityEditor.Search;
 using UnityEngine;
 using static EntityConstant;
 
 public class Diner : BaseWorker
 {
-    private EntityManager entityManager;
     private ResourcesManager resourcesManager;
     private FoodOrderManager foodOrderManager;
     private TableOrderManager tableOrderManager;
     private JobFactory jobFactory;
 
-    public Diner(EntityManager entityManager, ResourcesManager resourcesManager, FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager, JobFactory jobFactory)
+    public Diner(ResourcesManager resourcesManager, FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager, JobFactory jobFactory)
     {
-        this.entityManager = entityManager;
         this.resourcesManager = resourcesManager;
         this.foodOrderManager = foodOrderManager;
         this.tableOrderManager = tableOrderManager;
@@ -33,7 +32,7 @@ public class Diner : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        diningTable = entityManager.GetAvailableDiningTable(Building.DINING_TABLE);
+        diningTable = QueryBus.Query<GetActiveEntityQuery, DiningTable>(new GetActiveEntityQuery(Building.DINING_TABLE));
         if (diningTable == null)
         {
             tableOrderManager.AddTableOrder(new TableOrder() { diner = this });
