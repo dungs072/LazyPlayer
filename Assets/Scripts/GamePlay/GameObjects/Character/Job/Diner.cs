@@ -6,14 +6,12 @@ using static EntityConstant;
 
 public class Diner : BaseWorker
 {
-    private ResourcesManager resourcesManager;
     private FoodOrderManager foodOrderManager;
     private TableOrderManager tableOrderManager;
     private JobFactory jobFactory;
 
-    public Diner(ResourcesManager resourcesManager, FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager, JobFactory jobFactory)
+    public Diner(FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager, JobFactory jobFactory)
     {
-        this.resourcesManager = resourcesManager;
         this.foodOrderManager = foodOrderManager;
         this.tableOrderManager = tableOrderManager;
         this.jobFactory = jobFactory;
@@ -69,7 +67,7 @@ public class Diner : BaseWorker
         chatPanel.ShowChat("Yummy!");
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
        
-        resourcesManager.AddResource("money", 5);
+        EventBus.Publish(new AddResourceEvent("money", 5));
         var pedestrian = jobFactory.CreatePedestrian();
         switchableJob.SetJob(pedestrian);
         diningTable.VacateSeat(transform);

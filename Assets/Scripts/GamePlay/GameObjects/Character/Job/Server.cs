@@ -4,15 +4,13 @@ using Cysharp.Threading.Tasks;
 
 public class Server : BaseWorker
 {
-    private ResourcesManager resourcesManager;
     private FoodOrderManager foodOrderManager;
     
     private float workDuration = 2f;
     private bool isWorking = false;
-    public Server(float workDuration, ResourcesManager resourcesManager, FoodOrderManager foodOrderManager) : base()
+    public Server(float workDuration, FoodOrderManager foodOrderManager) : base()
     {
         this.workDuration = workDuration;
-        this.resourcesManager = resourcesManager;
         this.foodOrderManager = foodOrderManager;
         FoodOrderManager.OnFoodOrderAdded += HandleFoodOrderAdded;
 
@@ -41,12 +39,13 @@ public class Server : BaseWorker
         if (order == null) return;
         //! race conditions
         isWorking = true;
-        if (resourcesManager.IsAvailableFood(order.foodAmounts))
+        var isAvailableFood = QueryBus.Query<IsAvailableFoodQuery, bool>(new IsAvailableFoodQuery(order.foodAmounts));
+        if (isAvailableFood)
         {
             foodOrderManager.RemoveFoodOrder();
             await movement.Move(cancellationToken, servingTable.transform.position);
                
-            resourcesManager.ConsumeFood(order.foodAmounts);
+            EventBus.Publish(new ConsumeFoodEvent(order.foodAmounts));
             await movement.Move(cancellationToken, order.diningTable.transform.position);
                
             order.diner.EatFood();

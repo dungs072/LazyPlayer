@@ -1,13 +1,11 @@
 public class JobFactory
 {
-    private ResourcesManager resourcesManager;
     private FoodDictionary foodDictionary;
     private FoodOrderManager foodOrderManager;
     private TableOrderManager tableOrderManager;
     
-    public JobFactory(EntityManager entityManager, ResourcesManager resourcesManager, FoodDictionary foodDictionary,  FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager)
+    public JobFactory(FoodDictionary foodDictionary,  FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager)
     {
-        this.resourcesManager = resourcesManager;
         this.foodDictionary = foodDictionary;
         this.foodOrderManager = foodOrderManager;
         this.tableOrderManager = tableOrderManager;
@@ -15,17 +13,17 @@ public class JobFactory
 
     public Chef CreateChef(float workDuration)
     {
-        return new Chef(workDuration, resourcesManager, foodDictionary, foodOrderManager);
+        return new Chef(workDuration, foodDictionary, foodOrderManager);
     }
 
     public Farmer CreateFarmer(float workDuration)
     {
-        return new Farmer(workDuration, resourcesManager);
+        return new Farmer(workDuration);
     }
 
     public Diner CreateDiner()
     {
-        return new Diner(resourcesManager, foodOrderManager, tableOrderManager, this);
+        return new Diner(foodOrderManager, tableOrderManager, this);
     }
 
     public Pedestrian CreatePedestrian()
@@ -35,6 +33,6 @@ public class JobFactory
 
     public Server CreateServer(float workDuration)
     {
-        return new Server(workDuration, resourcesManager, foodOrderManager);
+        return new Server(workDuration, foodOrderManager);
     }
 }
