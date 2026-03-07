@@ -4,10 +4,15 @@ using UnityEngine;
 using Building = EntityConstant.Building;
 public class Farmer : BaseWorker
 {
+    private EntityManager entityManager;
+    private ResourcesManager resourcesManager;
     private float workDuration = 2f;
-    public Farmer(float workDuration) : base()
+    
+    public Farmer(float workDuration, EntityManager entityManager, ResourcesManager resourcesManager) : base()
     {
         this.workDuration = workDuration;
+        this.entityManager = entityManager;
+        this.resourcesManager = resourcesManager;
     }
     public override string JobName()
     {
@@ -16,7 +21,6 @@ public class Farmer : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var entityManager = GameManager.Instance.GamePlay.EntityManager;
         Plot plot = entityManager.GetEmptyPlot(Building.PLOT);
         while (plot != null)
         {
@@ -35,7 +39,6 @@ public class Farmer : BaseWorker
             plot = entityManager.GetHarvestablePlot(Building.PLOT);
         }
         var storage = entityManager.GetActiveEntity(Building.FARM_STORAGE);
-        var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
         while (plot != null)
         {
             await movement.Move(cancellationToken, plot.transform.position);

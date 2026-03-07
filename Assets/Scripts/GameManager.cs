@@ -9,22 +9,8 @@ public class GameManager : MonoBehaviour
     [field: SerializeField]
     public ScreensManager ScreensManager { get; private set; }
 
-    private static GameManager instance;
-    public static GameManager Instance
-    {
-        get { return instance; }
-    }
-
     private void Awake()
     {
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            instance = this;
-        }
         new GamePlugin().Init();
         new ScreenPlugin(ScreensManager);
 

@@ -5,6 +5,21 @@ using static EntityConstant;
 
 public class Diner : BaseWorker
 {
+    private EntityManager entityManager;
+    private ResourcesManager resourcesManager;
+    private FoodOrderManager foodOrderManager;
+    private TableOrderManager tableOrderManager;
+    private JobFactory jobFactory;
+
+    public Diner(EntityManager entityManager, ResourcesManager resourcesManager, FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager, JobFactory jobFactory)
+    {
+        this.entityManager = entityManager;
+        this.resourcesManager = resourcesManager;
+        this.foodOrderManager = foodOrderManager;
+        this.tableOrderManager = tableOrderManager;
+        this.jobFactory = jobFactory;
+    }
+    
     private float eatDuration = 5f;
     private DiningTable diningTable;
     public override string JobName()
@@ -18,9 +33,6 @@ public class Diner : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var entityManager = GameManager.Instance.GamePlay.EntityManager;
-        var foodOrderManager = GameManager.Instance.GamePlay.FoodOrderManager;
-        var tableOrderManager = GameManager.Instance.GamePlay.TableOrderManager;
         diningTable = entityManager.GetAvailableDiningTable(Building.DINING_TABLE);
         if (diningTable == null)
         {
@@ -58,9 +70,8 @@ public class Diner : BaseWorker
         chatPanel.ShowChat("Yummy!");
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
        
-        var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
         resourcesManager.AddResource("money", 5);
-        var pedestrian = new Pedestrian();
+        var pedestrian = jobFactory.CreatePedestrian();
         switchableJob.SetJob(pedestrian);
         diningTable.VacateSeat(transform);
         doable.DoJobAsync(pedestrian.DoJobAsync);
