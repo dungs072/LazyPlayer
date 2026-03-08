@@ -5,7 +5,12 @@ using UnityEngine;
 [Serializable]
 public class BuildingEditorScreenView
 {
-    [SerializeField] public MagicButton closeButton;
-    [SerializeField] public MagicButton rotateButton;
-    [SerializeField] public MagicButton buildButton;
+    [SerializeField]
+    public BaseEngine.MagicButtonWithIcon closeButton;
+
+    [SerializeField]
+    public BaseEngine.MagicButtonWithIcon rotateButton;
+
+    [SerializeField]
+    public BaseEngine.MagicButtonWithIcon buildButton;
 }

@@ -20,31 +20,30 @@ public class MenuGamePlayPanel : MonoBehaviour
     private RectTransform tab3;
 
     [SerializeField]
-    private MagicButton manageButton;
+    private MagicButtonWithIcon manageButton;
 
     [SerializeField]
-    private MagicButton shopButton;
+    private MagicButtonWithIcon shopButton;
 
     [SerializeField]
-    private MagicButton galleryButton;
+    private MagicButtonWithIcon galleryButton;
 
     [SerializeField]
-    private MagicButton settingButton;
+    private MagicButtonWithIcon settingButton;
 
     [SerializeField]
-    private MagicButton[] tab2Buttons;
+    private MagicButtonWithIcon closeButton;
 
     [SerializeField]
-    private MagicButton closeButton;
+    private Tab2ButtonsPanel tab2ButtonPanel;
     private float originalWidth;
-    private List<MagicButton> tab1Buttons;
-    private MagicButton selectedTab1Button;
-    private MagicButton selectedTab2Button;
+    private List<MagicButtonWithIcon> tab1Buttons;
+    private MagicButtonWithIcon selectedTab1Button;
 
     void Awake()
     {
         originalWidth = rectTransform.rect.width;
-        tab1Buttons = new List<MagicButton>
+        tab1Buttons = new List<MagicButtonWithIcon>
         {
             manageButton,
             shopButton,
@@ -82,7 +81,8 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleManageButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        SetSelectedTab1Button(ref selectedTab1Button, manageButton);
+        SetSelectedTab1Button(manageButton);
+        tab2ButtonPanel.SetTab2Buttons(ButtonTab1Type.MANAGEMENT);
         await OpenTabsMenuAsync();
         GamePlugin.BlockInput(false);
     }
@@ -90,7 +90,8 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleShopButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        SetSelectedTab1Button(ref selectedTab1Button, shopButton);
+        SetSelectedTab1Button(shopButton);
+        tab2ButtonPanel.SetTab2Buttons(ButtonTab1Type.SHOP);
         await OpenTabsMenuAsync();
         GamePlugin.BlockInput(false);
     }
@@ -98,7 +99,8 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleGalleryButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        SetSelectedTab1Button(ref selectedTab1Button, galleryButton);
+        SetSelectedTab1Button(galleryButton);
+        tab2ButtonPanel.SetTab2Buttons(ButtonTab1Type.GALLERY);
         await OpenTabsMenuAsync();
         GamePlugin.BlockInput(false);
     }
@@ -106,19 +108,20 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleSettingButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        SetSelectedTab1Button(ref selectedTab1Button, settingButton);
+        SetSelectedTab1Button(settingButton);
+        tab2ButtonPanel.SetTab2Buttons(ButtonTab1Type.SETTING);
         await OpenTabsMenuAsync();
         GamePlugin.BlockInput(false);
     }
 
-    private void SetSelectedTab1Button(ref MagicButton selectedButton, MagicButton button)
+    private void SetSelectedTab1Button(MagicButtonWithIcon button)
     {
-        if (selectedButton != null)
+        if (selectedTab1Button != null)
         {
-            var prevImage = selectedButton.GetComponent<Image>();
+            var prevImage = selectedTab1Button.GetComponent<Image>();
             prevImage.color = Color.white;
         }
-        selectedButton = button;
+        selectedTab1Button = button;
         if (button == null)
             return;
         var image = button.GetComponent<Image>();
@@ -154,7 +157,7 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleCloseButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        SetSelectedTab1Button(ref selectedTab1Button, null);
+        SetSelectedTab1Button(null);
         await rectTransform
             .DOSizeDelta(new Vector2(tab1.rect.width, rectTransform.sizeDelta.y), 0.35f)
             .SetEase(Ease.InQuart)

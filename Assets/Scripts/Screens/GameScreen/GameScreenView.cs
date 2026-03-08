@@ -21,16 +21,16 @@ public class GameScreenView
     public TMP_Text moneyAmount;
 
     [SerializeField]
-    public MagicButton preButton;
+    public BaseEngine.MagicButtonWithIcon preButton;
 
     [SerializeField]
-    public MagicButton nextButton;
+    public BaseEngine.MagicButtonWithIcon nextButton;
 
     [SerializeField]
-    public MagicButton staffButton;
+    public BaseEngine.MagicButtonWithIcon staffButton;
 
     [SerializeField]
-    public MagicButton builderButton;
+    public BaseEngine.MagicButtonWithIcon builderButton;
 
     [HideInInspector]
     public int currentMapIndex = 0;
