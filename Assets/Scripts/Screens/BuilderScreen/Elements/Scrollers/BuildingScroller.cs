@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class BuildingScroller : MonoBehaviour, IRecyclableScrollRectDataSource
 {
-    [SerializeField] private RecyclableScrollRect _recyclableScrollRect;
+    [SerializeField]
+    private RecyclableScrollRect _recyclableScrollRect;
 
     private IReadOnlyList<BuildableEntity> _contactList = new List<BuildableEntity>();
+
     public void SetData(IReadOnlyList<BuildableEntity> data)
     {
         _contactList = data;
@@ -20,6 +22,7 @@ public class BuildingScroller : MonoBehaviour, IRecyclableScrollRectDataSource
     {
         return _contactList.Count;
     }
+
     public void SetCell(ICell cell, int index)
     {
         var item = cell as BuildingBlock;
