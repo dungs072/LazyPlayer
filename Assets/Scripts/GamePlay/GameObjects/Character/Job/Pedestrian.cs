@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class Pedestrian : BaseWorker
 {
-    private JobFactory jobFactory;
-    public Pedestrian(JobFactory jobFactory)
-    {
-        this.jobFactory = jobFactory;
-    }
-    
     private float workDuration = 2f;
     public override string JobName()
     {
@@ -55,7 +49,7 @@ public class Pedestrian : BaseWorker
             }
             randomVar = Random.Range(0f, 1f);
         }
-        var diner = jobFactory.CreateDiner();
+        var diner = new Diner(); 
         switchableJob.SetJob(diner);
         diner.DoJob();
 

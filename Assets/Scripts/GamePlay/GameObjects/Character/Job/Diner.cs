@@ -6,15 +6,6 @@ using static EntityConstant;
 
 public class Diner : BaseWorker
 {
-    private TableOrderManager tableOrderManager;
-    private JobFactory jobFactory;
-
-    public Diner(TableOrderManager tableOrderManager, JobFactory jobFactory)
-    {
-        this.tableOrderManager = tableOrderManager;
-        this.jobFactory = jobFactory;
-    }
-
     private float eatDuration = 5f;
     private DiningTable diningTable;
 
@@ -35,7 +26,7 @@ public class Diner : BaseWorker
         );
         if (diningTable == null)
         {
-            tableOrderManager.AddTableOrder(new TableOrder() { diner = this });
+            EventBus.Publish(new AddTableOrderEvent(new TableOrder() { diner = this}));
             return;
         }
         var targetPos = diningTable.GetAvailableSeat();
@@ -73,7 +64,7 @@ public class Diner : BaseWorker
         chatPanel.ShowChat("Yummy!");
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
         EventBus.Publish(new AddResourceEvent("money", 5));
-        var pedestrian = jobFactory.CreatePedestrian();
+        var pedestrian = new Pedestrian(); 
         switchableJob.SetJob(pedestrian);
         diningTable.VacateSeat(transform);
         doable.DoJobAsync(pedestrian.DoJobAsync);

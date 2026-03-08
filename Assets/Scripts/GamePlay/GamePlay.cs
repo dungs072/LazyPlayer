@@ -21,11 +21,10 @@ public class GamePlay : MonoBehaviour
         ResourcesManager.Initialize1();
         FoodDictionary.Initialize1();
         TableOrderManager.Initialize1();
+        FoodOrderManager.Initialize1();
         StaffManager.Initialize1();
         BuildingSystem.Initialize1();
-        
-        var jobFactory = new JobFactory(TableOrderManager);
-        MapManager.Initialize1(EntityManager, CharacterManager, StaffManager, jobFactory);
+        MapManager.Initialize1(EntityManager, CharacterManager, StaffManager);
     }
 
     public void Initialize2()

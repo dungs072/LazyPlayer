@@ -54,3 +54,13 @@ public struct AddFoodOrderEvent
 
 public struct ReadyToServeFoodEvent { }
 public struct RemoveFoodOrderEvent { }
+
+public struct AddTableOrderEvent
+{
+    public TableOrder tableOrder;
+    
+    public AddTableOrderEvent(TableOrder tableOrder)
+    {
+        this.tableOrder = tableOrder;
+    }
+}
