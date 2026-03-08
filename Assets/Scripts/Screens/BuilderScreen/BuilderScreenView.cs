@@ -1,9 +1,13 @@
+using System;
 using BaseEngine;
 using UnityEngine;
-using System;
+
 [Serializable]
 public class BuilderScreenView
 {
-    [SerializeField] public BuildingScroller scroller;
-    [SerializeField] public MagicButton closeButton;
+    [SerializeField]
+    public BuildingScroller scroller;
+
+    [SerializeField]
+    public BaseEngine.MagicButtonWithIcon closeButton;
 }
