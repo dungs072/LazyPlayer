@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Search;
+
 public class ResourcesManager : MonoBehaviour
 {
     private Dictionary<string, int> resources = new();
@@ -11,6 +13,11 @@ public class ResourcesManager : MonoBehaviour
         SetResourceAmount("wheat", 0);
         SetResourceAmount("bread", 0);
         SetResourceAmount("money", 0);
+        
+        QueryBus.Subscribe<IsAvailableToCreateFoodQuery, bool>(query => IsAvailableToCreateFood(query.ingredientAmounts));
+        QueryBus.Subscribe<IsAvailableFoodQuery, bool>(query => IsAvailableFood(query.foodAmounts));
+        EventBus.Subscribe<ConsumeResourceEvent>(query => ConsumeResources(query.ingredientAmounts));
+        EventBus.Subscribe<ConsumeFoodEvent>(query => ConsumeFood(query.foodAmounts));
     }
 
     public void SetResourceAmount(string resourceName, int amount)

@@ -20,6 +20,8 @@ public class FoodDictionary : MonoBehaviour
         {
             ingredientDictionary[Ingredients[i].GetId()] = Ingredients[i];
         }
+        
+        QueryBus.Subscribe<GetRecipeDataQuery, RecipeData>(query => GetRecipeData(query.recipeName));
     }
     public RecipeData GetRecipeData(string name)
     {

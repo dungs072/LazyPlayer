@@ -5,17 +5,11 @@ using UnityEngine;
 using Building = EntityConstant.Building;
 public class Chef : BaseWorker
 {
-    private ResourcesManager resourcesManager;
-    private FoodDictionary foodDictionary;
-    private FoodOrderManager foodOrderManager;
     
     private float workDuration = 5f;
-    public Chef(float workDuration, ResourcesManager resourcesManager, FoodDictionary foodDictionary, FoodOrderManager foodOrderManager) : base()
+    public Chef(float workDuration) : base()
     {
         this.workDuration = workDuration;
-        this.resourcesManager = resourcesManager;
-        this.foodDictionary = foodDictionary;
-        this.foodOrderManager = foodOrderManager;
     }
     public override string JobName()
     {
@@ -24,8 +18,8 @@ public class Chef : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var breadRecipe = foodDictionary.GetRecipeData("bread");
-        var canCook = resourcesManager.IsAvailableToCreateFood(breadRecipe.GetIngredients());
+        var breadRecipe = QueryBus.Query<GetRecipeDataQuery, RecipeData>(new GetRecipeDataQuery("bread"));
+        var canCook = QueryBus.Query<IsAvailableToCreateFoodQuery, bool>(new IsAvailableToCreateFoodQuery(breadRecipe.GetIngredients()));
         if (canCook)
         {
             var kitchen = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.KITCHEN));
@@ -33,11 +27,11 @@ public class Chef : BaseWorker
                
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
                
-            resourcesManager.ConsumeResources(breadRecipe.GetIngredients());
+            await EventBus.PublishAsync(new ConsumeResourceEvent(breadRecipe.GetIngredients()));
             var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.SERVING_TABLE));
             await movement.Move(cancellationToken, servingTable.transform.position);
-            resourcesManager.AddResource("bread", 1);
-            foodOrderManager.ReadyToServeFood();
+            await EventBus.PublishAsync(new AddResourceEvent("bread", 1));
+            EventBus.Publish(new ReadyToServeFoodEvent());
         }
         
         await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken);

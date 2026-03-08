@@ -12,6 +12,8 @@ public class TableOrderManager : MonoBehaviour
     public void Initialize1()
     {
         DiningTable.OnAvailableDiningTable += HandleAvailableDiningTable;
+        
+        EventBus.Subscribe<AddTableOrderEvent>(ev => AddTableOrder(ev.tableOrder));
     }
     void OnDestroy()
     {

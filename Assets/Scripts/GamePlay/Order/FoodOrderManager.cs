@@ -16,6 +16,13 @@ public class FoodOrder
 
 public class FoodOrderManager : MonoBehaviour
 {
+    public void Initialize1()
+    {
+        EventBus.Subscribe<AddFoodOrderEvent>(ev => AddFoodOrder(ev.foodOrder));
+        EventBus.Subscribe<ReadyToServeFoodEvent>(ev => ReadyToServeFood());
+        EventBus.Subscribe<RemoveFoodOrderEvent>(ev => RemoveFoodOrder());
+        QueryBus.Subscribe<GetOldestFoodOrderQuery, FoodOrder>(query => GetOldestFoodOrder());
+    }
     public static event Action OnFoodOrderAdded;
     private Queue<FoodOrder> foodOrders = new();
 

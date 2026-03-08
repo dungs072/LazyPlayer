@@ -42,3 +42,36 @@ public struct GetHarvestablePlotQuery
         this.entityName = entityName;
     }
 }
+
+public struct IsAvailableFoodQuery
+{
+    public FoodAmount[] foodAmounts;
+    
+    public IsAvailableFoodQuery(FoodAmount[] foodAmounts)
+    {
+        this.foodAmounts = foodAmounts;
+    }
+}
+
+
+public struct IsAvailableToCreateFoodQuery
+{
+    public IngredientAmount[] ingredientAmounts;
+
+    public IsAvailableToCreateFoodQuery(IngredientAmount[] ingredientAmounts)
+    {
+        this.ingredientAmounts = ingredientAmounts;
+    }
+}
+
+public struct GetRecipeDataQuery
+{
+    public string recipeName;
+    
+    public GetRecipeDataQuery(string recipeName)
+    {
+        this.recipeName = recipeName;
+    }
+}
+
+public struct GetOldestFoodOrderQuery { }
