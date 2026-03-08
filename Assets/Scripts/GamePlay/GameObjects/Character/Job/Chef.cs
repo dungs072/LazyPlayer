@@ -5,13 +5,11 @@ using UnityEngine;
 using Building = EntityConstant.Building;
 public class Chef : BaseWorker
 {
-    private FoodOrderManager foodOrderManager;
     
     private float workDuration = 5f;
-    public Chef(float workDuration, FoodOrderManager foodOrderManager) : base()
+    public Chef(float workDuration) : base()
     {
         this.workDuration = workDuration;
-        this.foodOrderManager = foodOrderManager;
     }
     public override string JobName()
     {
@@ -33,7 +31,7 @@ public class Chef : BaseWorker
             var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.SERVING_TABLE));
             await movement.Move(cancellationToken, servingTable.transform.position);
             await EventBus.PublishAsync(new AddResourceEvent("bread", 1));
-            foodOrderManager.ReadyToServeFood();
+            EventBus.Publish(new ReadyToServeFoodEvent());
         }
         
         await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken);

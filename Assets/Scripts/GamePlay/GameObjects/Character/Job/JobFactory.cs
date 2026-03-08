@@ -1,17 +1,15 @@
 public class JobFactory
 {
-    private FoodOrderManager foodOrderManager;
     private TableOrderManager tableOrderManager;
     
-    public JobFactory(FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager)
+    public JobFactory(TableOrderManager tableOrderManager)
     {
-        this.foodOrderManager = foodOrderManager;
         this.tableOrderManager = tableOrderManager;
     }
 
     public Chef CreateChef(float workDuration)
     {
-        return new Chef(workDuration, foodOrderManager);
+        return new Chef(workDuration);
     }
 
     public Farmer CreateFarmer(float workDuration)
@@ -21,7 +19,7 @@ public class JobFactory
 
     public Diner CreateDiner()
     {
-        return new Diner(foodOrderManager, tableOrderManager, this);
+        return new Diner(tableOrderManager, this);
     }
 
     public Pedestrian CreatePedestrian()
@@ -31,6 +29,6 @@ public class JobFactory
 
     public Server CreateServer(float workDuration)
     {
-        return new Server(workDuration, foodOrderManager);
+        return new Server(workDuration);
     }
 }

@@ -73,3 +73,5 @@ public struct GetRecipeDataQuery
         this.recipeName = recipeName;
     }
 }
+
+public struct GetOldestFoodOrderQuery { }

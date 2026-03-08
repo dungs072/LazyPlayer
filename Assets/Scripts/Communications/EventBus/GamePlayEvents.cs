@@ -41,3 +41,16 @@ public struct ConsumeFoodEvent
         this.foodAmounts = foodAmounts;
     }
 }
+
+public struct AddFoodOrderEvent
+{
+    public FoodOrder foodOrder;
+    
+    public AddFoodOrderEvent(FoodOrder foodOrder)
+    {
+        this.foodOrder = foodOrder;
+    }
+}
+
+public struct ReadyToServeFoodEvent { }
+public struct RemoveFoodOrderEvent { }

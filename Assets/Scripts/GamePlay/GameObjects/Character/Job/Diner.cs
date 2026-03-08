@@ -6,13 +6,11 @@ using static EntityConstant;
 
 public class Diner : BaseWorker
 {
-    private FoodOrderManager foodOrderManager;
     private TableOrderManager tableOrderManager;
     private JobFactory jobFactory;
 
-    public Diner(FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager, JobFactory jobFactory)
+    public Diner(TableOrderManager tableOrderManager, JobFactory jobFactory)
     {
-        this.foodOrderManager = foodOrderManager;
         this.tableOrderManager = tableOrderManager;
         this.jobFactory = jobFactory;
     }
@@ -51,7 +49,7 @@ public class Diner : BaseWorker
             await movement.Move(cancellationToken, targetPos.Value);
 
             chatPanel.ShowChat("x1 bread");
-            foodOrderManager.AddFoodOrder(
+            EventBus.Publish(new AddFoodOrderEvent(
                 new FoodOrder()
                 {
                     diningTable = diningTable,
@@ -61,7 +59,7 @@ public class Diner : BaseWorker
                         new() { foodId = "bread", amount = 1 },
                     },
                 }
-            );
+            ));
         }
     }
 
