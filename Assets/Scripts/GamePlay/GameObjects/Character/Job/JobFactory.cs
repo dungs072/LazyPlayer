@@ -1,19 +1,17 @@
 public class JobFactory
 {
-    private FoodDictionary foodDictionary;
     private FoodOrderManager foodOrderManager;
     private TableOrderManager tableOrderManager;
     
-    public JobFactory(FoodDictionary foodDictionary,  FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager)
+    public JobFactory(FoodOrderManager foodOrderManager, TableOrderManager tableOrderManager)
     {
-        this.foodDictionary = foodDictionary;
         this.foodOrderManager = foodOrderManager;
         this.tableOrderManager = tableOrderManager;
     }
 
     public Chef CreateChef(float workDuration)
     {
-        return new Chef(workDuration, foodDictionary, foodOrderManager);
+        return new Chef(workDuration, foodOrderManager);
     }
 
     public Farmer CreateFarmer(float workDuration)

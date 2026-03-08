@@ -63,3 +63,13 @@ public struct IsAvailableToCreateFoodQuery
         this.ingredientAmounts = ingredientAmounts;
     }
 }
+
+public struct GetRecipeDataQuery
+{
+    public string recipeName;
+    
+    public GetRecipeDataQuery(string recipeName)
+    {
+        this.recipeName = recipeName;
+    }
+}

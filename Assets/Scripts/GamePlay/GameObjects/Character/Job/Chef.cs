@@ -5,14 +5,12 @@ using UnityEngine;
 using Building = EntityConstant.Building;
 public class Chef : BaseWorker
 {
-    private FoodDictionary foodDictionary;
     private FoodOrderManager foodOrderManager;
     
     private float workDuration = 5f;
-    public Chef(float workDuration, FoodDictionary foodDictionary, FoodOrderManager foodOrderManager) : base()
+    public Chef(float workDuration, FoodOrderManager foodOrderManager) : base()
     {
         this.workDuration = workDuration;
-        this.foodDictionary = foodDictionary;
         this.foodOrderManager = foodOrderManager;
     }
     public override string JobName()
@@ -22,7 +20,7 @@ public class Chef : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var breadRecipe = foodDictionary.GetRecipeData("bread");
+        var breadRecipe = QueryBus.Query<GetRecipeDataQuery, RecipeData>(new GetRecipeDataQuery("bread"));
         var canCook = QueryBus.Query<IsAvailableToCreateFoodQuery, bool>(new IsAvailableToCreateFoodQuery(breadRecipe.GetIngredients()));
         if (canCook)
         {
