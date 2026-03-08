@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      barn-pixelated_0: -8852378347447964010
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

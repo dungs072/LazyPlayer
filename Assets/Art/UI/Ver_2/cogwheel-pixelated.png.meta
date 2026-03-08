@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      cogwheel-pixelated_0: -3631907025356966165
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

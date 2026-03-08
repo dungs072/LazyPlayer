@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      people-pixelated_0: -5741888701765943150
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
