@@ -4,11 +4,16 @@ using Cysharp.Threading.Tasks;
 
 public class Server : BaseWorker
 {
+    private ResourcesManager resourcesManager;
+    private FoodOrderManager foodOrderManager;
+    
     private float workDuration = 2f;
     private bool isWorking = false;
-    public Server(float workDuration) : base()
+    public Server(float workDuration, ResourcesManager resourcesManager, FoodOrderManager foodOrderManager) : base()
     {
         this.workDuration = workDuration;
+        this.resourcesManager = resourcesManager;
+        this.foodOrderManager = foodOrderManager;
         FoodOrderManager.OnFoodOrderAdded += HandleFoodOrderAdded;
 
     }
@@ -30,11 +35,8 @@ public class Server : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var entityManager = GameManager.Instance.GamePlay.EntityManager;
-        var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
-        var foodOrderManager = GameManager.Instance.GamePlay.FoodOrderManager;
-        var servingTable = entityManager.GetActiveEntity(Building.SERVING_TABLE);
-        var orderTable = entityManager.GetActiveEntity(Building.ORDER_TABLE);
+        var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.SERVING_TABLE));
+        var orderTable = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.ORDER_TABLE));
         var order = foodOrderManager.GetOldestFoodOrder();
         if (order == null) return;
         //! race conditions

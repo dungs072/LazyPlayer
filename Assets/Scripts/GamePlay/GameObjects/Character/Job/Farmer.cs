@@ -4,10 +4,13 @@ using UnityEngine;
 using Building = EntityConstant.Building;
 public class Farmer : BaseWorker
 {
+    private ResourcesManager resourcesManager;
     private float workDuration = 2f;
-    public Farmer(float workDuration) : base()
+    
+    public Farmer(float workDuration, ResourcesManager resourcesManager) : base()
     {
         this.workDuration = workDuration;
+        this.resourcesManager = resourcesManager;
     }
     public override string JobName()
     {
@@ -16,8 +19,7 @@ public class Farmer : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var entityManager = GameManager.Instance.GamePlay.EntityManager;
-        Plot plot = entityManager.GetEmptyPlot(Building.PLOT);
+        Plot plot = QueryBus.Query<GetEmptyPlotQuery, Plot>(new GetEmptyPlotQuery(Building.PLOT)); 
         while (plot != null)
         {
             await movement.Move(cancellationToken, plot.transform.position);
@@ -25,17 +27,18 @@ public class Farmer : BaseWorker
             plot.PlantCrop("wheat", 10);
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
             
-            plot = entityManager.GetEmptyPlot(Building.PLOT);
+            plot = QueryBus.Query<GetEmptyPlotQuery, Plot>(new GetEmptyPlotQuery(Building.PLOT)); 
         }
-        plot = entityManager.GetHarvestablePlot(Building.PLOT);
+        plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery(Building.PLOT)); 
+        
         while (plot == null)
         {
             await DoNothing(cancellationToken);
             
-            plot = entityManager.GetHarvestablePlot(Building.PLOT);
+            plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery(Building.PLOT)); 
         }
-        var storage = entityManager.GetActiveEntity(Building.FARM_STORAGE);
-        var resourcesManager = GameManager.Instance.GamePlay.ResourcesManager;
+        
+        var storage = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.FARM_STORAGE));
         while (plot != null)
         {
             await movement.Move(cancellationToken, plot.transform.position);
@@ -46,7 +49,7 @@ public class Farmer : BaseWorker
             await movement.Move(cancellationToken, storage.transform.position);
             
             resourcesManager.AddResource(harvestedCrop.Item1, harvestedCrop.Item2);
-            plot = entityManager.GetHarvestablePlot(Building.PLOT);
+            plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery(Building.PLOT)); 
         }
     }
     private async UniTask DoNothing(CancellationToken cancellationToken)
@@ -54,10 +57,6 @@ public class Farmer : BaseWorker
         var randomPos = GetRandomPositionInFarmMap();
         await movement.Move(cancellationToken, randomPos);
         await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
-    }
-    public override void FinishCurrentStep()
-    {
-        currentStepIndex++;
     }
 
     private Vector3 GetRandomPositionInFarmMap()

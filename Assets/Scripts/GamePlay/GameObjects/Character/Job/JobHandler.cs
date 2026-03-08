@@ -6,7 +6,6 @@ using Cysharp.Threading.Tasks;
 [Serializable]
 public class JobHandler
 {
-    [SerializeField] private JobData jobData;
     [SerializeField] private bool isLooping = true;
 
     private BaseWorker worker;
