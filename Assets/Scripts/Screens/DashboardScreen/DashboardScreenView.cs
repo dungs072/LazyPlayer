@@ -18,10 +18,10 @@ public class DashboardScreenView
     private RectTransform mask;
 
     [SerializeField]
-    public MagicButton startGameButton;
+    public BaseEngine.MagicButtonWithIcon startGameButton;
 
     [SerializeField]
-    public MagicButton optionsButton;
+    public BaseEngine.MagicButtonWithIcon optionsButton;
 
     private CanvasGroup panelCanvasGroup;
     private CanvasGroup titleCanvasGroup;

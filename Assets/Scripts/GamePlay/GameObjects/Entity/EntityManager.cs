@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EntityManager : MonoBehaviour
 {
-    [SerializeField] private Entity[] entities;
+    [SerializeField]
+    private Entity[] entities;
 
     private Dictionary<string, Entity> entityDictPrefabs = new();
     private Dictionary<string, List<Entity>> entitiesPool = new();
@@ -17,6 +18,7 @@ public class EntityManager : MonoBehaviour
         }
         return null;
     }
+
     public Plot GetEmptyPlot(string plotName)
     {
         if (entitiesPool.TryGetValue(plotName, out var pool))
@@ -24,8 +26,12 @@ public class EntityManager : MonoBehaviour
             for (var i = 0; i < pool.Count; i++)
             {
                 var plot = pool[i] as Plot;
-                if (plot != null && plot.gameObject.activeSelf && plot.IsEmpty
-                && plot.BuildingState == BuildingState.READY)
+                if (
+                    plot != null
+                    && plot.gameObject.activeSelf
+                    && plot.IsEmpty
+                    && plot.BuildingState == BuildingState.READY
+                )
                 {
                     return plot;
                 }
@@ -33,6 +39,7 @@ public class EntityManager : MonoBehaviour
         }
         return null;
     }
+
     public Plot GetHarvestablePlot(string plotName)
     {
         if (entitiesPool.TryGetValue(plotName, out var pool))
@@ -40,8 +47,12 @@ public class EntityManager : MonoBehaviour
             for (var i = 0; i < pool.Count; i++)
             {
                 var plot = pool[i] as Plot;
-                if (plot != null && plot.gameObject.activeSelf && plot.IsReady
-                 && plot.BuildingState == BuildingState.READY)
+                if (
+                    plot != null
+                    && plot.gameObject.activeSelf
+                    && plot.IsReady
+                    && plot.BuildingState == BuildingState.READY
+                )
                 {
                     return plot;
                 }
@@ -49,6 +60,7 @@ public class EntityManager : MonoBehaviour
         }
         return null;
     }
+
     public DiningTable GetAvailableDiningTable(string diningTableName)
     {
         if (entitiesPool.TryGetValue(diningTableName, out var pool))
@@ -56,8 +68,12 @@ public class EntityManager : MonoBehaviour
             for (var i = 0; i < pool.Count; i++)
             {
                 var diningTable = pool[i] as DiningTable;
-                if (diningTable != null && diningTable.gameObject.activeSelf &&
-                diningTable.IsAvailable && diningTable.BuildingState == BuildingState.READY)
+                if (
+                    diningTable != null
+                    && diningTable.gameObject.activeSelf
+                    && diningTable.IsAvailable
+                    && diningTable.BuildingState == BuildingState.READY
+                )
                 {
                     return diningTable;
                 }
@@ -69,8 +85,12 @@ public class EntityManager : MonoBehaviour
     public void Initialize1()
     {
         //! fix here
-        QueryBus.Subscribe<GetBuildingDataListQuery, IReadOnlyList<BuildableEntity>>(query => GetBuildingDataList());
-        QueryBus.Subscribe<GetEntityQuery, Entity>(query => GetEntity(query.entityName, query.position));
+        QueryBus.Subscribe<GetBuildingDataListQuery, IReadOnlyList<BuildableEntity>>(query =>
+            GetBuildingDataList()
+        );
+        QueryBus.Subscribe<GetEntityQuery, Entity>(query =>
+            GetEntity(query.entityName, query.position)
+        );
         foreach (var entity in entities)
         {
             if (!entityDictPrefabs.ContainsKey(entity.EntityName))
@@ -86,21 +106,23 @@ public class EntityManager : MonoBehaviour
         QueryBus.Subscribe<GetEmptyPlotQuery, Plot>(query => GetEmptyPlot(query.entityName));
         QueryBus.Subscribe<GetHarvestablePlotQuery, Plot>(query => GetHarvestablePlot(query.entityName));
     }
+
     //! fix here
     private IReadOnlyList<BuildableEntity> GetBuildingDataList()
     {
-        return entityDictPrefabs.Where(kv => kv.Value is BuildableEntity)
-                           .Select(kv => kv.Value as BuildableEntity)
-                           .ToList()
-                           .AsReadOnly();
+        return entityDictPrefabs
+            .Where(kv => kv.Value is BuildableEntity)
+            .Select(kv => kv.Value as BuildableEntity)
+            .ToList()
+            .AsReadOnly();
     }
-
 
     public Entity GetEntity(string entityName, Vector3 position)
     {
         if (entitiesPool.ContainsKey(entityName) && entitiesPool[entityName].Count > 0)
         {
-            var inactiveEntity = entitiesPool[entityName].FirstOrDefault((x) => !x.gameObject.activeSelf);
+            var inactiveEntity = entitiesPool[entityName]
+                .FirstOrDefault((x) => !x.gameObject.activeSelf);
             if (inactiveEntity != null)
             {
                 inactiveEntity.transform.position = position;
@@ -136,6 +158,4 @@ public class EntityManager : MonoBehaviour
         entitiesPool[entityName].Add(instance);
         return instance;
     }
-
-
 }

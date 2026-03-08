@@ -16,13 +16,15 @@ public class Diner : BaseWorker
         this.tableOrderManager = tableOrderManager;
         this.jobFactory = jobFactory;
     }
-    
+
     private float eatDuration = 5f;
     private DiningTable diningTable;
+
     public override string JobName()
     {
         return "Diner";
     }
+
     public void DoJob()
     {
         doable.DoJobAsync(DoJobAsync);
@@ -30,7 +32,9 @@ public class Diner : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        diningTable = QueryBus.Query<GetActiveEntityQuery, DiningTable>(new GetActiveEntityQuery(Building.DINING_TABLE));
+        diningTable = QueryBus.Query<GetActiveEntityQuery, DiningTable>(
+            new GetActiveEntityQuery(Building.DINING_TABLE)
+        );
         if (diningTable == null)
         {
             tableOrderManager.AddTableOrder(new TableOrder() { diner = this });
@@ -45,28 +49,31 @@ public class Diner : BaseWorker
         else
         {
             await movement.Move(cancellationToken, targetPos.Value);
-               
+
             chatPanel.ShowChat("x1 bread");
-            foodOrderManager.AddFoodOrder(new FoodOrder()
-            {
-                diningTable = diningTable,
-                diner = this,
-                foodAmounts = new FoodAmount[]
+            foodOrderManager.AddFoodOrder(
+                new FoodOrder()
                 {
-                    new() { foodId = "bread", amount = 1 },
+                    diningTable = diningTable,
+                    diner = this,
+                    foodAmounts = new FoodAmount[]
+                    {
+                        new() { foodId = "bread", amount = 1 },
+                    },
                 }
-            });
+            );
         }
     }
+
     public void EatFood()
     {
         doable.DoJobAsync(EatFoodAsync);
     }
+
     private async UniTask EatFoodAsync(CancellationToken cancellationToken)
     {
         chatPanel.ShowChat("Yummy!");
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
-       
         EventBus.Publish(new AddResourceEvent("money", 5));
         var pedestrian = jobFactory.CreatePedestrian();
         switchableJob.SetJob(pedestrian);

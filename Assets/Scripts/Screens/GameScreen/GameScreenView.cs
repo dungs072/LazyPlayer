@@ -1,18 +1,37 @@
-using UnityEngine;
 using System;
-using TMPro;
-using UnityEngine.UI;
 using BaseEngine;
+using Cysharp.Threading.Tasks;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
 [Serializable]
 public class GameScreenView
 {
-    [SerializeField] public TMP_Text wheatAmount;
-    [SerializeField] public TMP_Text breadAmount;
-    [SerializeField] public TMP_Text moneyAmount;
-    [SerializeField] public MagicButton preButton;
-    [SerializeField] public MagicButton nextButton;
-    [SerializeField] public MagicButton staffButton;
-    [SerializeField] public MagicButton builderButton;
+    [SerializeField]
+    private MenuGamePlayPanel menuGamePlayPanel;
+
+    [SerializeField]
+    public TMP_Text wheatAmount;
+
+    [SerializeField]
+    public TMP_Text breadAmount;
+
+    [SerializeField]
+    public TMP_Text moneyAmount;
+
+    [SerializeField]
+    public BaseEngine.MagicButtonWithIcon preButton;
+
+    [SerializeField]
+    public BaseEngine.MagicButtonWithIcon nextButton;
+
+    [SerializeField]
+    public BaseEngine.MagicButtonWithIcon staffButton;
+
+    [SerializeField]
+    public BaseEngine.MagicButtonWithIcon builderButton;
+
     [HideInInspector]
     public int currentMapIndex = 0;
 
@@ -32,5 +51,15 @@ public class GameScreenView
         {
             moneyAmount.text = amount.ToString();
         }
+    }
+
+    public void PrepareFadeIn()
+    {
+        menuGamePlayPanel.PrepareFadeIn();
+    }
+
+    public async UniTask FadeInAsync()
+    {
+        await menuGamePlayPanel.FadeInAsync();
     }
 }
