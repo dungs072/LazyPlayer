@@ -76,7 +76,8 @@ public class GameScreen : BaseScreen
 
     public override void PrepareData()
     {
-        ////throw new System.NotImplementedException();
+        var gridMenuData = GetScreenData<GameScreenData>();
+        view.SetMenuGridData(gridMenuData.dataList);
     }
 
     public override void PrepareFadeIn()

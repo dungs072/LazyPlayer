@@ -36,6 +36,9 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     [SerializeField]
     private Tab2ButtonsPanel tab2ButtonPanel;
+
+    [SerializeField]
+    public MenuGridScroller scroller;
     private float originalWidth;
     private List<MagicButtonWithIcon> tab1Buttons;
     private MagicButtonWithIcon selectedTab1Button;
