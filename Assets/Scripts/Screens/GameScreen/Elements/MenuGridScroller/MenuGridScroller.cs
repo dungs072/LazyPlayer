@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MenuGridData
 {
-    public int Index { get; set; }
+    public string Id { get; set; }
     public Sprite Icon { get; set; }
     public string Name { get; set; }
 }

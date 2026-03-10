@@ -1,10 +1,10 @@
 ﻿//MIT License
 //Copyright (c) 2020 Mohammed Iqubal Hussain
-//Website : Polyandcode.com 
-
+//Website : Polyandcode.com
 
 using System.Collections;
 using UnityEngine;
+
 namespace PolyAndCode.UI
 {
     /// <summary>
@@ -14,9 +14,12 @@ namespace PolyAndCode.UI
     {
         public IRecyclableScrollRectDataSource DataSource;
 
-        protected RectTransform Viewport, Content;
+        protected RectTransform Viewport,
+            Content;
         protected RectTransform PrototypeCell;
         protected bool IsGrid;
+        protected float Spacing;
+        protected float Margin;
 
         protected float MinPoolCoverage = 1.5f; // The recyclable pool must cover (viewPort * _poolCoverage) area.
         protected int MinPoolSize = 10; // Cell pool must have a min size
