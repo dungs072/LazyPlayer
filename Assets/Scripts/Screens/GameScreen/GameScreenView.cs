@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BaseEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -32,6 +33,9 @@ public class GameScreenView
     [SerializeField]
     public BaseEngine.MagicButtonWithIcon builderButton;
 
+    [SerializeField]
+    private MenuGamePlayPanel menuPanel;
+
     [HideInInspector]
     public int currentMapIndex = 0;
 
@@ -61,5 +65,10 @@ public class GameScreenView
     public async UniTask FadeInAsync()
     {
         await menuGamePlayPanel.FadeInAsync();
+    }
+
+    public void SetMenuGridData(IReadOnlyList<MenuGridData> data)
+    {
+        menuGamePlayPanel.scroller.SetData(data);
     }
 }

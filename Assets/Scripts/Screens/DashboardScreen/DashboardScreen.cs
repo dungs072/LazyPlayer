@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -17,7 +18,19 @@ public class DashboardScreen : BaseScreen
     {
         await FadeOutAsync();
         await ScreenPlugin.CloseScreenAsync<DashboardScreen>();
-        await ScreenPlugin.OpenScreenAsync<GameScreen>();
+        //! remove it when we have real data
+        var data = new GameScreenData
+        {
+            dataList = new List<MenuGridData>()
+            {
+                new MenuGridData { Name = "Map 1", Icon = null },
+                new MenuGridData { Name = "Map 2", Icon = null },
+                new MenuGridData { Name = "Map 3", Icon = null },
+                new MenuGridData { Name = "Map 4", Icon = null },
+                new MenuGridData { Name = "Map 5", Icon = null },
+            },
+        };
+        await ScreenPlugin.OpenScreenAsync<GameScreen>(data);
     }
 
     private async UniTask HandleOptionsButtonClicked()

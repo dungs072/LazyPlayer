@@ -254,6 +254,7 @@ GameObject:
   m_Component:
   - component: {fileID: 191906963}
   - component: {fileID: 191906964}
+  - component: {fileID: 191906965}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -286,6 +287,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8319f2a3fe7e0db43bd05e731794805f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &191906965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 191906962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da3d559708f0fd4180c5270db435bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &268456705
@@ -914,7 +927,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000022888184
+      value: -0.000019073486
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x

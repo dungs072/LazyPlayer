@@ -1,11 +1,11 @@
 ﻿//MIT License
 //Copyright (c) 2020 Mohammed Iqubal Hussain
-//Website : Polyandcode.com 
+//Website : Polyandcode.com
 
-using UnityEngine.UI;
-using UnityEditor.AnimatedValues;
 using UnityEditor;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PolyAndCode.UI
 {
@@ -14,7 +14,6 @@ namespace PolyAndCode.UI
     /// <summary>
     /// Custom Editor for the Recyclable Scroll Rect Component which is derived from Scroll Rect.
     /// </summary>
-
     public class RecyclableScrollRectEditor : Editor
     {
         SerializedProperty m_Content;
@@ -31,11 +30,14 @@ namespace PolyAndCode.UI
         SerializedProperty _selfInitialize;
         SerializedProperty _direction;
         SerializedProperty _type;
+        SerializedProperty _spacing;
+        SerializedProperty _margin;
 
         AnimBool m_ShowElasticity;
         AnimBool m_ShowDecelerationRate;
 
         RecyclableScrollRect _script;
+
         protected virtual void OnEnable()
         {
             _script = (RecyclableScrollRect)target;
@@ -54,6 +56,8 @@ namespace PolyAndCode.UI
             _selfInitialize = serializedObject.FindProperty("SelfInitialize");
             _direction = serializedObject.FindProperty("Direction");
             _type = serializedObject.FindProperty("IsGrid");
+            _spacing = serializedObject.FindProperty("Spacing");
+            _margin = serializedObject.FindProperty("Margin");
 
             m_ShowElasticity = new AnimBool(Repaint);
             m_ShowDecelerationRate = new AnimBool(Repaint);
@@ -68,8 +72,17 @@ namespace PolyAndCode.UI
 
         void SetAnimBools(bool instant)
         {
-            SetAnimBool(m_ShowElasticity, !m_MovementType.hasMultipleDifferentValues && m_MovementType.enumValueIndex == (int)ScrollRect.MovementType.Elastic, instant);
-            SetAnimBool(m_ShowDecelerationRate, !m_Inertia.hasMultipleDifferentValues && m_Inertia.boolValue, instant);
+            SetAnimBool(
+                m_ShowElasticity,
+                !m_MovementType.hasMultipleDifferentValues
+                    && m_MovementType.enumValueIndex == (int)ScrollRect.MovementType.Elastic,
+                instant
+            );
+            SetAnimBool(
+                m_ShowDecelerationRate,
+                !m_Inertia.hasMultipleDifferentValues && m_Inertia.boolValue,
+                instant
+            );
         }
 
         void SetAnimBool(AnimBool a, bool value, bool instant)
@@ -82,21 +95,26 @@ namespace PolyAndCode.UI
 
         public override void OnInspectorGUI()
         {
-            SetAnimBools(false); 
+            SetAnimBools(false);
             serializedObject.Update();
-          
+
             EditorGUILayout.PropertyField(_direction);
             EditorGUILayout.PropertyField(_type, new GUIContent("Grid"));
             if (_type.boolValue)
             {
-                string title = _direction.enumValueIndex == (int)RecyclableScrollRect.DirectionType.Vertical ? "Coloumns" : "Rows";
-               _script.Segments =  EditorGUILayout.IntField(title, _script.Segments);
+                string title =
+                    _direction.enumValueIndex == (int)RecyclableScrollRect.DirectionType.Vertical
+                        ? "Coloumns"
+                        : "Rows";
+                _script.Segments = EditorGUILayout.IntField(title, _script.Segments);
             }
 
             EditorGUILayout.PropertyField(_selfInitialize);
             EditorGUILayout.PropertyField(m_Viewport);
             EditorGUILayout.PropertyField(m_Content);
             EditorGUILayout.PropertyField(_protoTypeCell);
+            EditorGUILayout.PropertyField(_spacing);
+            EditorGUILayout.PropertyField(_margin);
             EditorGUILayout.Space();
 
             EditorGUILayout.PropertyField(m_MovementType);

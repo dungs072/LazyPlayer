@@ -2,21 +2,26 @@ using System.Collections.Generic;
 using PolyAndCode.UI;
 using UnityEngine;
 
-public class BuildingScroller : MonoBehaviour, IRecyclableScrollRectDataSource
+public class MenuGridData
+{
+    public string Id { get; set; }
+    public Sprite Icon { get; set; }
+    public string Name { get; set; }
+}
+
+public class MenuGridScroller : MonoBehaviour, IRecyclableScrollRectDataSource
 {
     [SerializeField]
     private RecyclableScrollRect _recyclableScrollRect;
 
-    private IReadOnlyList<BuildableEntity> _contactList = new List<BuildableEntity>();
+    private IReadOnlyList<MenuGridData> _contactList = new List<MenuGridData>();
 
-    public void SetData(IReadOnlyList<BuildableEntity> data)
+    public void SetData(IReadOnlyList<MenuGridData> data)
     {
         _contactList = data;
         _recyclableScrollRect.DataSource = this;
         _recyclableScrollRect.ReloadData();
     }
-
-    #region DATA-SOURCE
 
     public int GetItemCount()
     {
@@ -25,9 +30,7 @@ public class BuildingScroller : MonoBehaviour, IRecyclableScrollRectDataSource
 
     public void SetCell(ICell cell, int index)
     {
-        var item = cell as BuildingBlock;
-        item.SetInfo(_contactList[index], index);
+        var item = cell as GridBlock;
+        item.SetInfo(index);
     }
-
-    #endregion
 }

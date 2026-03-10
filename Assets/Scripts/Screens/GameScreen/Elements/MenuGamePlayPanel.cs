@@ -36,13 +36,20 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     [SerializeField]
     private Tab2ButtonsPanel tab2ButtonPanel;
+
+    [SerializeField]
+    public MenuGridScroller scroller;
     private float originalWidth;
+    private Vector2 openPosition;
+    private float slideDistance;
     private List<MagicButtonWithIcon> tab1Buttons;
     private MagicButtonWithIcon selectedTab1Button;
 
     void Awake()
     {
         originalWidth = rectTransform.rect.width;
+        openPosition = rectTransform.anchoredPosition;
+        slideDistance = originalWidth - tab1.rect.width;
         tab1Buttons = new List<MagicButtonWithIcon>
         {
             manageButton,
@@ -74,8 +81,9 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     private void CloseTabsMenu()
     {
-        var tab1Width = tab1.rect.width;
-        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tab1Width);
+        var pos = openPosition;
+        pos.x += slideDistance;
+        rectTransform.anchoredPosition = pos;
     }
 
     private async UniTask HandleManageButtonClicked()
@@ -132,24 +140,13 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask OpenTabsMenuAsync()
     {
         var seq = DOTween.Sequence();
+        float targetX = openPosition.x;
 
-        float h = rectTransform.sizeDelta.y;
+        seq.Append(rectTransform.DOAnchorPosX(targetX - 35, 0.28f).SetEase(Ease.OutCubic));
 
-        seq.Append(
-            rectTransform
-                .DOSizeDelta(new Vector2(originalWidth + 35, h), 0.28f)
-                .SetEase(Ease.OutCubic)
-        );
+        seq.Append(rectTransform.DOAnchorPosX(targetX + 10, 0.12f).SetEase(Ease.InOutQuad));
 
-        seq.Append(
-            rectTransform
-                .DOSizeDelta(new Vector2(originalWidth - 10, h), 0.12f)
-                .SetEase(Ease.InOutQuad)
-        );
-
-        seq.Append(
-            rectTransform.DOSizeDelta(new Vector2(originalWidth, h), 0.10f).SetEase(Ease.OutQuad)
-        );
+        seq.Append(rectTransform.DOAnchorPosX(targetX, 0.10f).SetEase(Ease.OutQuad));
 
         await seq.AsyncWaitForCompletion();
     }
@@ -158,8 +155,9 @@ public class MenuGamePlayPanel : MonoBehaviour
     {
         GamePlugin.BlockInput(true);
         SetSelectedTab1Button(null);
+        float closedX = openPosition.x + slideDistance;
         await rectTransform
-            .DOSizeDelta(new Vector2(tab1.rect.width, rectTransform.sizeDelta.y), 0.35f)
+            .DOAnchorPosX(closedX, 0.35f)
             .SetEase(Ease.InQuart)
             .AsyncWaitForCompletion();
 
