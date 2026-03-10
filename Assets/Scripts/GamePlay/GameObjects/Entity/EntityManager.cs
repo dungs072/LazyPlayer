@@ -10,18 +10,19 @@ public class EntityManager : MonoBehaviour
     private Dictionary<string, Entity> entityDictPrefabs = new();
     private Dictionary<string, List<Entity>> entitiesPool = new();
 
-    public Entity GetActiveEntity(string entityName)
+    public Entity GetActiveEntity(string prefabId)
     {
-        if (entitiesPool.TryGetValue(entityName, out var pool))
+        if (entitiesPool.TryGetValue(prefabId, out var pool))
         {
             return pool.FirstOrDefault((x) => x.gameObject.activeSelf);
         }
         return null;
     }
 
-    public Plot GetEmptyPlot(string plotName)
+    public Plot GetEmptyPlot()
     {
-        if (entitiesPool.TryGetValue(plotName, out var pool))
+        var entityName = EntityConstant.Building.PLOT;
+        if (entitiesPool.TryGetValue(entityName, out var pool))
         {
             for (var i = 0; i < pool.Count; i++)
             {
@@ -40,9 +41,10 @@ public class EntityManager : MonoBehaviour
         return null;
     }
 
-    public Plot GetHarvestablePlot(string plotName)
+    public Plot GetHarvestablePlot()
     {
-        if (entitiesPool.TryGetValue(plotName, out var pool))
+        var entityName = EntityConstant.Building.PLOT;
+        if (entitiesPool.TryGetValue(entityName, out var pool))
         {
             for (var i = 0; i < pool.Count; i++)
             {
@@ -61,9 +63,10 @@ public class EntityManager : MonoBehaviour
         return null;
     }
 
-    public DiningTable GetAvailableDiningTable(string diningTableName)
+    public DiningTable GetAvailableDiningTable()
     {
-        if (entitiesPool.TryGetValue(diningTableName, out var pool))
+        var entityName = EntityConstant.Building.DINING_TABLE;
+        if (entitiesPool.TryGetValue(entityName, out var pool))
         {
             for (var i = 0; i < pool.Count; i++)
             {
@@ -89,7 +92,7 @@ public class EntityManager : MonoBehaviour
             GetBuildingDataList()
         );
         QueryBus.Subscribe<GetEntityQuery, Entity>(query =>
-            GetEntity(query.entityName, query.position)
+            GetEntity(query.prefabId, query.position)
         );
         foreach (var entity in entities)
         {
@@ -102,9 +105,9 @@ public class EntityManager : MonoBehaviour
                 Debug.LogWarning($"Duplicate entity name detected: {entity.EntityName}. Skipping.");
             }
         }
-        QueryBus.Subscribe<GetActiveEntityQuery, Entity>(query => GetActiveEntity(query.entityName));
-        QueryBus.Subscribe<GetEmptyPlotQuery, Plot>(query => GetEmptyPlot(query.entityName));
-        QueryBus.Subscribe<GetHarvestablePlotQuery, Plot>(query => GetHarvestablePlot(query.entityName));
+        QueryBus.Subscribe<GetActiveEntityQuery, Entity>(query => GetActiveEntity(query.prefabId));
+        QueryBus.Subscribe<GetEmptyPlotQuery, Plot>(query => GetEmptyPlot());
+        QueryBus.Subscribe<GetHarvestablePlotQuery, Plot>(query => GetHarvestablePlot());
     }
 
     //! fix here
@@ -117,11 +120,11 @@ public class EntityManager : MonoBehaviour
             .AsReadOnly();
     }
 
-    public Entity GetEntity(string entityName, Vector3 position)
+    public Entity GetEntity(string prefabId, Vector3 position)
     {
-        if (entitiesPool.ContainsKey(entityName) && entitiesPool[entityName].Count > 0)
+        if (entitiesPool.ContainsKey(prefabId) && entitiesPool[prefabId].Count > 0)
         {
-            var inactiveEntity = entitiesPool[entityName]
+            var inactiveEntity = entitiesPool[prefabId]
                 .FirstOrDefault((x) => !x.gameObject.activeSelf);
             if (inactiveEntity != null)
             {
@@ -131,31 +134,31 @@ public class EntityManager : MonoBehaviour
             }
             else
             {
-                return SpawnEntity(entityName, position);
+                return SpawnEntity(prefabId, position);
             }
         }
-        else if (entityDictPrefabs.ContainsKey(entityName))
+        else if (entityDictPrefabs.ContainsKey(prefabId))
         {
-            return SpawnEntity(entityName, position);
+            return SpawnEntity(prefabId, position);
         }
         else
         {
-            Debug.LogError($"Entity prefab not found for name: {entityName}");
+            Debug.LogError($"Entity prefab not found for name: {prefabId}");
             return null;
         }
     }
 
-    private Entity SpawnEntity(string entityName, Vector3 position)
+    private Entity SpawnEntity(string prefabId, Vector3 position)
     {
-        var entityPrefab = entityDictPrefabs[entityName];
+        var entityPrefab = entityDictPrefabs[prefabId];
         if (entityPrefab == null)
         {
-            Debug.LogError($"Entity prefab not found for name: {entityName}");
+            Debug.LogError($"Entity prefab not found for name: {prefabId}");
             return null;
         }
         var instance = Instantiate(entityPrefab, position, Quaternion.identity);
-        entitiesPool.TryAdd(entityName, new List<Entity>());
-        entitiesPool[entityName].Add(instance);
+        entitiesPool.TryAdd(prefabId, new List<Entity>());
+        entitiesPool[prefabId].Add(instance);
         return instance;
     }
 }

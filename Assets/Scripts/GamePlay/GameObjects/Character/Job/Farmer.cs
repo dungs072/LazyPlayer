@@ -17,7 +17,7 @@ public class Farmer : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        Plot plot = QueryBus.Query<GetEmptyPlotQuery, Plot>(new GetEmptyPlotQuery(Building.PLOT)); 
+        Plot plot = QueryBus.Query<GetEmptyPlotQuery, Plot>(new GetEmptyPlotQuery()); 
         while (plot != null)
         {
             await movement.Move(cancellationToken, plot.transform.position);
@@ -25,15 +25,15 @@ public class Farmer : BaseWorker
             plot.PlantCrop("wheat", 10);
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
             
-            plot = QueryBus.Query<GetEmptyPlotQuery, Plot>(new GetEmptyPlotQuery(Building.PLOT)); 
+            plot = QueryBus.Query<GetEmptyPlotQuery, Plot>(new GetEmptyPlotQuery()); 
         }
-        plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery(Building.PLOT)); 
+        plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery()); 
         
         while (plot == null)
         {
             await DoNothing(cancellationToken);
             
-            plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery(Building.PLOT)); 
+            plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery()); 
         }
         
         var storage = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.FARM_STORAGE));
@@ -47,7 +47,7 @@ public class Farmer : BaseWorker
             await movement.Move(cancellationToken, storage.transform.position);
             
             EventBus.Publish(new AddResourceEvent(harvestedCrop.Item1, harvestedCrop.Item2));
-            plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery(Building.PLOT)); 
+            plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery()); 
         }
     }
     private async UniTask DoNothing(CancellationToken cancellationToken)

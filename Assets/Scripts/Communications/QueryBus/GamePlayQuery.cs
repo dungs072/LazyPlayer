@@ -4,7 +4,7 @@ public struct GetCenterCameraPositionQuery: IQueryResult<Vector3> { }
 
 public struct GetEntityQuery: IQueryResult<Entity>
 {
-    public string entityName;
+    public string prefabId;
     public Vector3 position;
 }
 
@@ -15,32 +15,20 @@ public struct GetSnapGridPositionQuery: IQueryResult<Vector3>
 
 public struct GetActiveEntityQuery: IQueryResult<Entity>
 {
-    public string entityName;
+    public string prefabId;
 
-    public GetActiveEntityQuery(string entityName)
+    public GetActiveEntityQuery(string prefabId)
     {
-        this.entityName = entityName;
+        this.prefabId = prefabId;
     }
 }
 
 public struct GetEmptyPlotQuery: IQueryResult<Plot>
 {
-    public string entityName;
-
-    public GetEmptyPlotQuery(string entityName)
-    {
-        this.entityName = entityName;
-    }
 }
 
-public struct GetHarvestablePlotQuery: IQueryResult<Plot>
+public struct GetHarvestablePlotQuery : IQueryResult<Plot>
 {
-    public string entityName;
-
-    public GetHarvestablePlotQuery(string entityName)
-    {
-        this.entityName = entityName;
-    }
 }
 
 public struct IsAvailableFoodQuery: IQueryResult<bool>

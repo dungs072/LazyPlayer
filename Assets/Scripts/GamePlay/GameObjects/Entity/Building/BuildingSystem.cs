@@ -21,7 +21,7 @@ public class BuildingSystem : MonoBehaviour
     public void Build(SpawnEntityEvent e)
     {
         var centerWorldPos = QueryBus.Query<GetCenterCameraPositionQuery, Vector3>(new GetCenterCameraPositionQuery());
-        var building = QueryBus.Query<GetEntityQuery, Entity>(new GetEntityQuery { entityName = e.entityName, position = centerWorldPos });
+        var building = QueryBus.Query<GetEntityQuery, Entity>(new GetEntityQuery { prefabId = e.entityName, position = centerWorldPos });
         if (building == null)
         {
             Debug.LogError($"Failed to build {e.entityName} at {centerWorldPos}");
