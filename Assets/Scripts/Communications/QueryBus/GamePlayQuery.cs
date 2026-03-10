@@ -1,19 +1,19 @@
 using UnityEngine;
 
-public struct GetCenterCameraPositionQuery { }
+public struct GetCenterCameraPositionQuery: IQueryResult<Vector3> { }
 
-public struct GetEntityQuery
+public struct GetEntityQuery: IQueryResult<Entity>
 {
     public string entityName;
     public Vector3 position;
 }
 
-public struct GetSnapGridPositionQuery
+public struct GetSnapGridPositionQuery: IQueryResult<Vector3>
 {
     public Vector3 position;
 }
 
-public struct GetActiveEntityQuery
+public struct GetActiveEntityQuery: IQueryResult<Entity>
 {
     public string entityName;
 
@@ -23,7 +23,7 @@ public struct GetActiveEntityQuery
     }
 }
 
-public struct GetEmptyPlotQuery
+public struct GetEmptyPlotQuery: IQueryResult<Plot>
 {
     public string entityName;
 
@@ -33,7 +33,7 @@ public struct GetEmptyPlotQuery
     }
 }
 
-public struct GetHarvestablePlotQuery
+public struct GetHarvestablePlotQuery: IQueryResult<Plot>
 {
     public string entityName;
 
@@ -43,7 +43,7 @@ public struct GetHarvestablePlotQuery
     }
 }
 
-public struct IsAvailableFoodQuery
+public struct IsAvailableFoodQuery: IQueryResult<bool>
 {
     public FoodAmount[] foodAmounts;
     
@@ -54,7 +54,7 @@ public struct IsAvailableFoodQuery
 }
 
 
-public struct IsAvailableToCreateFoodQuery
+public struct IsAvailableToCreateFoodQuery: IQueryResult<bool>
 {
     public IngredientAmount[] ingredientAmounts;
 
@@ -64,7 +64,7 @@ public struct IsAvailableToCreateFoodQuery
     }
 }
 
-public struct GetRecipeDataQuery
+public struct GetRecipeDataQuery: IQueryResult<RecipeData>
 {
     public string recipeName;
     
@@ -74,4 +74,4 @@ public struct GetRecipeDataQuery
     }
 }
 
-public struct GetOldestFoodOrderQuery { }
+public struct GetOldestFoodOrderQuery: IQueryResult<FoodOrder> { }
