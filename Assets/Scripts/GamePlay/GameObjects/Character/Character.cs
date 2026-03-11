@@ -10,6 +10,8 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
     [SerializeField] private JobHandler jobHandler;
     [SerializeField] private ChatPanel chatPanel;
     [SerializeField] private TMP_Text nameText;
+    [SerializeField] private SpriteRenderer characterSpriteRenderer;
+    
     private Movement movement = null;
     private CharacterData characterData = null;
 
@@ -17,11 +19,12 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
 
     private CancellationTokenSource currentCTS = null;
 
-    void Awake()
+    public void Initialize(Sprite characterSkin)
     {
         movement = GetComponent<Movement>();
         jobHandler.Init(movement);
         chatPanel.HideChat();
+        characterSpriteRenderer.sprite = characterSkin;
     }
     public void StartJob()
     {
