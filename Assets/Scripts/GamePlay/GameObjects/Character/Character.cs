@@ -5,15 +5,16 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 
 [RequireComponent(typeof(Movement))]
-public class Character : MonoBehaviour, ISwitchableJob, IDoable
+public class Character : MonoBehaviour
 {
-    [SerializeField] private JobHandler jobHandler;
     [SerializeField] private ChatPanel chatPanel;
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private SpriteRenderer characterSpriteRenderer;
+    [SerializeField] private bool isLooping = true;
     
     private Movement movement = null;
     private CharacterData characterData = null;
+    private BaseWorker worker = null;
 
     public CharacterData CharacterData => characterData;
 
@@ -22,7 +23,6 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
     public void Initialize(Sprite characterSkin)
     {
         movement = GetComponent<Movement>();
-        jobHandler.Init(movement);
         chatPanel.HideChat();
         characterSpriteRenderer.sprite = characterSkin;
     }
@@ -31,18 +31,21 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
         currentCTS?.Cancel();
         currentCTS?.Dispose();
         currentCTS = new CancellationTokenSource();
-        jobHandler.DoJobAsync(currentCTS.Token).Forget();
+        DoJobAsync(currentCTS.Token).Forget();
     }
 
     public void SetJob(BaseWorker worker)
     {
+        worker.SetCharacter(this);
         worker.SetTransform(transform);
-        jobHandler.SetWorker(worker, this, chatPanel, this);
+        worker.SetMovement(movement);
+        worker.SetChatPanel(chatPanel);
+        this.worker = worker;
         nameText.text = worker.GetType().Name;
     }
     public void SetIsLoopingDoJob(bool isLoopingDoJob)
     {
-        jobHandler.SetIsLoopingDoJob(isLoopingDoJob);
+        isLooping = isLoopingDoJob;
     }
 
     public void DoJobAsync(Func<CancellationToken, UniTask> action)
@@ -55,7 +58,6 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
 
     public void SetCharacterData(CharacterData data)
     {
-        var worker = jobHandler.Worker;
         data.JobName = worker != null ? worker.JobName() : "Unemployed";
         characterData = data;
     }
@@ -65,5 +67,14 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
         currentCTS?.Cancel();
         currentCTS?.Dispose();
         currentCTS = null;
+    }
+    
+    public async UniTask DoJobAsync(CancellationToken cancellationToken)
+    {
+        do
+        {
+            await worker.DoJobAsync(cancellationToken);
+        }
+        while (!cancellationToken.IsCancellationRequested && isLooping);
     }
 }

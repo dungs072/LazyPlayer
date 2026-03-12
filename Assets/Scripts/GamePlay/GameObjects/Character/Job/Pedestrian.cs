@@ -50,7 +50,7 @@ public class Pedestrian : BaseWorker
             randomVar = Random.Range(0f, 1f);
         }
         var diner = new Diner(); 
-        switchableJob.SetJob(diner);
+        character.SetJob(diner);
         diner.DoJob();
 
     }

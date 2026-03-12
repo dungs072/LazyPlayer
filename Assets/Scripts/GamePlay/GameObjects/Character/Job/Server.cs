@@ -24,7 +24,7 @@ public class Server : BaseWorker
     private void HandleFoodOrderAdded()
     {
         if (isWorking) return;
-        doable.DoJobAsync(DoJobAsync);
+        character.DoJobAsync(DoJobAsync);
     }
 
 

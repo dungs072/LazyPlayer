@@ -16,7 +16,7 @@ public class Diner : BaseWorker
 
     public void DoJob()
     {
-        doable.DoJobAsync(DoJobAsync);
+        character.DoJobAsync(DoJobAsync);
     }
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ public class Diner : BaseWorker
 
     public void EatFood()
     {
-        doable.DoJobAsync(EatFoodAsync);
+        character.DoJobAsync(EatFoodAsync);
     }
 
     private async UniTask EatFoodAsync(CancellationToken cancellationToken)
@@ -65,9 +65,9 @@ public class Diner : BaseWorker
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
         EventBus.Publish(new AddResourceEvent("money", 5));
         var pedestrian = new Pedestrian(); 
-        switchableJob.SetJob(pedestrian);
+        character.SetJob(pedestrian);
         diningTable.VacateSeat(transform);
-        doable.DoJobAsync(pedestrian.DoJobAsync);
+        character.DoJobAsync(pedestrian.DoJobAsync);
         chatPanel.HideChat();
     }
 }
