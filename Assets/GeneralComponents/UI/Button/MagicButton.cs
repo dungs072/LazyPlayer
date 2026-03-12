@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace BaseEngine
 {
@@ -21,6 +22,7 @@ namespace BaseEngine
     }
 
     [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(Button))]
     public class MagicButtonWithIcon : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         private Action OnClicked;

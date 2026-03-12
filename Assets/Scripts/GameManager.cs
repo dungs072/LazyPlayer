@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GamePlay.Initialize2();
-        ScreenPlugin.OpenScreenAsync<DashboardScreen>().Forget();
+        var data = new GameScreenData { dataList = new List<MenuGridData>() { } };
+        ScreenPlugin.OpenScreenAsync<GameScreen>(data).Forget();
     }
 }

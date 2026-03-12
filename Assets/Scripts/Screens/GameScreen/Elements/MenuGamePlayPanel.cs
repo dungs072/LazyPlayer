@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using BaseEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.UI;
 
 public class MenuGamePlayPanel : MonoBehaviour
@@ -68,6 +70,8 @@ public class MenuGamePlayPanel : MonoBehaviour
         galleryButton.AddListener(HandleGalleryButtonClicked);
         settingButton.AddListener(HandleSettingButtonClicked);
         closeButton.AddListener(HandleCloseButtonClicked);
+
+        tab2ButtonPanel.OnRequestMenuGridData += HandleTab2ButtonPanelRequestMenuGridData;
     }
 
     void OnDestroy()
@@ -77,6 +81,12 @@ public class MenuGamePlayPanel : MonoBehaviour
         galleryButton.RemoveListener(HandleGalleryButtonClicked);
         settingButton.RemoveListener(HandleSettingButtonClicked);
         closeButton.RemoveListener(HandleCloseButtonClicked);
+        tab2ButtonPanel.OnRequestMenuGridData -= HandleTab2ButtonPanelRequestMenuGridData;
+    }
+
+    private void HandleTab2ButtonPanelRequestMenuGridData(ReadOnlyArray<MenuGridData> data)
+    {
+        scroller.SetData(data);
     }
 
     private void CloseTabsMenu()
@@ -135,6 +145,7 @@ public class MenuGamePlayPanel : MonoBehaviour
         var image = button.GetComponent<Image>();
 
         image.color = Color.gray;
+        scroller.SetData(new ReadOnlyArray<MenuGridData>());
     }
 
     private async UniTask OpenTabsMenuAsync()

@@ -21,11 +21,11 @@ public enum ButtonTab2Type
     SOUND,
 }
 
-[Serializable]
-public class Tab2ButtonInfo
+public enum ButtonTab3Type
 {
-    public ButtonTab2Type type;
-    public Sprite icon;
+    // BUILDER
+    BUILDING,
+    EDIT,
 }
 
 [Serializable]
@@ -35,20 +35,35 @@ public class Tab1ButtonInfo
     public List<Tab2ButtonInfo> icon;
 }
 
-[CreateAssetMenu(fileName = "NewTab2ButtonData", menuName = "UI/Tab2ButtonData")]
-public class Tab2ButtonData : ScriptableObject
+[Serializable]
+public class Tab2ButtonInfo
+{
+    public ButtonTab2Type type;
+    public Sprite icon;
+    public List<Tab3ButtonInfo> tab3Buttons;
+}
+
+[Serializable]
+public class Tab3ButtonInfo
+{
+    public ButtonTab3Type type;
+    public Sprite icon;
+}
+
+[CreateAssetMenu(fileName = "NewMenuPanelButtonData", menuName = "UI/MenuPanelButtonData")]
+public class MenuPanelButtonData : ScriptableObject
 {
     [SerializeField]
-    private Tab1ButtonInfo[] tab2ButtonsInfo;
+    private Tab1ButtonInfo[] tab1ButtonsInfo;
 
     [SerializeField]
     private Sprite lockSprite;
-    public Tab1ButtonInfo[] Tab2ButtonsData => tab2ButtonsInfo;
+    public Tab1ButtonInfo[] Tab1ButtonsData => tab1ButtonsInfo;
     public Sprite LockSprite => lockSprite;
 
-    public Tab1ButtonInfo GetTab2ButtonsInfo(ButtonTab1Type tab1Type)
+    public Tab1ButtonInfo GetTab1ButtonsInfo(ButtonTab1Type tab1Type)
     {
-        foreach (var info in tab2ButtonsInfo)
+        foreach (var info in tab1ButtonsInfo)
         {
             if (info.type == tab1Type)
                 return info;

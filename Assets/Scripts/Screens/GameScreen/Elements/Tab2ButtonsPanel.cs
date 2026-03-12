@@ -1,14 +1,20 @@
+using System;
+using System.Collections.Generic;
 using BaseEngine;
 using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class Tab2ButtonsPanel : MonoBehaviour
 {
+    public event Action<ReadOnlyArray<MenuGridData>> OnRequestMenuGridData;
+
     [SerializeField]
     private MagicButtonWithIcon[] tab2Buttons;
 
     [SerializeField]
-    Tab2ButtonData data;
+    MenuPanelButtonData data;
     private MagicButtonWithIcon selectedButton;
     private ButtonTab1Type tab1Type;
 
@@ -43,7 +49,7 @@ public class Tab2ButtonsPanel : MonoBehaviour
     public void SetTab2Buttons(ButtonTab1Type tab1Type)
     {
         this.tab1Type = tab1Type;
-        var tab2ButtonsInfo = data.GetTab2ButtonsInfo(tab1Type);
+        var tab2ButtonsInfo = data.GetTab1ButtonsInfo(tab1Type);
         SetSelectedTabButton(null);
         if (tab2ButtonsInfo == null)
         {
@@ -79,7 +85,7 @@ public class Tab2ButtonsPanel : MonoBehaviour
 
     private void HandleButtonClicked(int index)
     {
-        var tab2ButtonsInfo = data.GetTab2ButtonsInfo(tab1Type);
+        var tab2ButtonsInfo = data.GetTab1ButtonsInfo(tab1Type);
         if (tab2ButtonsInfo == null)
         {
             Debug.LogError($"No tab2 buttons info found for tab1 type {tab1Type}");
@@ -91,5 +97,20 @@ public class Tab2ButtonsPanel : MonoBehaviour
             return;
         }
         SetSelectedTabButton(button);
+
+        var infoTab2 = tab2ButtonsInfo.icon[index];
+        var tab3ButtonsInfo = infoTab2.tab3Buttons;
+        OnRequestMenuGridData?.Invoke(
+            new ReadOnlyArray<MenuGridData>(
+                tab3ButtonsInfo
+                    .ConvertAll(t => new MenuGridData
+                    {
+                        Type = t.type,
+                        Icon = t.icon,
+                        Name = t.type.ToString(),
+                    })
+                    .ToArray()
+            )
+        );
     }
 }

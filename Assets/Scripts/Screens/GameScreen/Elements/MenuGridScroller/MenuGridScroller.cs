@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MenuGridData
 {
-    public string Id { get; set; }
+    public ButtonTab3Type Type { get; set; }
     public Sprite Icon { get; set; }
     public string Name { get; set; }
 }
@@ -31,6 +31,7 @@ public class MenuGridScroller : MonoBehaviour, IRecyclableScrollRectDataSource
     public void SetCell(ICell cell, int index)
     {
         var item = cell as GridBlock;
-        item.SetInfo(index);
+        var data = _contactList[index];
+        item.SetInfo(data);
     }
 }
