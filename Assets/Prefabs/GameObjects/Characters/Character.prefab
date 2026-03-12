@@ -390,11 +390,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f714707a0c43118469d617787a4a04b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jobHandler:
-    isLooping: 1
-  chatPanel: {fileID: 4011620108830744652}
+  chatPanelComponent: {fileID: 4011620108830744652}
   nameText: {fileID: 452075318047996366}
   characterSpriteRenderer: {fileID: 3437263322890806796}
+  isLooping: 1
 --- !u!114 &7124730699190741637
 MonoBehaviour:
   m_ObjectHideFlags: 0

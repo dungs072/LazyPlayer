@@ -37,9 +37,9 @@ public class Diner : BaseWorker
         }
         else
         {
-            await movement.Move(cancellationToken, targetPos.Value);
+            await movementComponent.Move(cancellationToken, targetPos.Value);
 
-            chatPanel.ShowChat("x1 bread");
+            chatPanelComponent.ShowChat("x1 bread");
             EventBus.Publish(new AddFoodOrderEvent(
                 new FoodOrder()
                 {
@@ -61,13 +61,13 @@ public class Diner : BaseWorker
 
     private async UniTask EatFoodAsync(CancellationToken cancellationToken)
     {
-        chatPanel.ShowChat("Yummy!");
+        chatPanelComponent.ShowChat("Yummy!");
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
         EventBus.Publish(new AddResourceEvent("money", 5));
         var pedestrian = new Pedestrian(); 
         character.SetJob(pedestrian);
         diningTable.VacateSeat(transform);
         character.DoJobAsync(pedestrian.DoJobAsync);
-        chatPanel.HideChat();
+        chatPanelComponent.HideChat();
     }
 }

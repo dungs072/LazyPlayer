@@ -5,9 +5,9 @@ using UnityEngine;
 public class BaseWorker
 {
     protected Character character;
-    protected Movement movement;
+    protected Movement movementComponent;
     protected Transform transform;
-    protected ChatPanel chatPanel;
+    protected ChatPanel chatPanelComponent;
     public virtual string JobName()
     {
         return "BaseWorker";
@@ -16,18 +16,9 @@ public class BaseWorker
     public void SetCharacter(Character character)
     {
         this.character = character;
-    }
-    public void SetMovement(Movement movement)
-    {
-        this.movement = movement;
-    }
-    public void SetTransform(Transform transform)
-    {
-        this.transform = transform;
-    }
-    public void SetChatPanel(ChatPanel chatPanel)
-    {
-        this.chatPanel = chatPanel;
+        movementComponent = character.MovementComponent;
+        transform = character.transform;
+        chatPanelComponent = character.ChatPanelComponent;
     }
     public virtual async UniTask DoJobAsync(CancellationToken cancellationToken)
     {

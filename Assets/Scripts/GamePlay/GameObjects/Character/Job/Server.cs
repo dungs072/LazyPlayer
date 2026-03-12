@@ -40,10 +40,10 @@ public class Server : BaseWorker
         if (isAvailableFood)
         {
             EventBus.Publish(new RemoveFoodOrderEvent());
-            await movement.Move(cancellationToken, servingTable.transform.position);
+            await movementComponent.Move(cancellationToken, servingTable.transform.position);
                
             EventBus.Publish(new ConsumeFoodEvent(order.foodAmounts));
-            await movement.Move(cancellationToken, order.diningTable.transform.position);
+            await movementComponent.Move(cancellationToken, order.diningTable.transform.position);
                
             order.diner.EatFood();
             var orderLeft = QueryBus.Query<GetOldestFoodOrderQuery, FoodOrder>(new GetOldestFoodOrderQuery());
@@ -54,13 +54,13 @@ public class Server : BaseWorker
             }
             else
             {
-                await movement.Move(cancellationToken, orderTable.transform.position);
+                await movementComponent.Move(cancellationToken, orderTable.transform.position);
                 isWorking = false;
             }
         }
         else
         {
-            await movement.Move(cancellationToken, orderTable.transform.position);
+            await movementComponent.Move(cancellationToken, orderTable.transform.position);
                
             var orderLeft = QueryBus.Query<GetOldestFoodOrderQuery, FoodOrder>(new GetOldestFoodOrderQuery());
             if (orderLeft != null)

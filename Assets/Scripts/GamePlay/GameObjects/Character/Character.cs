@@ -7,23 +7,25 @@ using TMPro;
 [RequireComponent(typeof(Movement))]
 public class Character : MonoBehaviour
 {
-    [SerializeField] private ChatPanel chatPanel;
+    [SerializeField] private ChatPanel chatPanelComponent;
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private SpriteRenderer characterSpriteRenderer;
     [SerializeField] private bool isLooping = true;
     
-    private Movement movement = null;
+    private Movement movementComponent = null;
     private CharacterData characterData = null;
     private BaseWorker worker = null;
 
     public CharacterData CharacterData => characterData;
+    public Movement MovementComponent => movementComponent;
+    public ChatPanel ChatPanelComponent => chatPanelComponent;
 
     private CancellationTokenSource currentCTS = null;
 
     public void Initialize(Sprite characterSkin)
     {
-        movement = GetComponent<Movement>();
-        chatPanel.HideChat();
+        movementComponent = GetComponent<Movement>();
+        chatPanelComponent.HideChat();
         characterSpriteRenderer.sprite = characterSkin;
     }
     public void StartJob()
@@ -37,9 +39,6 @@ public class Character : MonoBehaviour
     public void SetJob(BaseWorker worker)
     {
         worker.SetCharacter(this);
-        worker.SetTransform(transform);
-        worker.SetMovement(movement);
-        worker.SetChatPanel(chatPanel);
         this.worker = worker;
         nameText.text = worker.GetType().Name;
     }
