@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     [SerializeField] private List<Character> characterPrefabs = new();
+    [SerializeField] private List<Sprite> characterSprites = new();
 
     private List<Character> characters = new();
 
@@ -32,6 +33,7 @@ public class CharacterManager : MonoBehaviour
             var prefab = characterPrefabs[0];
             if (prefab == null) return null;
             var instance = Instantiate(prefab, startWorldPos, Quaternion.identity);
+            instance.Initialize(characterSprites[Random.Range(0, characterSprites.Count)]);
             characters.Add(instance);
             return instance;
         }
