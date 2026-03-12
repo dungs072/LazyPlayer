@@ -48,9 +48,7 @@ public class GameScreen : BaseScreen
     public async UniTask OnStaffButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        var staffDataList = QueryBus.Query<GetStaffDataListQuery, IReadOnlyList<CharacterData>>(
-            new GetStaffDataListQuery()
-        );
+        var staffDataList = QueryBus.Query(new GetStaffDataListQuery());
         var data = new StaffScreenData { dataList = staffDataList };
         await ScreenPlugin.OpenScreenAsync<StaffScreen>(data);
         GamePlugin.BlockInput(false);
@@ -59,10 +57,7 @@ public class GameScreen : BaseScreen
     public async UniTask OnBuilderButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        var buildingDataList = QueryBus.Query<
-            GetBuildingDataListQuery,
-            IReadOnlyList<BuildableEntity>
-        >(new GetBuildingDataListQuery());
+        var buildingDataList = QueryBus.Query(new GetBuildingDataListQuery());
         var data = new BuilderScreenData { dataList = buildingDataList };
         await UniTask.WhenAll(
             new[]

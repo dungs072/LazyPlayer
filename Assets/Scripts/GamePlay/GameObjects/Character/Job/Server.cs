@@ -1,21 +1,24 @@
 using System.Threading;
-using Building = EntityConstant.Building;
 using Cysharp.Threading.Tasks;
+using Building = EntityConstant.Building;
 
 public class Server : BaseWorker
 {
     private float workDuration = 2f;
     private bool isWorking = false;
-    public Server(float workDuration) : base()
+
+    public Server(float workDuration)
+        : base()
     {
         this.workDuration = workDuration;
         FoodOrderManager.OnFoodOrderAdded += HandleFoodOrderAdded;
-
     }
+
     ~Server()
     {
         FoodOrderManager.OnFoodOrderAdded -= HandleFoodOrderAdded;
     }
+
     public override string JobName()
     {
         return "Server";
@@ -23,30 +26,31 @@ public class Server : BaseWorker
 
     private void HandleFoodOrderAdded()
     {
-        if (isWorking) return;
+        if (isWorking)
+            return;
         doable.DoJobAsync(DoJobAsync);
     }
 
-
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.SERVING_TABLE));
-        var orderTable = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.ORDER_TABLE));
-        var order = QueryBus.Query<GetOldestFoodOrderQuery, FoodOrder>(new GetOldestFoodOrderQuery());
-        if (order == null) return;
+        var servingTable = QueryBus.Query(new GetActiveEntityQuery(Building.SERVING_TABLE));
+        var orderTable = QueryBus.Query(new GetActiveEntityQuery(Building.ORDER_TABLE));
+        var order = QueryBus.Query(new GetOldestFoodOrderQuery());
+        if (order == null)
+            return;
         //! race conditions
         isWorking = true;
-        var isAvailableFood = QueryBus.Query<IsAvailableFoodQuery, bool>(new IsAvailableFoodQuery(order.foodAmounts));
+        var isAvailableFood = QueryBus.Query(new IsAvailableFoodQuery(order.foodAmounts));
         if (isAvailableFood)
         {
             EventBus.Publish(new RemoveFoodOrderEvent());
             await movement.Move(cancellationToken, servingTable.transform.position);
-               
+
             EventBus.Publish(new ConsumeFoodEvent(order.foodAmounts));
             await movement.Move(cancellationToken, order.diningTable.transform.position);
-               
+
             order.diner.EatFood();
-            var orderLeft = QueryBus.Query<GetOldestFoodOrderQuery, FoodOrder>(new GetOldestFoodOrderQuery());
+            var orderLeft = QueryBus.Query(new GetOldestFoodOrderQuery());
             if (orderLeft != null)
             {
                 isWorking = false;
@@ -61,8 +65,8 @@ public class Server : BaseWorker
         else
         {
             await movement.Move(cancellationToken, orderTable.transform.position);
-               
-            var orderLeft = QueryBus.Query<GetOldestFoodOrderQuery, FoodOrder>(new GetOldestFoodOrderQuery());
+
+            var orderLeft = QueryBus.Query(new GetOldestFoodOrderQuery());
             if (orderLeft != null)
             {
                 HandleFoodOrderAdded();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BaseEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -46,6 +47,7 @@ public class MenuGamePlayPanel : MonoBehaviour
     private float slideDistance;
     private List<MagicButtonWithIcon> tab1Buttons;
     private MagicButtonWithIcon selectedTab1Button;
+    private ReadOnlyArray<MenuGridData> previousMenuGridData;
 
     void Awake()
     {
@@ -72,6 +74,7 @@ public class MenuGamePlayPanel : MonoBehaviour
         closeButton.AddListener(HandleCloseButtonClicked);
 
         tab2ButtonPanel.OnRequestMenuGridData += HandleTab2ButtonPanelRequestMenuGridData;
+        scroller.OnGridBlockItemClicked += HandleGridBlockItemClicked;
     }
 
     void OnDestroy()
@@ -82,10 +85,12 @@ public class MenuGamePlayPanel : MonoBehaviour
         settingButton.RemoveListener(HandleSettingButtonClicked);
         closeButton.RemoveListener(HandleCloseButtonClicked);
         tab2ButtonPanel.OnRequestMenuGridData -= HandleTab2ButtonPanelRequestMenuGridData;
+        scroller.OnGridBlockItemClicked -= HandleGridBlockItemClicked;
     }
 
     private void HandleTab2ButtonPanelRequestMenuGridData(ReadOnlyArray<MenuGridData> data)
     {
+        previousMenuGridData = data;
         scroller.SetData(data);
     }
 
@@ -173,6 +178,63 @@ public class MenuGamePlayPanel : MonoBehaviour
             .AsyncWaitForCompletion();
 
         GamePlugin.BlockInput(false);
+    }
+
+    private async UniTask HandleGridBlockItemClicked(MenuGridData data)
+    {
+        GamePlugin.BlockInput(true);
+        var type = data.Type;
+        if (type == ButtonTab3Type.BUILD)
+        {
+            HandleClickBuildButton();
+        }
+        else if (type == ButtonTab3Type.BUILD_BACK)
+        {
+            HandleClickBuildBackButton();
+        }
+        else if (type == ButtonTab3Type.BUILDING_LIST)
+        {
+            HandleClickBuildingListButton(data.Name);
+        }
+        else
+        {
+            Debug.Log($"Clicked grid block with type {type}");
+        }
+        await UniTask.NextFrame();
+        GamePlugin.BlockInput(false);
+    }
+
+    private void HandleClickBuildButton()
+    {
+        var buildingDataList = QueryBus.Query(new GetBuildingDataListQuery());
+        var gridData = new MenuGridData[buildingDataList.Count + 1];
+        for (int i = 0; i < buildingDataList.Count; i++)
+        {
+            gridData[i] = new MenuGridData
+            {
+                Type = ButtonTab3Type.BUILDING_LIST,
+                Name = buildingDataList[i].EntityName,
+                Icon = buildingDataList[i].Icon,
+            };
+        }
+        gridData[buildingDataList.Count] = new MenuGridData
+        {
+            Type = ButtonTab3Type.BUILD_BACK,
+            Name = "Back",
+            Icon = null, // need to query the back icon
+        };
+
+        scroller.SetData(new ReadOnlyArray<MenuGridData>(gridData));
+    }
+
+    private void HandleClickBuildBackButton()
+    {
+        scroller.SetData(previousMenuGridData);
+    }
+
+    private void HandleClickBuildingListButton(string entityName)
+    {
+        EventBus.Publish(new SpawnEntityEvent { entityName = entityName });
     }
 
     public void PrepareFadeIn()

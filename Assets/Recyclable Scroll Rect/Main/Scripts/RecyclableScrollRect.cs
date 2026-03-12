@@ -13,6 +13,8 @@ namespace PolyAndCode.UI
     /// </summary>
     public class RecyclableScrollRect : ScrollRect
     {
+        public event Action<ICell> OnCellCreated;
+
         [HideInInspector]
         public IRecyclableScrollRectDataSource DataSource;
 
@@ -100,6 +102,8 @@ namespace PolyAndCode.UI
             }
             vertical = Direction == DirectionType.Vertical;
             horizontal = Direction == DirectionType.Horizontal;
+
+            _recyclingSystem.OnCellCreated += (cell) => OnCellCreated?.Invoke(cell);
 
             _prevAnchoredPos = content.anchoredPosition;
             onValueChanged.RemoveListener(OnValueChangedListener);

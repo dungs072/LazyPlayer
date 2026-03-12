@@ -6,7 +6,7 @@
             "id": "57efe09c-3040-48fd-9aea-72775fad2f9d",
             "actions": [
                 {
-                    "name": "Click",
+                    "name": "LeftClick",
                     "type": "Button",
                     "id": "bab498f8-6415-44fb-89be-54fbfb5c8aa8",
                     "expectedControlType": "",
@@ -15,13 +15,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Pointer",
-                    "type": "Value",
-                    "id": "112a866e-84a4-435a-a50b-c65aea0e1354",
+                    "name": "RightClick",
+                    "type": "Button",
+                    "id": "567c32b2-d588-4257-b71d-10197554d785",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -32,18 +32,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";MouseAndKeyboards",
-                    "action": "Click",
+                    "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "eb226fbf-4e4c-4eec-bc76-b6ff4bd84954",
-                    "path": "<Pointer>/position",
+                    "id": "f714b7e0-b91c-4d92-bcf5-50a87f3a30e9",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";MouseAndKeyboards",
-                    "action": "Pointer",
+                    "groups": "",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f7dede4d-b802-455d-9f8f-db499899c0c8",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

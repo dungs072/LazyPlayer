@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BuildingEditorScreen : BaseScreen
 {
-    [SerializeField] private BuildingEditorScreenView view;
+    [SerializeField]
+    private BuildingEditorScreenView view;
 
     public override void Initialize1()
     {
@@ -19,39 +20,49 @@ public class BuildingEditorScreen : BaseScreen
         view.rotateButton.RemoveListener(HandleRotateButtonClicked);
         view.buildButton.RemoveListener(HandleBuildButtonClicked);
     }
+
     private async UniTask HandleCloseButtonClicked()
     {
         GamePlugin.BlockInput(true);
         EventBus.Publish(new DestroyCurrentBuildingEvent());
-        var buildingDataList = QueryBus.Query<GetBuildingDataListQuery, IReadOnlyList<BuildableEntity>>(new GetBuildingDataListQuery());
+        var buildingDataList = QueryBus.Query(new GetBuildingDataListQuery());
 
-        await UniTask.WhenAll(new[] {
-            ScreenPlugin.OpenScreenAsync<BuilderScreen>(new BuilderScreenData { dataList = buildingDataList }),
-            ScreenPlugin.CloseScreenAsync<BuildingEditorScreen>()
-        });
+        await UniTask.WhenAll(
+            new[]
+            {
+                ScreenPlugin.OpenScreenAsync<BuilderScreen>(
+                    new BuilderScreenData { dataList = buildingDataList }
+                ),
+                ScreenPlugin.CloseScreenAsync<BuildingEditorScreen>(),
+            }
+        );
         GamePlugin.BlockInput(false);
     }
+
     private async UniTask HandleRotateButtonClicked()
     {
         GamePlugin.BlockInput(true);
         await UniTask.NextFrame();
         GamePlugin.BlockInput(false);
     }
+
     private async UniTask HandleBuildButtonClicked()
     {
         GamePlugin.BlockInput(true);
         EventBus.Publish(new BuildCurrentBuildingEvent());
-        await UniTask.WhenAll(new[]
-        {
-            ScreenPlugin.OpenScreenAsync<BuilderScreen>(),
-            ScreenPlugin.CloseScreenAsync<BuildingEditorScreen>()
-        });
+        await UniTask.WhenAll(
+            new[]
+            {
+                ScreenPlugin.OpenScreenAsync<BuilderScreen>(),
+                ScreenPlugin.CloseScreenAsync<BuildingEditorScreen>(),
+            }
+        );
         GamePlugin.BlockInput(false);
     }
 
     public override void PrepareData()
     {
-       // throw new System.NotImplementedException();
+        // throw new System.NotImplementedException();
     }
 
     public override void PrepareFadeIn()
@@ -61,13 +72,13 @@ public class BuildingEditorScreen : BaseScreen
 
     public override UniTask FadeInAsync()
     {
-       // throw new System.NotImplementedException();
-       return UniTask.CompletedTask;
+        // throw new System.NotImplementedException();
+        return UniTask.CompletedTask;
     }
 
     public override UniTask FadeOutAsync()
     {
-       // throw new System.NotImplementedException();
-       return UniTask.CompletedTask;
+        // throw new System.NotImplementedException();
+        return UniTask.CompletedTask;
     }
 }

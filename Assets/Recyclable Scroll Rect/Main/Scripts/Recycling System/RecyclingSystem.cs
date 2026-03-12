@@ -2,6 +2,7 @@
 //Copyright (c) 2020 Mohammed Iqubal Hussain
 //Website : Polyandcode.com
 
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -13,6 +14,10 @@ namespace PolyAndCode.UI
     public abstract class RecyclingSystem
     {
         public IRecyclableScrollRectDataSource DataSource;
+
+        public event Action<ICell> OnCellCreated;
+
+        protected void RaiseCellCreated(ICell cell) => OnCellCreated?.Invoke(cell);
 
         protected RectTransform Viewport,
             Content;

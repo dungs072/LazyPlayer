@@ -85,7 +85,8 @@ namespace PolyAndCode.UI
 
             //Set content width according to no of coloums
             int coloums = Mathf.CeilToInt((float)_cellPool.Count / _rows);
-            float contentXSize = coloums * _cellWidth + Mathf.Max(0, coloums - 1) * Spacing + 2 * Margin;
+            float contentXSize =
+                coloums * _cellWidth + Mathf.Max(0, coloums - 1) * Spacing + 2 * Margin;
             Content.sizeDelta = new Vector2(contentXSize, Content.sizeDelta.y);
             SetLeftAnchor(Content);
 
@@ -181,8 +182,10 @@ namespace PolyAndCode.UI
                 }
 
                 //Setting data for Cell
-                _cachedCells.Add(item.GetComponent<ICell>());
-                DataSource.SetCell(_cachedCells[_cachedCells.Count - 1], poolSize);
+                var cell = item.GetComponent<ICell>();
+                _cachedCells.Add(cell);
+                DataSource.SetCell(cell, poolSize);
+                RaiseCellCreated(cell);
 
                 //Update the Pool size
                 poolSize++;

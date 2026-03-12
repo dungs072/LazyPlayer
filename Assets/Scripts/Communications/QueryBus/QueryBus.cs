@@ -8,12 +8,25 @@ public static class QueryBus
 {
     private static Dictionary<Type, Delegate> queries = new();
 
-    public static void Subscribe<TQuery, TResult>(Func<TQuery, TResult> handler) where TQuery : IQueryResult<TResult>
+    public static void Subscribe<TQuery, TResult>(Func<TQuery, TResult> handler)
+        where TQuery : IQueryResult<TResult>
     {
         queries[typeof(TQuery)] = handler;
     }
 
-    public static TResult Query<TQuery, TResult>(TQuery query) where TQuery : IQueryResult<TResult>
+    public static TResult Query<TResult>(IQueryResult<TResult> query)
+    {
+        var queryType = query.GetType();
+        if (queries.TryGetValue(queryType, out var del))
+        {
+            return (TResult)del.DynamicInvoke(query);
+        }
+
+        throw new Exception($"No query handler for {queryType}");
+    }
+
+    public static TResult Query<TQuery, TResult>(TQuery query)
+        where TQuery : IQueryResult<TResult>
     {
         if (queries.TryGetValue(typeof(TQuery), out var del))
         {
@@ -21,7 +34,7 @@ public static class QueryBus
             {
                 return typedHandler(query);
             }
-            
+
             throw new InvalidCastException(
                 $"Query result type mismatch for {typeof(TQuery)}. Handler requested {typeof(TResult)}"
             );

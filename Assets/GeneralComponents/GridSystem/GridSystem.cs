@@ -19,16 +19,32 @@ public struct CellGrid
 
 public class GridSystem : MonoBehaviour
 {
-    [SerializeField] private int _rowCount;
-    [SerializeField] private int _columnCount;
-    [SerializeField] private Vector2 _cellSize;
-    [SerializeField] private Vector2 _spacing;
+    [SerializeField]
+    private int _rowCount;
 
-    [SerializeField] private bool _isDebug;
-    [SerializeField] private Color _gridColor = Color.green;
-    [SerializeField] private Color _textColor = Color.white;
-    [SerializeField] private bool _showText = true;
-    [SerializeField] private float _maxDrawDistance = 50f; // Only draw text when camera is close
+    [SerializeField]
+    private int _columnCount;
+
+    [SerializeField]
+    private Vector2 _cellSize;
+
+    [SerializeField]
+    private Vector2 _spacing;
+
+    [SerializeField]
+    private bool _isDebug;
+
+    [SerializeField]
+    private Color _gridColor = Color.green;
+
+    [SerializeField]
+    private Color _textColor = Color.white;
+
+    [SerializeField]
+    private bool _showText = true;
+
+    [SerializeField]
+    private float _maxDrawDistance = 50f; // Only draw text when camera is close
 
     private CellGrid[][] _grid;
 
@@ -48,7 +64,9 @@ public class GridSystem : MonoBehaviour
             }
         }
 
-        QueryBus.Subscribe<GetSnapGridPositionQuery, Vector3>(query => GetSnapGridPosition(query.position));
+        QueryBus.Subscribe<GetSnapGridPositionQuery, Vector3>(query =>
+            GetSnapGridPosition(query.position)
+        );
     }
 
     void Start()
@@ -67,7 +85,8 @@ public class GridSystem : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
-        if (!_isDebug) return;
+        if (!_isDebug)
+            return;
 
         DrawGrid();
     }
@@ -124,7 +143,8 @@ public class GridSystem : MonoBehaviour
         if (sceneCamera != null)
         {
             float distance = Vector3.Distance(sceneCamera.transform.position, transform.position);
-            if (distance > _maxDrawDistance) return;
+            if (distance > _maxDrawDistance)
+                return;
         }
 
         // Initialize cached style once
@@ -168,6 +188,7 @@ public class GridSystem : MonoBehaviour
 
         return new Vector2(x, y);
     }
+
     public Vector3 GetSnapGridPosition(Vector3 worldPosition)
     {
         Vector3 localPos = worldPosition - transform.position;
@@ -176,13 +197,16 @@ public class GridSystem : MonoBehaviour
         float totalWidth = _columnCount * _cellSize.x + (_columnCount - 1) * _spacing.x;
         float totalHeight = _rowCount * _cellSize.y + (_rowCount - 1) * _spacing.y;
 
-        // Calculate offset to center the grid
-        float offsetX = -totalWidth / 2;
-        float offsetY = -totalHeight / 2;
+        // First cell center in local space (matches GetCellPosition logic)
+        float firstCellCenterX = -totalWidth / 2 + _cellSize.x / 2;
+        float firstCellCenterY = -totalHeight / 2 + _cellSize.y / 2;
 
-        // Calculate column and row based on local position
-        int column = Mathf.RoundToInt((localPos.x - offsetX) / (_cellSize.x + _spacing.x));
-        int row = Mathf.RoundToInt((localPos.y - offsetY) / (_cellSize.y + _spacing.y));
+        float stepX = _cellSize.x + _spacing.x;
+        float stepY = _cellSize.y + _spacing.y;
+
+        // Find nearest cell by rounding distance from first cell center
+        int column = Mathf.RoundToInt((localPos.x - firstCellCenterX) / stepX);
+        int row = Mathf.RoundToInt((localPos.y - firstCellCenterY) / stepY);
 
         // Clamp to grid bounds
         column = Mathf.Clamp(column, 0, _columnCount - 1);

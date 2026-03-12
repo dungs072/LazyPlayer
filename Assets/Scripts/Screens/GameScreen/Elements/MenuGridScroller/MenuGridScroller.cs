@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using PolyAndCode.UI;
 using UnityEngine;
 
@@ -11,10 +13,31 @@ public class MenuGridData
 
 public class MenuGridScroller : MonoBehaviour, IRecyclableScrollRectDataSource
 {
+    public event Func<MenuGridData, UniTask> OnGridBlockItemClicked;
+
     [SerializeField]
     private RecyclableScrollRect _recyclableScrollRect;
 
     private IReadOnlyList<MenuGridData> _contactList = new List<MenuGridData>();
+
+    void Awake()
+    {
+        _recyclableScrollRect.OnCellCreated += HandleCellCreated;
+    }
+
+    void OnDestroy()
+    {
+        _recyclableScrollRect.OnCellCreated -= HandleCellCreated;
+    }
+
+    private void HandleCellCreated(ICell cell)
+    {
+        var gridBlock = cell as GridBlock;
+        gridBlock.AddListener(() =>
+        {
+            OnGridBlockItemClicked?.Invoke(gridBlock.Data);
+        });
+    }
 
     public void SetData(IReadOnlyList<MenuGridData> data)
     {

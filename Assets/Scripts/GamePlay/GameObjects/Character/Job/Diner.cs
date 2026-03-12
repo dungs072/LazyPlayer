@@ -21,12 +21,11 @@ public class Diner : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        diningTable = QueryBus.Query<GetActiveEntityQuery, Entity>(
-            new GetActiveEntityQuery(Building.DINING_TABLE)
-        ) as DiningTable;
+        diningTable =
+            QueryBus.Query(new GetActiveEntityQuery(Building.DINING_TABLE)) as DiningTable;
         if (diningTable == null)
         {
-            EventBus.Publish(new AddTableOrderEvent(new TableOrder() { diner = this}));
+            EventBus.Publish(new AddTableOrderEvent(new TableOrder() { diner = this }));
             return;
         }
         var targetPos = diningTable.GetAvailableSeat();
@@ -40,17 +39,19 @@ public class Diner : BaseWorker
             await movement.Move(cancellationToken, targetPos.Value);
 
             chatPanel.ShowChat("x1 bread");
-            EventBus.Publish(new AddFoodOrderEvent(
-                new FoodOrder()
-                {
-                    diningTable = diningTable,
-                    diner = this,
-                    foodAmounts = new FoodAmount[]
+            EventBus.Publish(
+                new AddFoodOrderEvent(
+                    new FoodOrder()
                     {
-                        new() { foodId = "bread", amount = 1 },
-                    },
-                }
-            ));
+                        diningTable = diningTable,
+                        diner = this,
+                        foodAmounts = new FoodAmount[]
+                        {
+                            new() { foodId = "bread", amount = 1 },
+                        },
+                    }
+                )
+            );
         }
     }
 
@@ -64,7 +65,7 @@ public class Diner : BaseWorker
         chatPanel.ShowChat("Yummy!");
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
         EventBus.Publish(new AddResourceEvent("money", 5));
-        var pedestrian = new Pedestrian(); 
+        var pedestrian = new Pedestrian();
         switchableJob.SetJob(pedestrian);
         diningTable.VacateSeat(transform);
         doable.DoJobAsync(pedestrian.DoJobAsync);

@@ -24,8 +24,10 @@ public enum ButtonTab2Type
 public enum ButtonTab3Type
 {
     // BUILDER
-    BUILDING,
+    BUILD,
     EDIT,
+    BUILD_BACK,
+    BUILDING_LIST,
 }
 
 [Serializable]

@@ -519,9 +519,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fadcfd0398eb8244eb44f59f4b76fd61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rowCount: 10
+  _rowCount: 30
   _columnCount: 100
-  _cellSize: {x: 1, y: 1}
+  _cellSize: {x: 0.5, y: 0.5}
   _spacing: {x: 0, y: 0}
   _isDebug: 1
   _gridColor: {r: 0, g: 1, b: 0, a: 1}
@@ -21082,7 +21082,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000019073486
+      value: -0.0000038146973
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x

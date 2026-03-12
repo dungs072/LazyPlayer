@@ -1,17 +1,24 @@
-using UnityEngine;
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using UnityEngine;
 
 [RequireComponent(typeof(Movement))]
 public class Character : MonoBehaviour, ISwitchableJob, IDoable
 {
-    [SerializeField] private JobHandler jobHandler;
-    [SerializeField] private ChatPanel chatPanel;
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private SpriteRenderer characterSpriteRenderer;
-    
+    [SerializeField]
+    private JobHandler jobHandler;
+
+    [SerializeField]
+    private ChatPanel chatPanel;
+
+    [SerializeField]
+    private TMP_Text nameText;
+
+    [SerializeField]
+    private SpriteRenderer characterSpriteRenderer;
+
     private Movement movement = null;
     private CharacterData characterData = null;
 
@@ -26,6 +33,7 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
         chatPanel.HideChat();
         characterSpriteRenderer.sprite = characterSkin;
     }
+
     public void StartJob()
     {
         currentCTS?.Cancel();
@@ -40,6 +48,7 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
         jobHandler.SetWorker(worker, this, chatPanel, this);
         nameText.text = worker.GetType().Name;
     }
+
     public void SetIsLoopingDoJob(bool isLoopingDoJob)
     {
         jobHandler.SetIsLoopingDoJob(isLoopingDoJob);

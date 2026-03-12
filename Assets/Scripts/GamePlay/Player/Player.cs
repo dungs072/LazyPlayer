@@ -9,6 +9,11 @@ public class Player : MonoBehaviour
         inputHandler.Awake();
     }
 
+    void OnDestroy()
+    {
+        inputHandler.OnDestroy();
+    }
+
     void OnEnable()
     {
         inputHandler.OnEnable();
@@ -17,9 +22,5 @@ public class Player : MonoBehaviour
     void OnDisable()
     {
         inputHandler.OnDisable();
-    }
-    void Update()
-    {
-        inputHandler.Update();
     }
 }

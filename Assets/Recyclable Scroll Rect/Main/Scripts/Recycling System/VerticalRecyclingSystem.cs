@@ -84,7 +84,8 @@ namespace PolyAndCode.UI
 
             //Set content height according to no of rows
             int noOfRows = (int)Mathf.Ceil((float)_cellPool.Count / (float)_coloumns);
-            float contentYSize = noOfRows * _cellHeight + Mathf.Max(0, noOfRows - 1) * Spacing + 2 * Margin;
+            float contentYSize =
+                noOfRows * _cellHeight + Mathf.Max(0, noOfRows - 1) * Spacing + 2 * Margin;
             Content.sizeDelta = new Vector2(Content.sizeDelta.x, contentYSize);
             SetTopAnchor(Content);
 
@@ -187,8 +188,10 @@ namespace PolyAndCode.UI
                 }
 
                 //Setting data for Cell
-                _cachedCells.Add(item.GetComponent<ICell>());
-                DataSource.SetCell(_cachedCells[_cachedCells.Count - 1], poolSize);
+                var cell = item.GetComponent<ICell>();
+                _cachedCells.Add(cell);
+                DataSource.SetCell(cell, poolSize);
+                RaiseCellCreated(cell);
 
                 //Update the Pool size
                 poolSize++;

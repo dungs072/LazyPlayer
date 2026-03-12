@@ -9,6 +9,9 @@ public class Entity : MonoBehaviour
     [SerializeField]
     private TMP_Text displayNameText;
 
+    [SerializeField]
+    private Sprite icon;
+
     public string EntityName
     {
         get { return entityName; }
@@ -19,5 +22,10 @@ public class Entity : MonoBehaviour
         if (displayNameText == null)
             return;
         displayNameText.text = entityName;
+    }
+
+    public Sprite Icon
+    {
+        get { return icon; }
     }
 }
