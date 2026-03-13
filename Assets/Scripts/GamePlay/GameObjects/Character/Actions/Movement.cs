@@ -36,13 +36,13 @@ public class Movement : MonoBehaviour
                 nextPosition = transform.position;
                 nextPosition.y = position.y;
                 var nextMoveDirection = nextPosition.y > transform.position.y ? MoveDirection.Up  : MoveDirection.Down;
-                UpdateDirection(nextMoveDirection);
+                SetDirection(nextMoveDirection);
             }
             else
             {
                 nextPosition = position;
                 var nextMoveDirection = nextPosition.x > transform.position.x ? MoveDirection.Right  : MoveDirection.Left;
-                UpdateDirection(nextMoveDirection);
+                SetDirection(nextMoveDirection);
             } 
             
             transform.position = Vector3.MoveTowards(
@@ -50,14 +50,14 @@ public class Movement : MonoBehaviour
                 nextPosition,
                 Time.deltaTime * speed
             );
-            UpdateIsMoving(true);
+            SetIsMoving(true);
             await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken);
         }
         
-        UpdateIsMoving(false);
+        SetIsMoving(false);
     }
 
-    private void UpdateDirection(MoveDirection nextMoveDirection)
+    private void SetDirection(MoveDirection nextMoveDirection)
     {
         if (currentMoveDirection != nextMoveDirection)
         {
@@ -66,7 +66,7 @@ public class Movement : MonoBehaviour
         }
     }
 
-    private void UpdateIsMoving(bool nextIsMoving)
+    private void SetIsMoving(bool nextIsMoving)
     {
         if (isMoving != nextIsMoving)
         {
