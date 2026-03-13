@@ -32,7 +32,7 @@ public class MapManager : MonoBehaviour
         var chars = characterManager.SpawnCharacter(1, new Vector3(0, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {
-            chars[i].SetJob(new Farmer(0.2f));
+            chars[i].EnqueueJob(new Farmer(0.2f));
             chars[i].StartJob();
             staffManager.AddStaffAndSetData(chars[i]);
         }
@@ -68,7 +68,7 @@ public class MapManager : MonoBehaviour
         var chars = characterManager.SpawnCharacter(1, new Vector3(18, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {
-            chars[i].SetJob(new Chef(5f));
+            chars[i].EnqueueJob(new Chef(5f));
             chars[i].StartJob();
             staffManager.AddStaffAndSetData(chars[i]);
         }
@@ -87,8 +87,8 @@ public class MapManager : MonoBehaviour
         var chars = characterManager.SpawnCharacter(1, new Vector3(40, 0, 0));
         for (var i = 0; i < chars.Length; i++)
         {
-            chars[0].SetIsLoopingDoJob(false);
-            chars[i].SetJob(new Server(2f));
+            chars[i].EnqueueJob(new Server());
+            chars[i].StartJob();
             staffManager.AddStaffAndSetData(chars[i]);
         }
         var diningTable = entityManager.GetEntity(
@@ -114,8 +114,7 @@ public class MapManager : MonoBehaviour
         var chars = characterManager.SpawnCharacter(10, new Vector3(60, 0, 0));
         for (int i = 0; i < chars.Length; i++)
         {
-            chars[i].SetIsLoopingDoJob(false);
-            chars[i].SetJob(new Pedestrian());
+            chars[i].EnqueueJob(new Pedestrian());
             chars[i].StartJob();
         }
     }

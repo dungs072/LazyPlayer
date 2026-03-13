@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TableOrder
 {
-    public Diner diner;
+    public Character diner;
 }
 public class TableOrderManager : MonoBehaviour
 {
@@ -23,8 +24,7 @@ public class TableOrderManager : MonoBehaviour
     {
         var order = GetOldestTableOrder();
         if (order == null) return;
-        var diner = order.diner;
-        diner.DoJob();
+        order.diner.EnqueueJob(new Diner());
         RemoveTableOrder(order);
     }
 
