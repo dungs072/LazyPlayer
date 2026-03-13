@@ -70,9 +70,12 @@ public class GridSystem : MonoBehaviour
         QueryBus.Subscribe<IsOverlappingGridQuery, bool>(query =>
             IsCellOccupied(query.position, query.size)
         );
-        EventBus.Subscribe<SetOccupiedGridEvent>(e =>
-            SetCellOccupied(e.position, e.size.x, e.size.y)
-        );
+        EventBus.Subscribe<SetOccupiedGridEvent>(SetCellOccupied);
+    }
+
+    void OnDestroy()
+    {
+        EventBus.Unsubscribe<SetOccupiedGridEvent>(SetCellOccupied);
     }
 
     void Start()
@@ -246,8 +249,11 @@ public class GridSystem : MonoBehaviour
         return transform.position + new Vector3(cellPos.x, cellPos.y, 0);
     }
 
-    public void SetCellOccupied(Vector3 position, float widthSize, float heightSize)
+    public void SetCellOccupied(SetOccupiedGridEvent e)
     {
+        var position = e.position;
+        var widthSize = e.size.x;
+        var heightSize = e.size.y;
         // Convert world position to local position
         Vector3 localPos = position - transform.position;
 
