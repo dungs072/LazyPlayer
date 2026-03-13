@@ -1,11 +1,15 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 // only pure class c# is allowed
 public class GamePlugin
 {
     private static EventSystem eventSystem;
+    private static readonly System.Collections.Generic.List<RaycastResult> raycastResults = new();
+
     public void Init()
     {
         eventSystem = EventSystem.current;
@@ -17,5 +21,26 @@ public class GamePlugin
         {
             eventSystem.enabled = !block;
         }
+    }
+
+    /// <summary>
+    /// Do not run function every frame, only run when player click, so it won't cause performance issue. It can be used to check if player click on UI or not.
+    /// </summary>
+    public static bool IsPointerOverUI()
+    {
+        var eventData = new PointerEventData(eventSystem)
+        {
+            position = Mouse.current.position.ReadValue(),
+        };
+        raycastResults.Clear();
+        eventSystem.RaycastAll(eventData, raycastResults);
+        foreach (var result in raycastResults)
+        {
+            if (result.gameObject.GetComponentInParent<Selectable>() != null)
+                return true;
+            if (result.gameObject.GetComponent<Image>() != null)
+                return true;
+        }
+        return false;
     }
 }

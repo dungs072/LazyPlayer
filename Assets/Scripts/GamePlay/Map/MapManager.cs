@@ -48,7 +48,11 @@ public class MapManager : MonoBehaviour
         {
             var position = new Vector3(basePos.x + i * xOffset, basePos.y + row * yOffset, 0);
             var gridPosition = QueryBus.Query(new GetSnapGridPositionQuery { position = position });
-            var farm = entityManager.GetEntity(EntityConstant.Building.PLOT, gridPosition);
+            var plot = entityManager.GetEntity(EntityConstant.Building.PLOT, gridPosition);
+            var buildableEntity = plot as BuildableEntity;
+            EventBus.Publish(
+                new SetOccupiedGridEvent { position = gridPosition, size = buildableEntity.Size }
+            );
             row = (i + 1) % 2;
         }
     }

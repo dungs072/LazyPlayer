@@ -5,47 +5,56 @@ using UnityEngine.InputSystem;
 
 public class BuildingSystem : MonoBehaviour
 {
-    private BuildableEntity currentBuildableEntity;
+    [SerializeField]
+    private SpriteRenderer ghostBuildingSkin;
+
+    private BuildableEntity buildablePrefab;
+    private bool isOverlapping = false;
     private Tween _moveTween;
 
     public void Initialize1()
     {
-        EventBus.Subscribe<SpawnEntityEvent>(StartBuilding);
-        InputHandler.OnMouseLeftClick += EndBuilding;
-        InputHandler.OnMouseRightClick += DestroyBuilding;
+        EventBus.Subscribe<SpawnEntityEvent>(StartGhostBuilding);
+        InputHandler.OnMouseLeftClick += EndGhostBuilding;
+        InputHandler.OnMouseRightClick += DestroyGhostBuilding;
     }
 
     void OnDestroy()
     {
-        EventBus.Unsubscribe<SpawnEntityEvent>(StartBuilding);
-        InputHandler.OnMouseLeftClick -= EndBuilding;
-        InputHandler.OnMouseRightClick -= DestroyBuilding;
+        EventBus.Unsubscribe<SpawnEntityEvent>(StartGhostBuilding);
+        InputHandler.OnMouseLeftClick -= EndGhostBuilding;
+        InputHandler.OnMouseRightClick -= DestroyGhostBuilding;
     }
 
-    public void StartBuilding(SpawnEntityEvent e)
+    public void StartGhostBuilding(SpawnEntityEvent e)
     {
         var centerWorldPos = QueryBus.Query(new GetCenterCameraPositionQuery());
-        var building = QueryBus.Query(
-            new GetEntityQuery { prefabId = e.entityName, position = centerWorldPos }
-        );
-        if (building == null)
+        var buildingPrefab = QueryBus.Query(new GetEntityPrefabQuery { prefabId = e.entityName });
+        if (buildingPrefab == null)
         {
-            Debug.LogError($"Failed to build {e.entityName} at {centerWorldPos}");
+            Debug.LogError($"Cannot find prefab for entity name: {e.entityName}");
+            return;
         }
-        currentBuildableEntity = building as BuildableEntity;
-        if (currentBuildableEntity)
-        {
-            currentBuildableEntity.SetBuildingState(BuildingState.UNDER_CONSTRUCTION);
-        }
-        else
+        var currentBuildableEntity = buildingPrefab as BuildableEntity;
+        if (currentBuildableEntity == null)
         {
             Debug.LogError($"The entity {e.entityName} is not a BuildableEntity.");
+            return;
         }
-        GamePlugin.BlockInput(true);
-        MoveBuilding();
+        ghostBuildingSkin.sprite = currentBuildableEntity.Skin;
+        ghostBuildingSkin.transform.position = centerWorldPos;
+        ghostBuildingSkin.transform.localScale = new Vector2(
+            currentBuildableEntity.DisplaySize.x,
+            currentBuildableEntity.DisplaySize.y
+        );
+        ghostBuildingSkin.gameObject.SetActive(true);
+        ghostBuildingSkin.color = Color.green;
+        buildablePrefab = currentBuildableEntity;
+
+        MoveGhostBuilding();
     }
 
-    private void MoveBuilding()
+    private void MoveGhostBuilding()
     {
         _moveTween?.Kill();
         var lastMousePosition = Mouse.current.position.ReadValue();
@@ -54,45 +63,65 @@ public class BuildingSystem : MonoBehaviour
             .SetLoops(-1)
             .OnUpdate(() =>
             {
-                if (!currentBuildableEntity)
+                if (!ghostBuildingSkin.sprite)
                     return;
                 var mousePosition = Mouse.current.position.ReadValue();
                 if (mousePosition == lastMousePosition)
                     return;
                 lastMousePosition = mousePosition;
                 var worldPos = GeneralUtils.GetMouseWorldPosition(mousePosition);
+                isOverlapping = QueryBus.Query(
+                    new IsOverlappingGridQuery { position = worldPos, size = buildablePrefab.Size }
+                );
+                if (isOverlapping)
+                {
+                    ghostBuildingSkin.color = Color.red;
+                }
+                else
+                {
+                    ghostBuildingSkin.color = Color.green;
+                }
                 var snapGridPos = QueryBus.Query(
                     new GetSnapGridPositionQuery { position = worldPos }
                 );
-                currentBuildableEntity.Move(snapGridPos);
+                ghostBuildingSkin.transform.position = snapGridPos;
+                GamePlugin.BlockInput(true);
             });
     }
 
-    private void EndBuilding()
+    private void EndGhostBuilding()
     {
         // If no building is currently being placed, ignore the click event
-        if (!currentBuildableEntity)
+        if (!ghostBuildingSkin.gameObject.activeSelf)
         {
             //Debug.LogWarning("No building is currently being placed. Ignoring build command.");
             return;
         }
+        if (isOverlapping)
+        {
+            return;
+        }
+        if (GamePlugin.IsPointerOverUI())
+        {
+            return;
+        }
+        var position = ghostBuildingSkin.transform.position;
+        var buildingEntity = QueryBus.Query(
+            new GetEntityQuery { prefabId = buildablePrefab.EntityName, position = position }
+        );
+        var currentBuildableEntity = buildingEntity as BuildableEntity;
         currentBuildableEntity.SetBuildingState(BuildingState.READY);
+        EventBus.Publish(
+            new SetOccupiedGridEvent { position = position, size = buildablePrefab.Size }
+        );
         KillMoveTween();
-        currentBuildableEntity = null;
+        HideGhostBuilding();
     }
 
-    private void DestroyBuilding()
+    private void DestroyGhostBuilding()
     {
         KillMoveTween();
-        if (currentBuildableEntity != null)
-        {
-            currentBuildableEntity.gameObject.SetActive(false);
-            currentBuildableEntity = null;
-        }
-        else
-        {
-            Debug.LogWarning("No building to destroy.");
-        }
+        HideGhostBuilding();
     }
 
     private void KillMoveTween()
@@ -100,5 +129,14 @@ public class BuildingSystem : MonoBehaviour
         _moveTween?.Kill();
         _moveTween = null;
         GamePlugin.BlockInput(false);
+    }
+
+    private void HideGhostBuilding()
+    {
+        if (ghostBuildingSkin.gameObject.activeSelf)
+        {
+            ghostBuildingSkin.sprite = null;
+            ghostBuildingSkin.gameObject.SetActive(false);
+        }
     }
 }

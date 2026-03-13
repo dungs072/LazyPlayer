@@ -47,8 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Plot
   displayNameText: {fileID: 0}
+  icon: {fileID: 0}
+  skinSpriteRenderer: {fileID: 585702136610708330}
   growthTime: 10
-  plotRenderer: {fileID: 585702136610708330}
 --- !u!1 &8588676678944224415
 GameObject:
   m_ObjectHideFlags: 0

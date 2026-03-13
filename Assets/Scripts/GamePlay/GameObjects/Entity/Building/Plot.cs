@@ -1,23 +1,25 @@
-
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+
 public enum PlotState
 {
     EMPTY,
     GROWING,
-    READY
+    READY,
 }
 
 public class Plot : BuildableEntity
 {
-    [SerializeField] private float growthTime = 10f;
-    [SerializeField] private SpriteRenderer plotRenderer;
+    [SerializeField]
+    private float growthTime = 10f;
+
     private PlotState state = PlotState.EMPTY;
 
     private string currentCropId = string.Empty;
     private int harvestedAmount = 0;
     public bool IsEmpty => state == PlotState.EMPTY;
     public bool IsReady => state == PlotState.READY;
+
     protected override void Awake()
     {
         base.Awake();
@@ -57,20 +59,21 @@ public class Plot : BuildableEntity
         SwitchState(PlotState.EMPTY);
         return (harvestedCropId, harvestedAmount);
     }
+
     private void SwitchState(PlotState newState)
     {
         state = newState;
         if (state == PlotState.EMPTY)
         {
-            plotRenderer.color = Color.gray;
+            skinSpriteRenderer.color = Color.gray;
         }
         else if (state == PlotState.GROWING)
         {
-            plotRenderer.color = Color.green;
+            skinSpriteRenderer.color = Color.green;
         }
         else if (state == PlotState.READY)
         {
-            plotRenderer.color = Color.yellow;
+            skinSpriteRenderer.color = Color.yellow;
         }
     }
 }

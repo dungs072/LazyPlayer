@@ -67,6 +67,12 @@ public class GridSystem : MonoBehaviour
         QueryBus.Subscribe<GetSnapGridPositionQuery, Vector3>(query =>
             GetSnapGridPosition(query.position)
         );
+        QueryBus.Subscribe<IsOverlappingGridQuery, bool>(query =>
+            IsCellOccupied(query.position, query.size)
+        );
+        EventBus.Subscribe<SetOccupiedGridEvent>(e =>
+            SetCellOccupied(e.position, e.size.x, e.size.y)
+        );
     }
 
     void Start()
@@ -133,6 +139,29 @@ public class GridSystem : MonoBehaviour
         if (_showText)
         {
             DrawCellTexts();
+        }
+
+        // Draw occupied cells
+        if (_grid != null)
+        {
+            DrawOccupiedCells();
+        }
+    }
+
+    private void DrawOccupiedCells()
+    {
+        Color occupiedColor = new Color(1f, 0f, 0f, 0.3f);
+        for (int row = 0; row < _rowCount; row++)
+        {
+            for (int col = 0; col < _columnCount; col++)
+            {
+                if (!_grid[row][col].IsOccupied)
+                    continue;
+                Vector2 cellPos = GetCellPosition(row, col);
+                Vector3 worldPos = transform.position + new Vector3(cellPos.x, cellPos.y, 0);
+                Gizmos.color = occupiedColor;
+                Gizmos.DrawCube(worldPos, new Vector3(_cellSize.x, _cellSize.y, 0));
+            }
         }
     }
 
@@ -226,13 +255,16 @@ public class GridSystem : MonoBehaviour
         float totalWidth = _columnCount * _cellSize.x + (_columnCount - 1) * _spacing.x;
         float totalHeight = _rowCount * _cellSize.y + (_rowCount - 1) * _spacing.y;
 
-        // Calculate offset to center the grid
-        float offsetX = -totalWidth / 2;
-        float offsetY = -totalHeight / 2;
+        // First cell center (matches GetSnapGridPosition logic)
+        float firstCellCenterX = -totalWidth / 2 + _cellSize.x / 2;
+        float firstCellCenterY = -totalHeight / 2 + _cellSize.y / 2;
+
+        float stepX = _cellSize.x + _spacing.x;
+        float stepY = _cellSize.y + _spacing.y;
 
         // Calculate the center cell
-        int centerColumn = Mathf.RoundToInt((localPos.x - offsetX) / (_cellSize.x + _spacing.x));
-        int centerRow = Mathf.RoundToInt((localPos.y - offsetY) / (_cellSize.y + _spacing.y));
+        int centerColumn = Mathf.RoundToInt((localPos.x - firstCellCenterX) / stepX);
+        int centerRow = Mathf.RoundToInt((localPos.y - firstCellCenterY) / stepY);
 
         // Calculate how many cells the object occupies
         int cellsWidth = Mathf.CeilToInt(widthSize / (_cellSize.x + _spacing.x));
@@ -257,5 +289,42 @@ public class GridSystem : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool IsCellOccupied(Vector3 position, Vector2 size)
+    {
+        Vector3 localPos = position - transform.position;
+
+        float totalWidth = _columnCount * _cellSize.x + (_columnCount - 1) * _spacing.x;
+        float totalHeight = _rowCount * _cellSize.y + (_rowCount - 1) * _spacing.y;
+
+        float firstCellCenterX = -totalWidth / 2 + _cellSize.x / 2;
+        float firstCellCenterY = -totalHeight / 2 + _cellSize.y / 2;
+
+        float stepX = _cellSize.x + _spacing.x;
+        float stepY = _cellSize.y + _spacing.y;
+
+        int centerColumn = Mathf.RoundToInt((localPos.x - firstCellCenterX) / stepX);
+        int centerRow = Mathf.RoundToInt((localPos.y - firstCellCenterY) / stepY);
+
+        int cellsWidth = Mathf.CeilToInt(size.x / stepX);
+        int cellsHeight = Mathf.CeilToInt(size.y / stepY);
+
+        int startColumn = centerColumn - cellsWidth / 2;
+        int endColumn = centerColumn + (cellsWidth - 1) / 2;
+        int startRow = centerRow - cellsHeight / 2;
+        int endRow = centerRow + (cellsHeight - 1) / 2;
+
+        for (int row = startRow; row <= endRow; row++)
+        {
+            for (int col = startColumn; col <= endColumn; col++)
+            {
+                if (row < 0 || row >= _rowCount || col < 0 || col >= _columnCount)
+                    return true;
+                if (_grid[row][col].IsOccupied)
+                    return true;
+            }
+        }
+        return false;
     }
 }

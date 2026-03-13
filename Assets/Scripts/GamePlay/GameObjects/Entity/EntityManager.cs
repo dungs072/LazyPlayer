@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class EntityManager : MonoBehaviour
@@ -9,6 +10,19 @@ public class EntityManager : MonoBehaviour
 
     private Dictionary<string, Entity> entityDictPrefabs = new();
     private Dictionary<string, List<Entity>> entitiesPool = new();
+
+    public Entity GetEntityPrefab(string prefabId)
+    {
+        if (entityDictPrefabs.TryGetValue(prefabId, out var prefab))
+        {
+            return prefab;
+        }
+        else
+        {
+            Debug.LogError($"Entity prefab not found for name: {prefabId}");
+            return null;
+        }
+    }
 
     public Entity GetActiveEntity(string prefabId)
     {
@@ -94,6 +108,7 @@ public class EntityManager : MonoBehaviour
         QueryBus.Subscribe<GetEntityQuery, Entity>(query =>
             GetEntity(query.prefabId, query.position)
         );
+        QueryBus.Subscribe<GetEntityPrefabQuery, Entity>(query => GetEntityPrefab(query.prefabId));
         foreach (var entity in entities)
         {
             if (!entityDictPrefabs.ContainsKey(entity.EntityName))

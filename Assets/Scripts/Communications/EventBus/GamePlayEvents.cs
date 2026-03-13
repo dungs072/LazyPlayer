@@ -1,13 +1,25 @@
-
 using UnityEngine;
 
 public struct SpawnEntityEvent
 {
     public string entityName;
 }
+
 public struct MouseClickEvent
 {
     public Vector2 mousePosition;
+}
+
+public struct SetOccupiedGridEvent
+{
+    public Vector3 position;
+    public Vector2 size;
+
+    public SetOccupiedGridEvent(Vector3 position, Vector2 size)
+    {
+        this.position = position;
+        this.size = size;
+    }
 }
 
 public struct AddResourceEvent
@@ -35,7 +47,7 @@ public struct ConsumeResourceEvent
 public struct ConsumeFoodEvent
 {
     public FoodAmount[] foodAmounts;
-    
+
     public ConsumeFoodEvent(FoodAmount[] foodAmounts)
     {
         this.foodAmounts = foodAmounts;
@@ -45,7 +57,7 @@ public struct ConsumeFoodEvent
 public struct AddFoodOrderEvent
 {
     public FoodOrder foodOrder;
-    
+
     public AddFoodOrderEvent(FoodOrder foodOrder)
     {
         this.foodOrder = foodOrder;
@@ -53,12 +65,13 @@ public struct AddFoodOrderEvent
 }
 
 public struct ReadyToServeFoodEvent { }
+
 public struct RemoveFoodOrderEvent { }
 
 public struct AddTableOrderEvent
 {
     public TableOrder tableOrder;
-    
+
     public AddTableOrderEvent(TableOrder tableOrder)
     {
         this.tableOrder = tableOrder;
