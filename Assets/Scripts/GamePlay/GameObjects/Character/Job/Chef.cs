@@ -23,23 +23,24 @@ public class Chef : BaseWorker
         if (canCook)
         {
             var kitchen = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.KITCHEN));
-            await movement.Move(cancellationToken, kitchen.transform.position);
+            await character.MovementComponent.Move(cancellationToken, kitchen.transform.position);
                
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
                
             await EventBus.PublishAsync(new ConsumeResourceEvent(breadRecipe.GetIngredients()));
             var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.SERVING_TABLE));
-            await movement.Move(cancellationToken, servingTable.transform.position);
+            await character.MovementComponent.Move(cancellationToken, servingTable.transform.position);
             await EventBus.PublishAsync(new AddResourceEvent("bread", 1));
             EventBus.Publish(new ReadyToServeFoodEvent());
         }
         
         await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken);
+        character.EnqueueJob(this);
     }
     private async UniTask DoNothing(CancellationToken cancellationToken)
     {
         var randomPos = GetRandomPositionInScreen();
-        await movement.Move(cancellationToken, randomPos);
+        await character.MovementComponent.Move(cancellationToken, randomPos);
        
         await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
     }

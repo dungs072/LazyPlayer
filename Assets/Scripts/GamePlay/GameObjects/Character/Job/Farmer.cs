@@ -20,7 +20,7 @@ public class Farmer : BaseWorker
         Plot plot = QueryBus.Query<GetEmptyPlotQuery, Plot>(new GetEmptyPlotQuery()); 
         while (plot != null)
         {
-            await movement.Move(cancellationToken, plot.transform.position);
+            await character.MovementComponent.Move(cancellationToken, plot.transform.position);
             
             plot.PlantCrop("wheat", 10);
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
@@ -39,21 +39,23 @@ public class Farmer : BaseWorker
         var storage = QueryBus.Query<GetActiveEntityQuery, Entity>(new GetActiveEntityQuery(Building.FARM_STORAGE));
         while (plot != null)
         {
-            await movement.Move(cancellationToken, plot.transform.position);
+            await character.MovementComponent.Move(cancellationToken, plot.transform.position);
             
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
             
             var harvestedCrop = plot.Harvest();
-            await movement.Move(cancellationToken, storage.transform.position);
+            await character.MovementComponent.Move(cancellationToken, storage.transform.position);
             
             EventBus.Publish(new AddResourceEvent(harvestedCrop.Item1, harvestedCrop.Item2));
             plot = QueryBus.Query<GetHarvestablePlotQuery, Plot>(new GetHarvestablePlotQuery()); 
         }
+        
+        character.EnqueueJob(this);
     }
     private async UniTask DoNothing(CancellationToken cancellationToken)
     {
         var randomPos = GetRandomPositionInFarmMap();
-        await movement.Move(cancellationToken, randomPos);
+        await character.MovementComponent.Move(cancellationToken, randomPos);
         await UniTask.WaitForSeconds(1.5f, cancellationToken: cancellationToken);
     }
 

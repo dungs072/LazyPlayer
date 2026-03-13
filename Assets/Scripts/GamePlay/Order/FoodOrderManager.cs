@@ -10,7 +10,7 @@ public class FoodOrder
 {
     public FoodAmount[] foodAmounts;
     public DiningTable diningTable;
-    public Diner diner;
+    public Character diner;
 }
 
 
