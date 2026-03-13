@@ -393,7 +393,8 @@ MonoBehaviour:
   chatPanelComponent: {fileID: 4011620108830744652}
   nameText: {fileID: 452075318047996366}
   characterSpriteRenderer: {fileID: 3437263322890806796}
-  isLooping: 1
+  animator: {fileID: 6993762597257107431}
+  movement: {fileID: 7124730699190741637}
 --- !u!114 &7124730699190741637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,8 +624,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6167606642974457265}
   - component: {fileID: 3437263322890806796}
+  - component: {fileID: 6993762597257107431}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Skin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -700,6 +702,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &6993762597257107431
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8711485838020759948}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 80fd4772479f3494bb784ae3a3d61d49, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8729923886910416557
 GameObject:
   m_ObjectHideFlags: 0

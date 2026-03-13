@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -8,30 +7,27 @@ using UnityEngine;
 [RequireComponent(typeof(Movement))]
 public class Character : MonoBehaviour
 {
-    [SerializeField]
-    private ChatPanel chatPanelComponent;
-
-    [SerializeField]
-    private TMP_Text nameText;
-
-    [SerializeField]
-    private SpriteRenderer characterSpriteRenderer;
+    [SerializeField] private ChatPanel chatPanelComponent;
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private SpriteRenderer characterSpriteRenderer;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Movement movement;
 
     private Queue<BaseWorker> workQueue = new();
     private BaseWorker worker = null;
 
-    private Movement movementComponent = null;
     private CharacterData characterData = null;
     public CharacterData CharacterData => characterData;
-    public Movement MovementComponent => movementComponent;
+    public Movement MovementComponent => movement;
     public ChatPanel ChatPanelComponent => chatPanelComponent;
-
+    
+    public CharacterAnimator characterAnimator = null;
     private CancellationTokenSource currentCTS = null;
 
     public void Initialize(Sprite characterSkin)
     {
-        movementComponent = GetComponent<Movement>();
         chatPanelComponent.HideChat();
+        characterAnimator = new CharacterAnimator(movement, animator);
         characterSpriteRenderer.sprite = characterSkin;
     }
 
