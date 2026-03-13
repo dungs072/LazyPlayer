@@ -1,12 +1,10 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEditor.Search;
 using UnityEngine;
 using static EntityConstant;
 
 public class Diner : BaseWorker
 {
-    private float eatDuration = 5f;
     private DiningTable diningTable;
 
     public override string JobName()
@@ -14,37 +12,34 @@ public class Diner : BaseWorker
         return "Diner";
     }
 
-    public void DoJob()
-    {
-        doable.DoJobAsync(DoJobAsync);
-    }
-
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         diningTable =
-            QueryBus.Query(new GetActiveEntityQuery(Building.DINING_TABLE)) as DiningTable;
+            QueryBus.Query<GetActiveEntityQuery, Entity>(
+                new GetActiveEntityQuery(Building.DINING_TABLE)
+            ) as DiningTable;
         if (diningTable == null)
         {
-            EventBus.Publish(new AddTableOrderEvent(new TableOrder() { diner = this }));
+            EventBus.Publish(new AddTableOrderEvent(new TableOrder() { diner = character }));
             return;
         }
         var targetPos = diningTable.GetAvailableSeat();
-        diningTable.OccupySeat(transform);
+        diningTable.OccupySeat(character.transform);
         if (targetPos == null)
         {
             Debug.Log("No available seat found for diner");
         }
         else
         {
-            await movement.Move(cancellationToken, targetPos.Value);
+            await character.MovementComponent.Move(cancellationToken, targetPos.Value);
 
-            chatPanel.ShowChat("x1 bread");
+            character.ChatPanelComponent.ShowChat("x1 bread");
             EventBus.Publish(
                 new AddFoodOrderEvent(
                     new FoodOrder()
                     {
                         diningTable = diningTable,
-                        diner = this,
+                        diner = character,
                         foodAmounts = new FoodAmount[]
                         {
                             new() { foodId = "bread", amount = 1 },
@@ -53,22 +48,5 @@ public class Diner : BaseWorker
                 )
             );
         }
-    }
-
-    public void EatFood()
-    {
-        doable.DoJobAsync(EatFoodAsync);
-    }
-
-    private async UniTask EatFoodAsync(CancellationToken cancellationToken)
-    {
-        chatPanel.ShowChat("Yummy!");
-        await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
-        EventBus.Publish(new AddResourceEvent("money", 5));
-        var pedestrian = new Pedestrian();
-        switchableJob.SetJob(pedestrian);
-        diningTable.VacateSeat(transform);
-        doable.DoJobAsync(pedestrian.DoJobAsync);
-        chatPanel.HideChat();
     }
 }

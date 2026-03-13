@@ -1,17 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(Movement))]
-public class Character : MonoBehaviour, ISwitchableJob, IDoable
+public class Character : MonoBehaviour
 {
     [SerializeField]
-    private JobHandler jobHandler;
-
-    [SerializeField]
-    private ChatPanel chatPanel;
+    private ChatPanel chatPanelComponent;
 
     [SerializeField]
     private TMP_Text nameText;
@@ -19,52 +17,37 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
     [SerializeField]
     private SpriteRenderer characterSpriteRenderer;
 
-    private Movement movement = null;
-    private CharacterData characterData = null;
+    private Queue<BaseWorker> workQueue = new();
+    private BaseWorker worker = null;
 
+    private Movement movementComponent = null;
+    private CharacterData characterData = null;
     public CharacterData CharacterData => characterData;
+    public Movement MovementComponent => movementComponent;
+    public ChatPanel ChatPanelComponent => chatPanelComponent;
 
     private CancellationTokenSource currentCTS = null;
 
     public void Initialize(Sprite characterSkin)
     {
-        movement = GetComponent<Movement>();
-        jobHandler.Init(movement);
-        chatPanel.HideChat();
+        movementComponent = GetComponent<Movement>();
+        chatPanelComponent.HideChat();
         characterSpriteRenderer.sprite = characterSkin;
     }
 
     public void StartJob()
     {
-        currentCTS?.Cancel();
-        currentCTS?.Dispose();
         currentCTS = new CancellationTokenSource();
-        jobHandler.DoJobAsync(currentCTS.Token).Forget();
+        DoJobAsync(currentCTS.Token).Forget();
     }
 
-    public void SetJob(BaseWorker worker)
+    public void EnqueueJob(BaseWorker worker)
     {
-        worker.SetTransform(transform);
-        jobHandler.SetWorker(worker, this, chatPanel, this);
-        nameText.text = worker.GetType().Name;
-    }
-
-    public void SetIsLoopingDoJob(bool isLoopingDoJob)
-    {
-        jobHandler.SetIsLoopingDoJob(isLoopingDoJob);
-    }
-
-    public void DoJobAsync(Func<CancellationToken, UniTask> action)
-    {
-        currentCTS?.Cancel();
-        currentCTS?.Dispose();
-        currentCTS = new CancellationTokenSource();
-        action(currentCTS.Token).Forget();
+        workQueue.Enqueue(worker);
     }
 
     public void SetCharacterData(CharacterData data)
     {
-        var worker = jobHandler.Worker;
         data.JobName = worker != null ? worker.JobName() : "Unemployed";
         characterData = data;
     }
@@ -74,5 +57,18 @@ public class Character : MonoBehaviour, ISwitchableJob, IDoable
         currentCTS?.Cancel();
         currentCTS?.Dispose();
         currentCTS = null;
+    }
+
+    public async UniTask DoJobAsync(CancellationToken cancellationToken)
+    {
+        do
+        {
+            var baseWorker = workQueue.Count > 0 ? workQueue.Dequeue() : BaseWorker.EMPTY_WORKER;
+            baseWorker.SetCharacter(this);
+            worker = baseWorker;
+            nameText.text = baseWorker.GetType().Name;
+            await baseWorker.DoJobAsync(cancellationToken);
+            await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken);
+        } while (!cancellationToken.IsCancellationRequested);
     }
 }

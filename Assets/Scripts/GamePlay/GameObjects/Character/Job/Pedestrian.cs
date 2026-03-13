@@ -18,7 +18,7 @@ public class Pedestrian : BaseWorker
         while (randomVar < 0.5f)
         {
             // Move from start to end
-            await movement.Move(cancellationToken, endPos);
+            await character.MovementComponent.Move(cancellationToken, endPos);
                await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
             if (cancellationToken.IsCancellationRequested) return; 
 
@@ -27,13 +27,13 @@ public class Pedestrian : BaseWorker
             {
                 float randomX = Random.value > 0.5f ? startPos.x : startPos.x + 10f; // 2 verticals: 65 and 75
                 var randomPos = GetRandomVerticalPosition(randomX);
-                await movement.Move(cancellationToken, randomPos);
+                await character.MovementComponent.Move(cancellationToken, randomPos);
                        
                 await UniTask.WaitForSeconds(Random.Range(0.5f, 2f), cancellationToken: cancellationToken);
             }
 
             // Move back to start
-            await movement.Move(cancellationToken, startPos);
+            await character.MovementComponent.Move(cancellationToken, startPos);
                
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
             if (cancellationToken.IsCancellationRequested) return; 
@@ -43,16 +43,13 @@ public class Pedestrian : BaseWorker
             {
                 float randomX = Random.value > 0.5f ? startPos.x : startPos.x + 10f; // 2 verticals: 65 and 75
                 var randomPos = GetRandomVerticalPosition(randomX);
-                await movement.Move(cancellationToken, randomPos);
+                await character.MovementComponent.Move(cancellationToken, randomPos);
                        
                 await UniTask.WaitForSeconds(Random.Range(0.5f, 2f), cancellationToken: cancellationToken);
             }
             randomVar = Random.Range(0f, 1f);
         }
-        var diner = new Diner(); 
-        switchableJob.SetJob(diner);
-        diner.DoJob();
-
+        character.EnqueueJob(new Diner());
     }
 
     private Vector3 GetRandomVerticalPosition(float x)
