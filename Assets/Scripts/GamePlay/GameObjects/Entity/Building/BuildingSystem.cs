@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,7 @@ public class BuildingSystem : MonoBehaviour
         EventBus.Subscribe<SpawnEntityEvent>(StartGhostBuilding);
         InputHandler.OnMouseLeftClick += EndGhostBuilding;
         InputHandler.OnMouseRightClick += DestroyGhostBuilding;
+        ghostBuildingSkin.gameObject.SetActive(false);
     }
 
     void OnDestroy()
