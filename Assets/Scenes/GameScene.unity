@@ -705,20 +705,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8518e402603785c4ea7ddb814f7679ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPrefabs:
-  - {fileID: 2247980239797932756, guid: 1e28fcc13dd580a4ab901fa91d80ba1a, type: 3}
-  characterSprites:
-  - {fileID: 8348649040173944389, guid: 568788b9b353a4832b817d07ed163fdb, type: 3}
-  - {fileID: -1085628007, guid: 02aa1a73fb2814b5dbe8324ff2a04762, type: 3}
-  - {fileID: -1204443314, guid: fc7c886f915cd4ec8a489db789bbda34, type: 3}
-  - {fileID: -1204443314, guid: fc7c886f915cd4ec8a489db789bbda34, type: 3}
-  - {fileID: 2059967763, guid: dc8445243cec745ac8ff5f0fdbf2f5f6, type: 3}
-  - {fileID: -1395521629, guid: a64836234b89e4a30bc857b5aeeda4b4, type: 3}
-  - {fileID: -808580066, guid: e3dcdf275eb3b4f60b6215e5421aef88, type: 3}
-  - {fileID: -117452897, guid: 4569ce25299eb4403a236d98c4e74111, type: 3}
-  - {fileID: -229396078, guid: 08981e6e46f78403890c7f3b4cc0aee6, type: 3}
-  - {fileID: -1731870455, guid: 3d8e394ab47f5465aa2c190680b9b3cf, type: 3}
-  - {fileID: -1801171892, guid: 2b078c5e0b2634be2b4ea340ca7a95fa, type: 3}
+  characterPrefab: {fileID: 2247980239797932756, guid: 1e28fcc13dd580a4ab901fa91d80ba1a, type: 3}
+  characterAnimations:
+  - {fileID: 9100000, guid: 80fd4772479f3494bb784ae3a3d61d49, type: 2}
+  - {fileID: 22100000, guid: 3f73da4b9728b4eab9bd04e0a42b83da, type: 2}
+  - {fileID: 22100000, guid: 329614d61e16243d289e73a5fda14cef, type: 2}
+  - {fileID: 22100000, guid: 2ded2854ce2204d449b5efbbdf6277d7, type: 2}
+  - {fileID: 22100000, guid: 0a772b3e231be4f75a628ca19bfcd46f, type: 2}
+  - {fileID: 22100000, guid: 5024afcd848834fc7be8cbba8876502f, type: 2}
+  - {fileID: 22100000, guid: f35e224f3d56e447eb70c291f8165d64, type: 2}
+  - {fileID: 22100000, guid: 9235fab85bfa14d4596278bb83e4e024, type: 2}
+  - {fileID: 22100000, guid: be620a7bfb68b4948b43880c27afdb8b, type: 2}
+  - {fileID: 22100000, guid: 9bca8b18961694e9982d8192cbf8285e, type: 2}
 --- !u!1 &518393843
 GameObject:
   m_ObjectHideFlags: 0
@@ -21082,7 +21080,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00002670288
+      value: 0.000011444092
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x

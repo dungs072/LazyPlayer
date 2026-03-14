@@ -9,7 +9,6 @@ public class Character : MonoBehaviour
 {
     [SerializeField] private ChatPanel chatPanelComponent;
     [SerializeField] private TMP_Text nameText;
-    [SerializeField] private SpriteRenderer characterSpriteRenderer;
     [SerializeField] private Animator animator;
     [SerializeField] private Movement movement;
 
@@ -24,11 +23,11 @@ public class Character : MonoBehaviour
     public CharacterAnimator characterAnimator = null;
     private CancellationTokenSource currentCTS = null;
 
-    public void Initialize(Sprite characterSkin)
+    public void Initialize(RuntimeAnimatorController characterAnimation)
     {
         chatPanelComponent.HideChat();
         characterAnimator = new CharacterAnimator(movement, animator);
-        characterSpriteRenderer.sprite = characterSkin;
+        animator.runtimeAnimatorController = characterAnimation;
     }
 
     public void StartJob()
