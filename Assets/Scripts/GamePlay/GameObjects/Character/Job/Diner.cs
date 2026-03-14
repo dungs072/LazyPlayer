@@ -15,7 +15,7 @@ public class Diner : BaseWorker
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         diningTable =
-            QueryBus.Query<GetActiveEntityQuery, Entity>(
+            QueryBus.Query(
                 new GetActiveEntityQuery(Building.DINING_TABLE)
             ) as DiningTable;
         if (diningTable == null)

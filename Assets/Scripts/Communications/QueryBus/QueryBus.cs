@@ -24,22 +24,4 @@ public static class QueryBus
 
         throw new Exception($"No query handler for {queryType}");
     }
-
-    public static TResult Query<TQuery, TResult>(TQuery query)
-        where TQuery : IQueryResult<TResult>
-    {
-        if (queries.TryGetValue(typeof(TQuery), out var del))
-        {
-            if (del is Func<TQuery, TResult> typedHandler)
-            {
-                return typedHandler(query);
-            }
-
-            throw new InvalidCastException(
-                $"Query result type mismatch for {typeof(TQuery)}. Handler requested {typeof(TResult)}"
-            );
-        }
-
-        throw new Exception($"No query handler for {typeof(TQuery)}");
-    }
 }

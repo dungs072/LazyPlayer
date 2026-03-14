@@ -27,7 +27,7 @@ public class Chef : BaseWorker
         );
         if (canCook)
         {
-            var kitchen = QueryBus.Query<GetActiveEntityQuery, Entity>(
+            var kitchen = QueryBus.Query(
                 new GetActiveEntityQuery(Building.KITCHEN)
             );
             await character.MovementComponent.Move(cancellationToken, kitchen.transform.position);
@@ -35,7 +35,7 @@ public class Chef : BaseWorker
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
 
             await EventBus.PublishAsync(new ConsumeResourceEvent(breadRecipe.GetIngredients()));
-            var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(
+            var servingTable = QueryBus.Query(
                 new GetActiveEntityQuery(Building.SERVING_TABLE)
             );
             await character.MovementComponent.Move(
