@@ -70,7 +70,6 @@ public class GameScreen : BaseScreen
 
     public override UniTask FadeOutAsync()
     {
-        ////throw new System.NotImplementedException();
         return UniTask.CompletedTask;
     }
 }
