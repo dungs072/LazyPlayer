@@ -30,7 +30,7 @@ public class Server : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var order = QueryBus.Query<GetOldestFoodOrderQuery, FoodOrder>(
+        var order = QueryBus.Query(
             new GetOldestFoodOrderQuery()
         );
         if (order == null)
@@ -39,15 +39,15 @@ public class Server : BaseWorker
             return;
         }
 
-        var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(
+        var servingTable = QueryBus.Query(
             new GetActiveEntityQuery(Building.SERVING_TABLE)
         );
-        var orderTable = QueryBus.Query<GetActiveEntityQuery, Entity>(
+        var orderTable = QueryBus.Query(
             new GetActiveEntityQuery(Building.ORDER_TABLE)
         );
         //! race conditions
         //isWorking = true;
-        var isAvailableFood = QueryBus.Query<IsAvailableFoodQuery, bool>(
+        var isAvailableFood = QueryBus.Query(
             new IsAvailableFoodQuery(order.foodAmounts)
         );
         if (isAvailableFood)
@@ -66,7 +66,7 @@ public class Server : BaseWorker
 
             //TODO: eat duration based on what?
             order.diner.EnqueueJob(new DinerEatFood(order.diningTable, 5f));
-            var orderLeft = QueryBus.Query<GetOldestFoodOrderQuery, FoodOrder>(
+            var orderLeft = QueryBus.Query(
                 new GetOldestFoodOrderQuery()
             );
             if (orderLeft != null)
@@ -90,7 +90,7 @@ public class Server : BaseWorker
                 orderTable.transform.position
             );
 
-            var orderLeft = QueryBus.Query<GetOldestFoodOrderQuery, FoodOrder>(
+            var orderLeft = QueryBus.Query(
                 new GetOldestFoodOrderQuery()
             );
             if (orderLeft != null)
