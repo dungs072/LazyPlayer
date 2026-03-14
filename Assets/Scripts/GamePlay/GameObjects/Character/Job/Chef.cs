@@ -21,7 +21,7 @@ public class Chef : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var breadRecipe = QueryBus.Query(new GetRecipeDataQuery("bread"));
+        var breadRecipe = QueryBus.Query(new GetRecipeDataQuery(FoodDictionary.BreadId));
         var canCook = QueryBus.Query(
             new IsAvailableToCreateFoodQuery(breadRecipe.GetIngredients())
         );
@@ -42,7 +42,7 @@ public class Chef : BaseWorker
                 cancellationToken,
                 servingTable.transform.position
             );
-            await EventBus.PublishAsync(new AddResourceEvent("bread", 1));
+            await EventBus.PublishAsync(new AddResourceEvent(FoodDictionary.BreadId, 1));
             EventBus.Publish(new ReadyToServeFoodEvent());
         }
 

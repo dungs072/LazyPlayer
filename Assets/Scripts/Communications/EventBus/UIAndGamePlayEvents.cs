@@ -7,7 +7,7 @@ public struct NextButtonClickedEvent { }
 
 public struct ResourceAmountChangedEvent
 {
-    public string name;
+    public string id;
     public int amount;
 }
 

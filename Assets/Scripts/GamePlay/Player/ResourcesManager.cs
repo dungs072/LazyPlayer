@@ -10,8 +10,8 @@ public class ResourcesManager : MonoBehaviour
     public void Initialize1()
     {
         // Initialize resources with default values
-        SetResourceAmount("wheat", 0);
-        SetResourceAmount("bread", 0);
+        SetResourceAmount(FoodDictionary.WheatId, 0);
+        SetResourceAmount(FoodDictionary.BreadId, 0);
         SetResourceAmount("money", 0);
         
         QueryBus.Subscribe<IsAvailableToCreateFoodQuery, bool>(query => IsAvailableToCreateFood(query.ingredientAmounts));
@@ -23,7 +23,7 @@ public class ResourcesManager : MonoBehaviour
     public void SetResourceAmount(string resourceName, int amount)
     {
         resources[resourceName] = amount;
-        EventBus.Publish(new ResourceAmountChangedEvent { name = resourceName, amount = amount });
+        EventBus.Publish(new ResourceAmountChangedEvent { id = resourceName, amount = amount });
     }
     public void AddResource(string resourceName, int amount)
     {

@@ -42,7 +42,7 @@ public class Diner : BaseWorker
                         diner = character,
                         foodAmounts = new FoodAmount[]
                         {
-                            new() { foodId = "bread", amount = 1 },
+                            new() { foodId = FoodDictionary.BreadId, amount = 1 },
                         },
                     }
                 )
