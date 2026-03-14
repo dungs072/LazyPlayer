@@ -188,6 +188,10 @@ public class MenuGamePlayPanel : MonoBehaviour
         {
             HandleClickBuildButton();
         }
+        else if (type == ButtonTab3Type.EDIT)
+        {
+            HandleClickEditButton();
+        }
         else if (type == ButtonTab3Type.BUILD_BACK)
         {
             HandleClickBuildBackButton();
@@ -214,7 +218,7 @@ public class MenuGamePlayPanel : MonoBehaviour
             {
                 Type = ButtonTab3Type.BUILDING_LIST,
                 Name = buildingDataList[i].EntityName,
-                Icon = buildingDataList[i].Icon,
+                Icon = null,
             };
         }
         gridData[buildingDataList.Count] = new MenuGridData
@@ -227,6 +231,11 @@ public class MenuGamePlayPanel : MonoBehaviour
         scroller.SetData(new ReadOnlyArray<MenuGridData>(gridData));
     }
 
+    private void HandleClickEditButton()
+    {
+        EventBus.Publish(new EditBuildableEntityEvent());
+    }
+
     private void HandleClickBuildBackButton()
     {
         scroller.SetData(previousMenuGridData);
@@ -234,7 +243,7 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     private void HandleClickBuildingListButton(string entityName)
     {
-        EventBus.Publish(new SpawnEntityEvent { entityName = entityName });
+        EventBus.Publish(new BuildBuildableEntityEvent { entityName = entityName });
     }
 
     public void PrepareFadeIn()

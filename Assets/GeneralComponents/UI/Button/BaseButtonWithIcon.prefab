@@ -139,7 +139,7 @@ MonoBehaviour:
   buttonType: 0
   scaleDownFactor: 0.9
   scaleUpFactor: 1
-  scaleDuration: 0.3
+  scaleDuration: 0.1
   buttonState: 0
   bubbleUpFactor: 1.2
   bubbleDownFactor: 0.95

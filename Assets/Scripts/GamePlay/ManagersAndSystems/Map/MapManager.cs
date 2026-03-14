@@ -51,7 +51,12 @@ public class MapManager : MonoBehaviour
             var plot = entityManager.GetEntity(EntityConstant.Building.PLOT, gridPosition);
             var buildableEntity = plot as BuildableEntity;
             EventBus.Publish(
-                new SetOccupiedGridEvent { position = gridPosition, size = buildableEntity.Size }
+                new SetOccupiedGridEvent
+                {
+                    position = gridPosition,
+                    size = buildableEntity.Size,
+                    entityInstanceId = plot.InstanceId,
+                }
             );
             row = (i + 1) % 2;
         }

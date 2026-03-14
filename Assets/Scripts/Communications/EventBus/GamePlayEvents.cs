@@ -1,9 +1,11 @@
 using UnityEngine;
 
-public struct SpawnEntityEvent
+public struct BuildBuildableEntityEvent
 {
     public string entityName;
 }
+
+public struct EditBuildableEntityEvent { }
 
 public struct MouseClickEvent
 {
@@ -14,12 +16,7 @@ public struct SetOccupiedGridEvent
 {
     public Vector3 position;
     public Vector2 size;
-
-    public SetOccupiedGridEvent(Vector3 position, Vector2 size)
-    {
-        this.position = position;
-        this.size = size;
-    }
+    public int entityInstanceId;
 }
 
 public struct AddResourceEvent

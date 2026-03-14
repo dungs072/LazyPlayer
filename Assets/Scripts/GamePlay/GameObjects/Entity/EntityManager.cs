@@ -10,6 +10,45 @@ public class EntityManager : MonoBehaviour
 
     private Dictionary<string, Entity> entityDictPrefabs = new();
     private Dictionary<string, List<Entity>> entitiesPool = new();
+    private Dictionary<int, Entity> instancedEntities = new();
+
+    public void Initialize1()
+    {
+        SubscribeQueries();
+        InitEntitiesPrefabs();
+    }
+
+    private void InitEntitiesPrefabs()
+    {
+        foreach (var entity in entities)
+        {
+            if (!entityDictPrefabs.ContainsKey(entity.EntityName))
+            {
+                entityDictPrefabs.Add(entity.EntityName, entity);
+            }
+            else
+            {
+                Debug.LogWarning($"Duplicate entity name detected: {entity.EntityName}. Skipping.");
+            }
+        }
+    }
+
+    private void SubscribeQueries()
+    {
+        QueryBus.Subscribe<GetBuildingDataListQuery, IReadOnlyList<BuildableEntity>>(query =>
+            GetBuildingDataList()
+        );
+        QueryBus.Subscribe<GetEntityQuery, Entity>(query =>
+            GetEntity(query.prefabId, query.position)
+        );
+        QueryBus.Subscribe<GetEntityPrefabQuery, Entity>(query => GetEntityPrefab(query.prefabId));
+        QueryBus.Subscribe<GetActiveEntityQuery, Entity>(query => GetActiveEntity(query.prefabId));
+        QueryBus.Subscribe<GetEmptyPlotQuery, Plot>(query => GetEmptyPlot());
+        QueryBus.Subscribe<GetHarvestablePlotQuery, Plot>(query => GetHarvestablePlot());
+        QueryBus.Subscribe<GetInstantiatedEntityQuery, Entity>(query =>
+            GetInstancedEntity(query.instanceId)
+        );
+    }
 
     public Entity GetEntityPrefab(string prefabId)
     {
@@ -20,6 +59,19 @@ public class EntityManager : MonoBehaviour
         else
         {
             Debug.LogError($"Entity prefab not found for name: {prefabId}");
+            return null;
+        }
+    }
+
+    public Entity GetInstancedEntity(int instanceId)
+    {
+        if (instancedEntities.TryGetValue(instanceId, out var entity))
+        {
+            return entity;
+        }
+        else
+        {
+            Debug.LogError($"Entity instance not found for ID: {instanceId}");
             return null;
         }
     }
@@ -99,32 +151,6 @@ public class EntityManager : MonoBehaviour
         return null;
     }
 
-    public void Initialize1()
-    {
-        //! fix here
-        QueryBus.Subscribe<GetBuildingDataListQuery, IReadOnlyList<BuildableEntity>>(query =>
-            GetBuildingDataList()
-        );
-        QueryBus.Subscribe<GetEntityQuery, Entity>(query =>
-            GetEntity(query.prefabId, query.position)
-        );
-        QueryBus.Subscribe<GetEntityPrefabQuery, Entity>(query => GetEntityPrefab(query.prefabId));
-        foreach (var entity in entities)
-        {
-            if (!entityDictPrefabs.ContainsKey(entity.EntityName))
-            {
-                entityDictPrefabs.Add(entity.EntityName, entity);
-            }
-            else
-            {
-                Debug.LogWarning($"Duplicate entity name detected: {entity.EntityName}. Skipping.");
-            }
-        }
-        QueryBus.Subscribe<GetActiveEntityQuery, Entity>(query => GetActiveEntity(query.prefabId));
-        QueryBus.Subscribe<GetEmptyPlotQuery, Plot>(query => GetEmptyPlot());
-        QueryBus.Subscribe<GetHarvestablePlotQuery, Plot>(query => GetHarvestablePlot());
-    }
-
     //! fix here
     private IReadOnlyList<BuildableEntity> GetBuildingDataList()
     {
@@ -174,6 +200,7 @@ public class EntityManager : MonoBehaviour
         var instance = Instantiate(entityPrefab, position, Quaternion.identity);
         entitiesPool.TryAdd(prefabId, new List<Entity>());
         entitiesPool[prefabId].Add(instance);
+        instancedEntities.Add(instance.InstanceId, instance);
         return instance;
     }
 }

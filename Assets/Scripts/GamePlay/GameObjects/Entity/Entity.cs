@@ -1,17 +1,21 @@
 using TMPro;
+using Unity.Collections;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
+    [SerializeField, ReadOnly]
+    private int instanceId;
+
     [SerializeField]
     private string entityName = "Default";
 
     [SerializeField]
     private TMP_Text displayNameText;
-
-    [SerializeField]
-    private Sprite icon;
-
+    public int InstanceId
+    {
+        get { return instanceId; }
+    }
     public string EntityName
     {
         get { return entityName; }
@@ -19,13 +23,14 @@ public class Entity : MonoBehaviour
 
     protected virtual void Awake()
     {
+        instanceId = GenerateInstanceId();
         if (displayNameText == null)
             return;
         displayNameText.text = entityName;
     }
 
-    public Sprite Icon
+    private int GenerateInstanceId()
     {
-        get { return icon; }
+        return GetHashCode();
     }
 }

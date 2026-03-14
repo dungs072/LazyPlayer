@@ -8,6 +8,11 @@ public struct GetEntityQuery : IQueryResult<Entity>
     public Vector3 position;
 }
 
+public struct GetInstantiatedEntityQuery : IQueryResult<Entity>
+{
+    public int instanceId;
+}
+
 public struct GetEntityPrefabQuery : IQueryResult<Entity>
 {
     public string prefabId;
@@ -22,6 +27,11 @@ public struct IsOverlappingGridQuery : IQueryResult<bool>
 {
     public Vector3 position;
     public Vector2 size;
+}
+
+public struct GetEntityIdAtPositionQuery : IQueryResult<int>
+{
+    public Vector3 position;
 }
 
 public struct GetActiveEntityQuery : IQueryResult<Entity>

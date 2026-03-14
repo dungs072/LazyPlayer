@@ -175,31 +175,37 @@ namespace BaseEngine
             CancellationToken token
         )
         {
-            await PlayPointerUpAnim(token);
-
-            isClicking = false;
-
-            var canClick = true;
-
-            if (isClickedOnHitArea && !IsPointerOverUI(eventData))
+            try
             {
-                canClick = false;
-            }
+                await PlayPointerUpAnim(token);
 
-            if (!canClick)
+                var canClick = true;
+
+                if (isClickedOnHitArea && !IsPointerOverUI(eventData))
+                {
+                    canClick = false;
+                }
+
+                if (!canClick)
+                {
+                    InitButtonState();
+                    return;
+                }
+
+                OnClicked?.Invoke();
+                OnClickedAsync?.Invoke().Forget();
+            }
+            finally
             {
-                InitButtonState();
-                return;
+                isClicking = false;
             }
-
-            OnClicked?.Invoke();
-            OnClickedAsync?.Invoke().Forget();
         }
 
         private async UniTask PlayPointerUpAnim(CancellationToken token)
         {
             if (buttonType == ButtonType.SCALE)
             {
+                transform.DOKill();
                 var tween = transform.DOScale(scaleUpFactor, scaleDuration);
                 await tween.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(token);
             }

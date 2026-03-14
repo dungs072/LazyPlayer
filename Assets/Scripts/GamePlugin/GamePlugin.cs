@@ -33,9 +33,15 @@ public class GamePlugin
             position = Mouse.current.position.ReadValue(),
         };
         raycastResults.Clear();
+        int uiLayer = LayerMask.NameToLayer(LayerConstant.UI);
         eventSystem.RaycastAll(eventData, raycastResults);
         foreach (var result in raycastResults)
         {
+            Debug.Log(
+                $"Raycast hit: {result.gameObject.transform.parent.name}, layer: {result.gameObject.layer}"
+            );
+            if (result.gameObject.layer == uiLayer)
+                return true;
             if (result.gameObject.GetComponentInParent<Selectable>() != null)
                 return true;
             if (result.gameObject.GetComponent<Image>() != null)
