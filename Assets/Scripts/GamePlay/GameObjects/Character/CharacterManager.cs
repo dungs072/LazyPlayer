@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
 {
-    [SerializeField] private List<Character> characterPrefabs = new();
-    [SerializeField] private List<Sprite> characterSprites = new();
+    [SerializeField] Character characterPrefab;
+    [SerializeField] private List<RuntimeAnimatorController> characterAnimations = new();
 
     private List<Character> characters = new();
 
@@ -30,10 +30,10 @@ public class CharacterManager : MonoBehaviour
         }
         else
         {
-            var prefab = characterPrefabs[0];
+            var prefab = characterPrefab;
             if (prefab == null) return null;
             var instance = Instantiate(prefab, startWorldPos, Quaternion.identity);
-            instance.Initialize(characterSprites[Random.Range(0, characterSprites.Count)]);
+            instance.Initialize(characterAnimations[Random.Range(0, characterAnimations.Count)]);
             characters.Add(instance);
             return instance;
         }
