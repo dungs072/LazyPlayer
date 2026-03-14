@@ -13,7 +13,6 @@ public class GameScreen : BaseScreen
         view.preButton.AddListener(OnPreButtonClicked);
         view.nextButton.AddListener(OnNextButtonClicked);
         view.staffButton.AddListener(OnStaffButtonClicked);
-        view.builderButton.AddListener(OnBuilderButtonClicked);
     }
 
     private void OnDestroy()
@@ -22,7 +21,6 @@ public class GameScreen : BaseScreen
         view.preButton.RemoveListener(OnPreButtonClicked);
         view.nextButton.RemoveListener(OnNextButtonClicked);
         view.staffButton.RemoveListener(OnStaffButtonClicked);
-        view.builderButton.RemoveListener(OnBuilderButtonClicked);
     }
 
     public void OnPreButtonClicked()
@@ -51,21 +49,6 @@ public class GameScreen : BaseScreen
         var staffDataList = QueryBus.Query(new GetStaffDataListQuery());
         var data = new StaffScreenData { dataList = staffDataList };
         await ScreenPlugin.OpenScreenAsync<StaffScreen>(data);
-        GamePlugin.BlockInput(false);
-    }
-
-    public async UniTask OnBuilderButtonClicked()
-    {
-        GamePlugin.BlockInput(true);
-        var buildingDataList = QueryBus.Query(new GetBuildingDataListQuery());
-        var data = new BuilderScreenData { dataList = buildingDataList };
-        await UniTask.WhenAll(
-            new[]
-            {
-                ScreenPlugin.OpenScreenAsync<BuilderScreen>(data),
-                ScreenPlugin.CloseScreenAsync<GameScreen>(),
-            }
-        );
         GamePlugin.BlockInput(false);
     }
 

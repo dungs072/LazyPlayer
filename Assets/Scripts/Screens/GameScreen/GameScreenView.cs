@@ -31,9 +31,6 @@ public class GameScreenView
     public BaseEngine.MagicButtonWithIcon staffButton;
 
     [SerializeField]
-    public BaseEngine.MagicButtonWithIcon builderButton;
-
-    [SerializeField]
     private MenuGamePlayPanel menuPanel;
 
     [HideInInspector]
