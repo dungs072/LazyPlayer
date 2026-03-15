@@ -21080,7 +21080,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000011444092
+      value: -0.00002670288
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -24883,14 +24883,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7114cc1fdbbf747abdd9d8af86b430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entities:
-  - {fileID: -1560770420975295689, guid: 73b5adca21135694f8d23c829c174985, type: 3}
-  - {fileID: 3426723103134937418, guid: 75f92877ed174f84683ffe6a42b3e744, type: 3}
-  - {fileID: 3426723103134937418, guid: 59449f58ff7b78748a3f4fc1904972ab, type: 3}
-  - {fileID: 3426723103134937418, guid: 0900f60224cc9684c98f3e019d258e4c, type: 3}
-  - {fileID: 3426723103134937418, guid: 82c2c12402302694fb90d5661d84271c, type: 3}
-  - {fileID: 8177823633125856115, guid: 369d29bd6fe38e94c89214d7c9476314, type: 3}
-  - {fileID: 8758919499856225004, guid: 4d63619d4774b544187a268cbe5e5d92, type: 3}
+  entityPrefabs:
+  - {fileID: 6582900714397633962, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
+  - {fileID: -1214924741264129812, guid: 1e4f56b690672a64883fc441b6e3ea62, type: 3}
+  entityDataList:
+  - {fileID: 11400000, guid: 91636a167295a9847b38afeaa0ae9cd0, type: 2}
+  - {fileID: 11400000, guid: 99ef9aba64ae0944289d4067fff77b15, type: 2}
 --- !u!1 &2095119888
 GameObject:
   m_ObjectHideFlags: 0

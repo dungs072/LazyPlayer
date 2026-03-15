@@ -1,17 +1,24 @@
 using System;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+
 public class DiningTable : BuildableEntity
 {
     public static event Action OnAvailableDiningTable;
-    [SerializeField] private int capacity = 2;
-    [SerializeField] private Transform[] seatPositions;
-    [SerializeField] private TMP_Text[] tMP_Texts;
+
+    [SerializeField]
+    private int capacity = 2;
+
+    [SerializeField]
+    private Transform[] seatPositions;
+
+    [SerializeField]
+    private TMP_Text[] tMP_Texts;
 
     private Transform[] occupiedSeats;
-    protected override void Awake()
+
+    private void Awake()
     {
-        base.Awake();
         occupiedSeats = new Transform[capacity];
         for (int i = 0; i < capacity; i++)
         {
@@ -19,6 +26,7 @@ public class DiningTable : BuildableEntity
             tMP_Texts[i].text = "Available";
         }
     }
+
     public bool IsAvailable
     {
         get
@@ -45,6 +53,7 @@ public class DiningTable : BuildableEntity
         }
         return null;
     }
+
     public void OccupySeat(Transform character)
     {
         for (int i = 0; i < capacity; i++)
@@ -57,6 +66,7 @@ public class DiningTable : BuildableEntity
             }
         }
     }
+
     public void VacateSeat(Transform character)
     {
         for (int i = 0; i < capacity; i++)
@@ -70,6 +80,4 @@ public class DiningTable : BuildableEntity
             }
         }
     }
-
-
 }

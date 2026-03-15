@@ -8,27 +8,16 @@ public enum BuildingState
 
 public class BuildableEntity : Entity, Buildable
 {
-    [SerializeField]
-    protected SpriteRenderer skinSpriteRenderer;
     private BuildingState buildingState = BuildingState.READY;
     public BuildingState BuildingState => buildingState;
 
-    public Sprite Skin => skinSpriteRenderer.sprite;
+    public Sprite Skin => spriteRenderer.sprite;
     public Vector2 Size =>
         new Vector2(
-            Skin.bounds.size.x * skinSpriteRenderer.transform.localScale.x,
-            Skin.bounds.size.y * skinSpriteRenderer.transform.localScale.y
+            Skin.bounds.size.x * spriteRenderer.transform.localScale.x,
+            Skin.bounds.size.y * spriteRenderer.transform.localScale.y
         );
-    public Vector2 DisplaySize => skinSpriteRenderer.transform.localScale;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        // if (skinSpriteRenderer == null)
-        // {
-        //     Debug.LogError("Skin SpriteRenderer is not assigned!");
-        // }
-    }
+    public Vector2 DisplaySize => spriteRenderer.transform.localScale;
 
     public void SetBuildingState(BuildingState newState)
     {
