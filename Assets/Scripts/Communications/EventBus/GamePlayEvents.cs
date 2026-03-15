@@ -1,10 +1,5 @@
 using UnityEngine;
 
-public struct SpawnEntityEvent
-{
-    public string entityName;
-}
-
 public struct MouseClickEvent
 {
     public Vector2 mousePosition;

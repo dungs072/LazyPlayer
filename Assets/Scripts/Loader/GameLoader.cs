@@ -6,8 +6,9 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 
 public class GameLoader : MonoBehaviour
 {
-    [SerializeField] private List<AssetLabelReference> labels = new();
-    private Dictionary<string, object> assetCache = new();
+    [SerializeField]
+    private List<AssetLabelReference> labels = new();
+    private Dictionary<string, List<object>> assetCache = new();
     public static GameLoader Instance => _instance;
     private static GameLoader _instance;
 
@@ -23,11 +24,13 @@ public class GameLoader : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     async void Start()
     {
         await LoadLabels();
         await LoadScene(AddressableKeys.GAME_SCENE);
     }
+
     private async UniTask LoadLabels()
     {
         var uniTasks = new List<UniTask>();
@@ -37,6 +40,7 @@ public class GameLoader : MonoBehaviour
         }
         await UniTask.WhenAll(uniTasks);
     }
+
     public async UniTask LoadLabel(AssetLabelReference label)
     {
         var locationsHandle = Addressables.LoadResourceLocationsAsync(label);
@@ -45,15 +49,18 @@ public class GameLoader : MonoBehaviour
 
         IList<IResourceLocation> locations = locationsHandle.Result;
 
+        string key = label.RuntimeKey.ToString();
         foreach (var location in locations)
         {
-            string key = location.PrimaryKey;
-
             var handle = Addressables.LoadAssetAsync<Object>(location);
 
             var asset = await handle.ToUniTask();
 
-            assetCache[key] = asset;
+            if (!assetCache.ContainsKey(key))
+            {
+                assetCache[key] = new List<object>();
+            }
+            assetCache[key].Add(asset);
 
             Debug.Log($"Loaded asset key: {key}");
         }
@@ -68,15 +75,14 @@ public class GameLoader : MonoBehaviour
         Debug.Log($"Scene loaded: {sceneKey}");
     }
 
-    public T GetAsset<T>(string key) where T : Object
+    public List<object> GetAsset(string key)
     {
         if (assetCache.TryGetValue(key, out var asset))
         {
-            return asset as T;
+            return asset;
         }
 
         Debug.LogError($"Asset not found: {key}");
         return null;
     }
-
 }

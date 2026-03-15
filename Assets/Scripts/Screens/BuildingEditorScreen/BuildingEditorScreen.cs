@@ -25,17 +25,18 @@ public class BuildingEditorScreen : BaseScreen
     {
         GamePlugin.BlockInput(true);
         EventBus.Publish(new DestroyCurrentBuildingEvent());
-        var buildingDataList = QueryBus.Query(new GetBuildingDataListQuery());
+        // var buildingDataList = QueryBus.Query(new GetBuildingDataListQuery());
 
-        await UniTask.WhenAll(
-            new[]
-            {
-                ScreenPlugin.OpenScreenAsync<BuilderScreen>(
-                    new BuilderScreenData { dataList = buildingDataList }
-                ),
-                ScreenPlugin.CloseScreenAsync<BuildingEditorScreen>(),
-            }
-        );
+        // await UniTask.WhenAll(
+        //     new[]
+        //     {
+        //         ScreenPlugin.OpenScreenAsync<BuilderScreen>(
+        //             new BuilderScreenData { dataList = buildingDataList }
+        //         ),
+        //         ScreenPlugin.CloseScreenAsync<BuildingEditorScreen>(),
+        //     }
+        // );
+        await UniTask.NextFrame();
         GamePlugin.BlockInput(false);
     }
 

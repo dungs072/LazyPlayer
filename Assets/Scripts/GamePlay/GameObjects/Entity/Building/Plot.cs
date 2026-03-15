@@ -20,9 +20,8 @@ public class Plot : BuildableEntity
     public bool IsEmpty => state == PlotState.EMPTY;
     public bool IsReady => state == PlotState.READY;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         SwitchState(PlotState.EMPTY);
     }
 
@@ -65,15 +64,15 @@ public class Plot : BuildableEntity
         state = newState;
         if (state == PlotState.EMPTY)
         {
-            skinSpriteRenderer.color = Color.gray;
+            spriteRenderer.color = Color.gray;
         }
         else if (state == PlotState.GROWING)
         {
-            skinSpriteRenderer.color = Color.green;
+            spriteRenderer.color = Color.green;
         }
         else if (state == PlotState.READY)
         {
-            skinSpriteRenderer.color = Color.yellow;
+            spriteRenderer.color = Color.yellow;
         }
     }
 }

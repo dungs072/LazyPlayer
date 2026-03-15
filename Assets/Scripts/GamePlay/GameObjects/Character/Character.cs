@@ -7,10 +7,17 @@ using UnityEngine;
 [RequireComponent(typeof(Movement))]
 public class Character : MonoBehaviour
 {
-    [SerializeField] private ChatPanel chatPanelComponent;
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private Animator animator;
-    [SerializeField] private Movement movement;
+    [SerializeField]
+    private ChatPanel chatPanelComponent;
+
+    [SerializeField]
+    private TMP_Text nameText;
+
+    [SerializeField]
+    private Animator animator;
+
+    [SerializeField]
+    private Movement movement;
 
     private Queue<BaseWorker> workQueue = new();
     private BaseWorker worker = null;
@@ -19,12 +26,17 @@ public class Character : MonoBehaviour
     public CharacterData CharacterData => characterData;
     public Movement MovementComponent => movement;
     public ChatPanel ChatPanelComponent => chatPanelComponent;
-    
+
     public CharacterAnimator characterAnimator = null;
+    public EntityManager entityManager = null;
     private CancellationTokenSource currentCTS = null;
 
-    public void Initialize(RuntimeAnimatorController characterAnimation)
+    public void Initialize(
+        EntityManager entityManager,
+        RuntimeAnimatorController characterAnimation
+    )
     {
+        this.entityManager = entityManager;
         chatPanelComponent.HideChat();
         characterAnimator = new CharacterAnimator(movement, animator);
         animator.runtimeAnimatorController = characterAnimation;
