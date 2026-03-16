@@ -21,23 +21,20 @@ public class Chef : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
+        var entityManager = character.entityManager;
         var breadRecipe = QueryBus.Query(new GetRecipeDataQuery("bread"));
         var canCook = QueryBus.Query(
             new IsAvailableToCreateFoodQuery(breadRecipe.GetIngredients())
         );
         if (canCook)
         {
-            var kitchen = QueryBus.Query<GetActiveEntityQuery, Entity>(
-                new GetActiveEntityQuery(Building.KITCHEN)
-            );
+            var kitchen = entityManager.FindActiveEntity(EntityId.KITCHEN);
             await character.MovementComponent.Move(cancellationToken, kitchen.transform.position);
 
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
 
             await EventBus.PublishAsync(new ConsumeResourceEvent(breadRecipe.GetIngredients()));
-            var servingTable = QueryBus.Query<GetActiveEntityQuery, Entity>(
-                new GetActiveEntityQuery(Building.SERVING_TABLE)
-            );
+            var servingTable = entityManager.FindActiveEntity(EntityId.SERVING_TABLE);
             await character.MovementComponent.Move(
                 cancellationToken,
                 servingTable.transform.position

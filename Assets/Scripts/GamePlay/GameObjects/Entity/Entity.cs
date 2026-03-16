@@ -8,29 +8,28 @@ public class Entity : MonoBehaviour
     private int instanceId;
 
     [SerializeField]
-    private string entityName = "Default";
+    protected SpriteRenderer spriteRenderer;
 
     [SerializeField]
     private TMP_Text displayNameText;
-    public int InstanceId
-    {
-        get { return instanceId; }
-    }
-    public string EntityName
-    {
-        get { return entityName; }
-    }
+    private EntityData entityData;
+    public EntityData Data => entityData;
+    public int InstanceId => instanceId;
 
     protected virtual void Awake()
     {
         instanceId = GenerateInstanceId();
-        if (displayNameText == null)
-            return;
-        displayNameText.text = entityName;
     }
 
     private int GenerateInstanceId()
     {
         return GetHashCode();
+    }
+
+    public virtual void Initialize(EntityData data)
+    {
+        entityData = data;
+        spriteRenderer.sprite = entityData.Skin;
+        displayNameText.text = entityData.DisplayName;
     }
 }

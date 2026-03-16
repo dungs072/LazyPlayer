@@ -240,7 +240,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1863c5454566b0d47845b5a3aa0bb00a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  labels: []
+  labels:
+  - m_LabelString: entity
+  - m_LabelString: entity_data
 --- !u!4 &758186161
 Transform:
   m_ObjectHideFlags: 0

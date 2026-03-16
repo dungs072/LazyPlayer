@@ -217,7 +217,7 @@ public class MenuGamePlayPanel : MonoBehaviour
             gridData[i] = new MenuGridData
             {
                 Type = ButtonTab3Type.BUILDING_LIST,
-                Name = buildingDataList[i].EntityName,
+                Name = buildingDataList[i].DisplayName,
                 Icon = null,
             };
         }
@@ -243,7 +243,7 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     private void HandleClickBuildingListButton(string entityName)
     {
-        EventBus.Publish(new BuildBuildableEntityEvent { entityName = entityName });
+        EventBus.Publish(new SpawnEntityEvent { entityId = EntityId.ParseId(entityName) });
     }
 
     public void PrepareFadeIn()

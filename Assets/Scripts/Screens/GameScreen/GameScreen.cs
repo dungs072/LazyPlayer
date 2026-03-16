@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameScreen : BaseScreen
@@ -49,6 +50,22 @@ public class GameScreen : BaseScreen
         var staffDataList = QueryBus.Query(new GetStaffDataListQuery());
         var data = new StaffScreenData { dataList = staffDataList };
         await ScreenPlugin.OpenScreenAsync<StaffScreen>(data);
+        GamePlugin.BlockInput(false);
+    }
+
+    public async UniTask OnBuilderButtonClicked()
+    {
+        GamePlugin.BlockInput(true);
+        // var buildingDataList = QueryBus.Query(new GetBuildingDataListQuery());
+        // var data = new BuilderScreenData { dataList = buildingDataList };
+        // await UniTask.WhenAll(
+        //     new[]
+        //     {
+        //         ScreenPlugin.OpenScreenAsync<BuilderScreen>(data),
+        //         ScreenPlugin.CloseScreenAsync<GameScreen>(),
+        //     }
+        // );
+        await UniTask.NextFrame();
         GamePlugin.BlockInput(false);
     }
 

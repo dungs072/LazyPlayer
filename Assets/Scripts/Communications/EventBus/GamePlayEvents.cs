@@ -1,12 +1,5 @@
 using UnityEngine;
 
-public struct BuildBuildableEntityEvent
-{
-    public string entityName;
-}
-
-public struct EditBuildableEntityEvent { }
-
 public struct MouseClickEvent
 {
     public Vector2 mousePosition;
