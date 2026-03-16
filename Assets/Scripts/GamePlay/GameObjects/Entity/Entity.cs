@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
+    private static int nextId = 1;
+
     [SerializeField, ReadOnly]
     private int instanceId;
 
@@ -16,14 +18,10 @@ public class Entity : MonoBehaviour
     public EntityData Data => entityData;
     public int InstanceId => instanceId;
 
-    protected virtual void Awake()
+    // must call Init() after Instantiate
+    public void Init()
     {
-        instanceId = GenerateInstanceId();
-    }
-
-    private int GenerateInstanceId()
-    {
-        return GetHashCode();
+        instanceId = nextId++;
     }
 
     public virtual void Initialize(EntityData data)

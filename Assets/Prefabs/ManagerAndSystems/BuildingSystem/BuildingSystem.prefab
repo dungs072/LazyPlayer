@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1148037625204784346}
-  - component: {fileID: 5606571833511754439}
+  - component: {fileID: 5724010689362252529}
   m_Layer: 0
   m_Name: BuildingSystem
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 7398684389193412301}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5606571833511754439
+--- !u!114 &5724010689362252529
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,7 +179,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: {fileID: 8955947500293313279}
-  editPanel: {fileID: 0}
-  moveButton: {fileID: 0}
-  rotateButton: {fileID: 0}
-  cancelButton: {fileID: 0}

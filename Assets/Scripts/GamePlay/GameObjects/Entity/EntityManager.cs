@@ -23,6 +23,7 @@ public class EntityManager : MonoBehaviour
     private readonly Dictionary<EntityPrefabId, Entity> entityDictPrefabs = new();
     private readonly Dictionary<EntityPrefabId, List<Entity>> entitiesPool = new();
     private readonly Dictionary<EntityId, EntityData> entityDataDict = new();
+    private readonly Dictionary<int, Entity> entityInstanceDict = new();
 
     public void Initialize1()
     {
@@ -164,8 +165,11 @@ public class EntityManager : MonoBehaviour
             return null;
         }
         var instance = Instantiate(entityPrefab);
+        instance.Init();
         entitiesPool.TryAdd(prefabId, new List<Entity>());
         entitiesPool[prefabId].Add(instance);
+        Debug.Log(instance.InstanceId);
+        entityInstanceDict.Add(instance.InstanceId, instance);
         return instance;
     }
 
@@ -243,6 +247,19 @@ public class EntityManager : MonoBehaviour
         else
         {
             Debug.LogError($"Entity data not found for ID: {entityId}");
+            return null;
+        }
+    }
+
+    public Entity GetInstantiatedEntity(int instanceId)
+    {
+        if (entityInstanceDict.TryGetValue(instanceId, out var entity))
+        {
+            return entity;
+        }
+        else
+        {
+            Debug.LogError($"Entity not found for instance ID: {instanceId}");
             return null;
         }
     }

@@ -37,9 +37,9 @@ public class GamePlugin
         eventSystem.RaycastAll(eventData, raycastResults);
         foreach (var result in raycastResults)
         {
-            Debug.Log(
-                $"Raycast hit: {result.gameObject.transform.parent.name}, layer: {result.gameObject.layer}"
-            );
+            // Debug.Log(
+            //     $"Raycast hit: {result.gameObject.transform.parent.name}, layer: {result.gameObject.layer}"
+            // );
             if (result.gameObject.layer == uiLayer)
                 return true;
             if (result.gameObject.GetComponentInParent<Selectable>() != null)

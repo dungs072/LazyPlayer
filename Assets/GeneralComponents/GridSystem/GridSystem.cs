@@ -2,6 +2,21 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+public struct GetSnapGridPositionQuery : IQueryResult<Vector3>
+{
+    public Vector3 position;
+}
+
+public struct IsOverlappingGridQuery : IQueryResult<bool>
+{
+    public Vector3 position;
+    public Vector2 size;
+}
+
+public struct GetEntityIdAtPositionQuery : IQueryResult<int>
+{
+    public Vector3 position;
+}
 
 public struct CellGrid
 {
@@ -84,12 +99,6 @@ public class GridSystem : MonoBehaviour
         QueryBus.Subscribe<GetEntityIdAtPositionQuery, int>(query =>
             GetEntityIdAtPosition(query.position)
         );
-        EventBus.Subscribe<SetOccupiedGridEvent>(SetCellOccupied);
-    }
-
-    void OnDestroy()
-    {
-        EventBus.Unsubscribe<SetOccupiedGridEvent>(SetCellOccupied);
     }
 
     void Start()
@@ -263,11 +272,10 @@ public class GridSystem : MonoBehaviour
         return transform.position + new Vector3(cellPos.x, cellPos.y, 0);
     }
 
-    public void SetCellOccupied(SetOccupiedGridEvent e)
+    public void SetCellsOccupied(Vector3 position, Vector2 size, int entityInstanceId)
     {
-        var position = e.position;
-        var widthSize = e.size.x;
-        var heightSize = e.size.y;
+        var widthSize = size.x;
+        var heightSize = size.y;
         // Convert world position to local position
         Vector3 localPos = position - transform.position;
 
@@ -305,7 +313,7 @@ public class GridSystem : MonoBehaviour
                 if (row >= 0 && row < _rowCount && col >= 0 && col < _columnCount)
                 {
                     // Create new struct with updated OccupiedByEntityId value
-                    _grid[row][col] = new CellGrid(row, col, e.entityInstanceId);
+                    _grid[row][col] = new CellGrid(row, col, entityInstanceId);
                 }
             }
         }

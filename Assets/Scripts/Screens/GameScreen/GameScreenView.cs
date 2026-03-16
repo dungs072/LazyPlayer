@@ -33,6 +33,9 @@ public class GameScreenView
     [SerializeField]
     private MenuGamePlayPanel menuPanel;
 
+    [SerializeField]
+    private EditBuildingPanel editBuildingPanel;
+
     [HideInInspector]
     public int currentMapIndex = 0;
 

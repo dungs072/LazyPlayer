@@ -1,12 +1,21 @@
+using System.Collections.Generic;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-enum BuildMode
+public struct BuildBuildingEvent
 {
-    NONE,
-    BUILD,
+    public EntityId entityId;
+}
+
+public struct EditBuildingEvent { }
+
+public enum BuildingSystemState
+{
     EDIT,
+    BUILD,
+    NONE,
 }
 
 public class BuildingSystem : MonoBehaviour
@@ -14,63 +23,108 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField]
     private GhostBuilding ghostBuilding;
 
-    private BuildableEntity buildablePrefab;
+    private EntityManager entityManager = null;
+    private GridSystem gridSystem = null;
+    private EntityData buildingData = null;
     private bool isOverlapping = false;
-    private Tween _moveTween;
-    private BuildMode currentBuildMode = BuildMode.NONE;
+    private Tween _moveTween = null;
+    private BuildingSystemState currentState = BuildingSystemState.NONE;
 
-    public void Initialize1()
+    public void Initialize1(EntityManager entityManager, GridSystem gridSystem)
     {
-        EventBus.Subscribe<BuildBuildableEntityEvent>(StartBuildBuilding);
-        InputHandler.OnMouseLeftClick += HandleSelection;
-        InputHandler.OnMouseRightClick += CancelBuildBuilding;
-        EventBus.Subscribe<EditBuildableEntityEvent>(StartEditBuilding);
+        this.entityManager = entityManager;
+        this.gridSystem = gridSystem;
+
+        EventBus.Subscribe<BuildBuildingEvent>(StartBuildBuilding);
+        EventBus.Subscribe<EditBuildingEvent>(StartEditBuilding);
+        InputHandler.OnMouseLeftClick += HandleClick;
+        InputHandler.OnMouseRightClick += DestroyBuilding;
+
         ghostBuilding.gameObject.SetActive(false);
     }
 
     void OnDestroy()
     {
-        EventBus.Unsubscribe<BuildBuildableEntityEvent>(StartBuildBuilding);
-        InputHandler.OnMouseLeftClick -= HandleSelection;
-        InputHandler.OnMouseRightClick -= CancelBuildBuilding;
-        EventBus.Unsubscribe<EditBuildableEntityEvent>(StartEditBuilding);
+        EventBus.Unsubscribe<BuildBuildingEvent>(StartBuildBuilding);
+        InputHandler.OnMouseLeftClick -= HandleClick;
+        InputHandler.OnMouseRightClick -= DestroyBuilding;
     }
 
-    private void StartBuildBuilding(BuildBuildableEntityEvent e)
+    private void StartBuildBuilding(BuildBuildingEvent e)
     {
         var centerWorldPos = QueryBus.Query(new GetCenterCameraPositionQuery());
-        var buildingPrefab = QueryBus.Query(new GetEntityPrefabQuery { prefabId = e.entityName });
+        buildingData = entityManager.GetEntityData(e.entityId);
+        var buildingPrefab = buildingData.EntityPrefab;
         if (buildingPrefab == null)
         {
-            Debug.LogError($"Cannot find prefab for entity name: {e.entityName}");
+            Debug.LogError($"Cannot find prefab for entity ID: {e.entityId}");
             return;
         }
-        var currentBuildableEntity = buildingPrefab as BuildableEntity;
-        if (currentBuildableEntity == null)
-        {
-            Debug.LogError($"The entity {e.entityName} is not a BuildableEntity.");
-            return;
-        }
-        SwitchMode(BuildMode.BUILD);
-        ghostBuilding.SetSkin(currentBuildableEntity.Skin);
+        currentState = BuildingSystemState.BUILD;
+        var buildableEntityPrefab = buildingPrefab as BuildableEntity;
+        ghostBuilding.SetSkin(buildingData.Skin);
         ghostBuilding.transform.position = centerWorldPos;
-        ghostBuilding.SetSize(currentBuildableEntity.DisplaySize);
+        ghostBuilding.transform.localScale = new Vector2(
+            buildableEntityPrefab.DisplaySize.x,
+            buildableEntityPrefab.DisplaySize.y
+        );
         ghostBuilding.gameObject.SetActive(true);
         ghostBuilding.SetSkinColor(Color.green);
-        buildablePrefab = currentBuildableEntity;
 
         MoveGhostBuilding();
     }
 
-    private void SwitchMode(BuildMode newMode)
+    private void StartEditBuilding(EditBuildingEvent e)
     {
-        currentBuildMode = newMode;
+        currentState = BuildingSystemState.EDIT;
+    }
+
+    private void HandleClick()
+    {
+        if (currentState == BuildingSystemState.BUILD)
+        {
+            EndBuildBuilding();
+        }
+        else if (currentState == BuildingSystemState.EDIT)
+        {
+            SelectBuildingToEdit();
+        }
+    }
+
+    private void SelectBuildingToEdit()
+    {
+        var mousePosition = Mouse.current.position.ReadValue();
+        var worldPos = GeneralUtils.GetMouseWorldPosition(mousePosition);
+        var entityInstanceId = gridSystem.GetEntityIdAtPosition(worldPos);
+        var entityInstance = entityManager.GetInstantiatedEntity(entityInstanceId);
+        if (entityInstance == null)
+        {
+            Debug.LogError($"Cannot find entity instance with ID: {entityInstanceId}");
+            return;
+        }
+        if (entityInstance is BuildableEntity buildableEntity)
+        {
+            buildingData = buildableEntity.Data;
+            ghostBuilding.SetSkin(buildingData.Skin);
+            ghostBuilding.transform.position = buildableEntity.transform.position;
+            ghostBuilding.SetSize(buildableEntity.DisplaySize);
+            ghostBuilding.gameObject.SetActive(true);
+            ghostBuilding.SetSkinColor(Color.green);
+            buildableEntity.gameObject.SetActive(false);
+            MoveGhostBuilding();
+        }
     }
 
     private void MoveGhostBuilding()
     {
         _moveTween?.Kill();
         var lastMousePosition = Mouse.current.position.ReadValue();
+        var buildingPrefab = buildingData.EntityPrefab as BuildableEntity;
+        var skin = buildingData.Skin;
+        var buildingSize = new Vector2(
+            skin.bounds.size.x * buildingPrefab.DisplaySize.x,
+            skin.bounds.size.y * buildingPrefab.DisplaySize.y
+        );
         _moveTween = DOTween
             .To(() => 0f, _ => { }, 0f, 1f)
             .SetLoops(-1)
@@ -83,9 +137,7 @@ public class BuildingSystem : MonoBehaviour
                     return;
                 lastMousePosition = mousePosition;
                 var worldPos = GeneralUtils.GetMouseWorldPosition(mousePosition);
-                isOverlapping = QueryBus.Query(
-                    new IsOverlappingGridQuery { position = worldPos, size = buildablePrefab.Size }
-                );
+                isOverlapping = gridSystem.IsCellOccupied(worldPos, buildingSize);
                 if (isOverlapping)
                 {
                     ghostBuilding.SetSkinColor(Color.red);
@@ -94,25 +146,10 @@ public class BuildingSystem : MonoBehaviour
                 {
                     ghostBuilding.SetSkinColor(Color.green);
                 }
-                var snapGridPos = QueryBus.Query(
-                    new GetSnapGridPositionQuery { position = worldPos }
-                );
+                var snapGridPos = gridSystem.GetSnapGridPosition(worldPos);
                 ghostBuilding.transform.position = snapGridPos;
                 GamePlugin.BlockInput(true);
             });
-    }
-
-    private void HandleSelection()
-    {
-        GamePlugin.IsPointerOverUI();
-        if (currentBuildMode == BuildMode.BUILD)
-        {
-            EndBuildBuilding();
-        }
-        else if (currentBuildMode == BuildMode.EDIT)
-        {
-            SelectEditBuilding();
-        }
     }
 
     private void EndBuildBuilding()
@@ -120,6 +157,7 @@ public class BuildingSystem : MonoBehaviour
         // If no building is currently being placed, ignore the click event
         if (!ghostBuilding.gameObject.activeSelf)
         {
+            //Debug.LogWarning("No building is currently being placed. Ignoring build command.");
             return;
         }
         if (isOverlapping)
@@ -131,67 +169,24 @@ public class BuildingSystem : MonoBehaviour
             return;
         }
         var position = ghostBuilding.transform.position;
-        var buildingEntity = QueryBus.Query(
-            new GetEntityQuery { prefabId = buildablePrefab.EntityName, position = position }
+        var entityId = EntityId.ParseId(buildingData.EntityId);
+        var buildingEntity = entityManager.Acquire<BuildableEntity>(
+            entityId,
+            new EntityConfig { position = position }
         );
-        var currentBuildableEntity = buildingEntity as BuildableEntity;
+        var currentBuildableEntity = buildingEntity;
         currentBuildableEntity.SetBuildingState(BuildingState.READY);
-        EventBus.Publish(
-            new SetOccupiedGridEvent
-            {
-                position = position,
-                size = buildablePrefab.Size,
-                entityInstanceId = buildingEntity.InstanceId,
-            }
-        );
+        gridSystem.SetCellsOccupied(position, buildingEntity.Size, buildingEntity.GetInstanceID());
         KillMoveTween();
         HideGhostBuilding();
-        SwitchMode(BuildMode.NONE);
+        currentState = BuildingSystemState.NONE;
     }
 
-    private void CancelBuildBuilding()
+    private void DestroyBuilding()
     {
         KillMoveTween();
         HideGhostBuilding();
-        SwitchMode(BuildMode.NONE);
-    }
-
-    private void StartEditBuilding(EditBuildableEntityEvent e)
-    {
-        SwitchMode(BuildMode.EDIT);
-    }
-
-    private void SelectEditBuilding()
-    {
-        var mousePosition = Mouse.current.position.ReadValue();
-        var mouseWorldPos = GeneralUtils.GetMouseWorldPosition(mousePosition);
-        var buildingId = QueryBus.Query(
-            new GetEntityIdAtPositionQuery { position = mouseWorldPos }
-        );
-        if (buildingId == 0)
-        {
-            Debug.Log("No building found at the clicked position.");
-            return;
-        }
-        var buildingEntity = QueryBus.Query(
-            new GetInstantiatedEntityQuery { instanceId = buildingId }
-        );
-        var buildableEntity = buildingEntity as BuildableEntity;
-        if (buildableEntity == null)
-        {
-            Debug.LogError($"The entity at the clicked position is not a BuildableEntity.");
-            return;
-        }
-        var buildingPosition = buildingEntity.transform.position;
-        var skin = buildableEntity.Skin;
-        ghostBuilding.transform.localScale = new Vector2(
-            buildableEntity.DisplaySize.x,
-            buildableEntity.DisplaySize.y
-        );
-        ghostBuilding.transform.position = buildingPosition;
-        ghostBuilding.SetSkin(skin);
-        buildingEntity.gameObject.SetActive(false);
-        ghostBuilding.gameObject.SetActive(true);
+        currentState = BuildingSystemState.NONE;
     }
 
     private void KillMoveTween()
@@ -206,7 +201,7 @@ public class BuildingSystem : MonoBehaviour
         if (ghostBuilding.gameObject.activeSelf)
         {
             ghostBuilding.SetSkin(null);
-            // ghostBuilding.gameObject.SetActive(false);
+            ghostBuilding.gameObject.SetActive(false);
         }
     }
 }

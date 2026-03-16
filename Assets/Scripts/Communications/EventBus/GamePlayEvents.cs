@@ -5,13 +5,6 @@ public struct MouseClickEvent
     public Vector2 mousePosition;
 }
 
-public struct SetOccupiedGridEvent
-{
-    public Vector3 position;
-    public Vector2 size;
-    public int entityInstanceId;
-}
-
 public struct AddResourceEvent
 {
     public string resourceName;

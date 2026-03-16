@@ -233,7 +233,7 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     private void HandleClickEditButton()
     {
-        EventBus.Publish(new EditBuildableEntityEvent());
+        EventBus.Publish(new EditBuildingEvent());
     }
 
     private void HandleClickBuildBackButton()
@@ -243,7 +243,7 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     private void HandleClickBuildingListButton(string entityName)
     {
-        EventBus.Publish(new SpawnEntityEvent { entityId = EntityId.ParseId(entityName) });
+        EventBus.Publish(new BuildBuildingEvent { entityId = EntityId.ParseId(entityName) });
     }
 
     public void PrepareFadeIn()

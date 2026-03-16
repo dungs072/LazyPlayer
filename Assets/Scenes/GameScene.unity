@@ -24447,7 +24447,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1780490101 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5606571833511754439, guid: 3b2782ece1432114c9e6293988057793, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5724010689362252529, guid: 3b2782ece1432114c9e6293988057793, type: 3}
   m_PrefabInstance: {fileID: 5769019806679163076}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -24824,6 +24824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EntityManager>k__BackingField: {fileID: 2025385783}
+  <GridSystem>k__BackingField: {fileID: 268456707}
   <CharacterManager>k__BackingField: {fileID: 454364414}
   <ResourcesManager>k__BackingField: {fileID: 1409567390}
   <MapManager>k__BackingField: {fileID: 191906964}

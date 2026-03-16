@@ -5,16 +5,19 @@ public class MapManager : MonoBehaviour
     private EntityManager entityManager;
     private CharacterManager characterManager;
     private StaffManager staffManager;
+    private GridSystem gridSystem;
 
     public void Initialize1(
         EntityManager entityManager,
         CharacterManager characterManager,
-        StaffManager staffManager
+        StaffManager staffManager,
+        GridSystem gridSystem
     )
     {
         this.entityManager = entityManager;
         this.characterManager = characterManager;
         this.staffManager = staffManager;
+        this.gridSystem = gridSystem;
     }
 
     public void Initialize2()
@@ -53,14 +56,7 @@ public class MapManager : MonoBehaviour
                 new EntityConfig { position = gridPosition }
             );
             var buildableEntity = plot as BuildableEntity;
-            EventBus.Publish(
-                new SetOccupiedGridEvent
-                {
-                    position = gridPosition,
-                    size = buildableEntity.Size,
-                    entityInstanceId = plot.InstanceId,
-                }
-            );
+            gridSystem.SetCellsOccupied(gridPosition, buildableEntity.Size, plot.InstanceId);
             row = (i + 1) % 2;
         }
     }

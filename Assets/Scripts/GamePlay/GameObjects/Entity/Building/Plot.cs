@@ -29,7 +29,7 @@ public class Plot : BuildableEntity
     {
         if (state != PlotState.EMPTY)
         {
-            UnityEngine.Debug.LogWarning("Plot is not empty!");
+            Debug.LogWarning("Plot is not empty!");
             return;
         }
         currentCropId = cropId;
