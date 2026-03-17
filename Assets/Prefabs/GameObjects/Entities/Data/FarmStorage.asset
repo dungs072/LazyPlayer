@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: FarmStorage
   skin: {fileID: 21300000, guid: 47bbf45d06ef9324a9420addc2f0a946, type: 3}
-  entityPrefab: {fileID: -1214924741264129812, guid: 1e4f56b690672a64883fc441b6e3ea62, type: 3}
+  entityPrefab: {fileID: -2226018069198887508, guid: 1e4f56b690672a64883fc441b6e3ea62, type: 3}

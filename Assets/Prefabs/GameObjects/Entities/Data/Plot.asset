@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Plot
   skin: {fileID: 556929346069465176, guid: 01de2acd393c01a45a3ba8e57ffa4bea, type: 3}
-  entityPrefab: {fileID: -1214924741264129812, guid: 1e4f56b690672a64883fc441b6e3ea62, type: 3}
+  entityPrefab: {fileID: -1214924741264129812, guid: 860aa3c8c216d480a96fa770eac7ac64, type: 3}

@@ -41,17 +41,17 @@ public class GameScreenView
 
     public void SetResourcesAmount(ResourceAmountChangedEvent e)
     {
-        var resourceName = e.name;
+        var resourceId = e.id;
         var amount = e.amount;
-        if (resourceName == "wheat")
+        if (resourceId == FoodDictionary.WheatId)
         {
             wheatAmount.text = amount.ToString();
         }
-        if (resourceName == "bread")
+        if (resourceId == FoodDictionary.BreadId)
         {
             breadAmount.text = amount.ToString();
         }
-        if (resourceName == "money")
+        if (resourceId == "money")
         {
             moneyAmount.text = amount.ToString();
         }

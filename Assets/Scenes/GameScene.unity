@@ -21076,7 +21076,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00002670288
+      value: 0.00005340576
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -24764,7 +24764,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityPrefabs:
   - {fileID: 6582900714397633962, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
-  - {fileID: -1214924741264129812, guid: 1e4f56b690672a64883fc441b6e3ea62, type: 3}
+  - {fileID: -1214924741264129812, guid: 860aa3c8c216d480a96fa770eac7ac64, type: 3}
+  - {fileID: -2226018069198887508, guid: 1e4f56b690672a64883fc441b6e3ea62, type: 3}
   entityDataList:
   - {fileID: 11400000, guid: 91636a167295a9847b38afeaa0ae9cd0, type: 2}
   - {fileID: 11400000, guid: 99ef9aba64ae0944289d4067fff77b15, type: 2}

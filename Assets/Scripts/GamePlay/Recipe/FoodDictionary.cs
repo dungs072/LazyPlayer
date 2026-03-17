@@ -6,9 +6,11 @@ public class FoodDictionary : MonoBehaviour
     [field: SerializeField] public IngredientData[] Ingredients { get; private set; }
     [field: SerializeField] public RecipeData[] Recipes { get; private set; }
 
-
     private readonly Dictionary<string, RecipeData> recipeDictionary = new();
     private readonly Dictionary<string, IngredientData> ingredientDictionary = new();
+
+    public const string WheatId = "wheat";
+    public const string BreadId = "bread";
 
     public void Initialize1()
     {
@@ -23,22 +25,22 @@ public class FoodDictionary : MonoBehaviour
         
         QueryBus.Subscribe<GetRecipeDataQuery, RecipeData>(query => GetRecipeData(query.recipeName));
     }
-    public RecipeData GetRecipeData(string name)
+    public RecipeData GetRecipeData(string recipeId)
     {
-        if (recipeDictionary.TryGetValue(name, out var recipeData))
+        if (recipeDictionary.TryGetValue(recipeId, out var recipeData))
         {
             return recipeData;
         }
-        Debug.LogError($"Recipe '{name}' not found in FoodDictionary.");
+        Debug.LogError($"Recipe '{recipeId}' not found in FoodDictionary.");
         return null;
     }
-    public IngredientData GetIngredientData(string name)
+    public IngredientData GetIngredientData(string ingredientId)
     {
-        if (ingredientDictionary.TryGetValue(name, out var ingredientData))
+        if (ingredientDictionary.TryGetValue(ingredientId, out var ingredientData))
         {
             return ingredientData;
         }
-        Debug.LogError($"Ingredient '{name}' not found in FoodDictionary.");
+        Debug.LogError($"Ingredient '{ingredientId}' not found in FoodDictionary.");
         return null;
     }
 }
