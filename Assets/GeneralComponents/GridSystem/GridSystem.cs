@@ -319,7 +319,22 @@ public class GridSystem : MonoBehaviour
         }
     }
 
-    public bool IsCellOccupied(Vector3 position, Vector2 size)
+    public void ResetCellsOccupied(int entityInstanceId)
+    {
+        for (int row = 0; row < _rowCount; row++)
+        {
+            for (int col = 0; col < _columnCount; col++)
+            {
+                if (_grid[row][col].OccupiedByEntityId == entityInstanceId)
+                {
+                    // Create new struct with OccupiedByEntityId set to 0
+                    _grid[row][col] = new CellGrid(row, col, 0);
+                }
+            }
+        }
+    }
+
+    public bool IsCellOccupied(Vector3 position, Vector2 size, int instanceIdToIgnore = 0)
     {
         Vector3 localPos = position - transform.position;
 
@@ -349,7 +364,10 @@ public class GridSystem : MonoBehaviour
             {
                 if (row < 0 || row >= _rowCount || col < 0 || col >= _columnCount)
                     return true;
-                if (_grid[row][col].IsOccupied)
+                if (
+                    _grid[row][col].IsOccupied
+                    && _grid[row][col].OccupiedByEntityId != instanceIdToIgnore
+                )
                     return true;
             }
         }

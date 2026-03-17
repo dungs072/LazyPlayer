@@ -11,10 +11,23 @@ public struct BuildBuildingEvent
 
 public struct EditBuildingEvent { }
 
+public struct MoveSelectBuildingEvent
+{
+    public int instanceId;
+}
+
+public struct RotateSelectBuildingEvent
+{
+    public int instanceId;
+}
+
+public struct CancelSelectEvent { }
+
 public enum BuildingSystemState
 {
     EDIT,
     BUILD,
+    MOVE,
     NONE,
 }
 
@@ -25,7 +38,12 @@ public class BuildingSystem : MonoBehaviour
 
     private EntityManager entityManager = null;
     private GridSystem gridSystem = null;
+
+    // for build mode only
     private EntityData buildingData = null;
+
+    //for edit, move mode only
+    private int selectedInstanceId = -1;
     private bool isOverlapping = false;
     private Tween _moveTween = null;
     private BuildingSystemState currentState = BuildingSystemState.NONE;
@@ -37,8 +55,11 @@ public class BuildingSystem : MonoBehaviour
 
         EventBus.Subscribe<BuildBuildingEvent>(StartBuildBuilding);
         EventBus.Subscribe<EditBuildingEvent>(StartEditBuilding);
-        InputHandler.OnMouseLeftClick += HandleClick;
-        InputHandler.OnMouseRightClick += DestroyBuilding;
+        EventBus.Subscribe<MoveSelectBuildingEvent>(StartMoveBuilding);
+        EventBus.Subscribe<RotateSelectBuildingEvent>(StartRotateBuilding);
+        EventBus.Subscribe<CancelSelectEvent>(CancelSelectBuilding);
+        InputHandler.OnMouseLeftClick += HandleLeftMouseClick;
+        InputHandler.OnMouseRightClick += HandleRightMouseClick;
 
         ghostBuilding.gameObject.SetActive(false);
     }
@@ -46,8 +67,12 @@ public class BuildingSystem : MonoBehaviour
     void OnDestroy()
     {
         EventBus.Unsubscribe<BuildBuildingEvent>(StartBuildBuilding);
-        InputHandler.OnMouseLeftClick -= HandleClick;
-        InputHandler.OnMouseRightClick -= DestroyBuilding;
+        EventBus.Unsubscribe<EditBuildingEvent>(StartEditBuilding);
+        EventBus.Unsubscribe<MoveSelectBuildingEvent>(StartMoveBuilding);
+        EventBus.Unsubscribe<RotateSelectBuildingEvent>(StartRotateBuilding);
+        EventBus.Unsubscribe<CancelSelectEvent>(CancelSelectBuilding);
+        InputHandler.OnMouseLeftClick -= HandleLeftMouseClick;
+        InputHandler.OnMouseRightClick -= HandleRightMouseClick;
     }
 
     private void StartBuildBuilding(BuildBuildingEvent e)
@@ -79,7 +104,57 @@ public class BuildingSystem : MonoBehaviour
         currentState = BuildingSystemState.EDIT;
     }
 
-    private void HandleClick()
+    private void StartMoveBuilding(MoveSelectBuildingEvent e)
+    {
+        selectedInstanceId = e.instanceId;
+        var entityInstance = entityManager.GetInstantiatedEntity(selectedInstanceId);
+        if (entityInstance == null)
+        {
+            Debug.LogError($"Cannot find entity instance with ID: {selectedInstanceId}");
+            return;
+        }
+        if (entityInstance is BuildableEntity buildableEntity)
+        {
+            currentState = BuildingSystemState.MOVE;
+            buildingData = buildableEntity.Data;
+            ghostBuilding.SetSkin(buildingData.Skin);
+            ghostBuilding.transform.position = buildableEntity.transform.position;
+            ghostBuilding.SetSize(buildableEntity.DisplaySize);
+            ghostBuilding.gameObject.SetActive(true);
+            ghostBuilding.SetSkinColor(Color.green);
+            buildableEntity.gameObject.SetActive(false);
+            MoveGhostBuilding(selectedInstanceId);
+        }
+    }
+
+    private void StartRotateBuilding(RotateSelectBuildingEvent e)
+    {
+        var entityInstance = entityManager.GetInstantiatedEntity(e.instanceId);
+        if (entityInstance == null)
+        {
+            Debug.LogError($"Cannot find entity instance with ID: {e.instanceId}");
+            return;
+        }
+        if (entityInstance is BuildableEntity buildableEntity)
+        {
+            var currentRotation = buildableEntity.transform.rotation.eulerAngles.z;
+            var newRotation = currentRotation + 90f;
+            buildableEntity.transform.rotation = Quaternion.Euler(0, 0, newRotation);
+            gridSystem.ResetCellsOccupied(e.instanceId);
+            gridSystem.SetCellsOccupied(
+                buildableEntity.transform.position,
+                buildableEntity.Size,
+                buildableEntity.InstanceId
+            );
+        }
+    }
+
+    private void CancelSelectBuilding(CancelSelectEvent e)
+    {
+        currentState = BuildingSystemState.NONE;
+    }
+
+    private void HandleLeftMouseClick()
     {
         if (currentState == BuildingSystemState.BUILD)
         {
@@ -89,6 +164,10 @@ public class BuildingSystem : MonoBehaviour
         {
             SelectBuildingToEdit();
         }
+        else if (currentState == BuildingSystemState.MOVE)
+        {
+            EndMoveBuilding();
+        }
     }
 
     private void SelectBuildingToEdit()
@@ -96,26 +175,58 @@ public class BuildingSystem : MonoBehaviour
         var mousePosition = Mouse.current.position.ReadValue();
         var worldPos = GeneralUtils.GetMouseWorldPosition(mousePosition);
         var entityInstanceId = gridSystem.GetEntityIdAtPosition(worldPos);
+        if (entityInstanceId == 0)
+            return;
         var entityInstance = entityManager.GetInstantiatedEntity(entityInstanceId);
+        if (entityInstance is BuildableEntity buildableEntity)
+        {
+            var entityPosition = buildableEntity.transform.position;
+            var size = buildableEntity.Size;
+            EventBus.Publish(
+                new SelectEditingBuildingEvent
+                {
+                    instanceId = entityInstanceId,
+                    worldPosition = entityPosition + new Vector3(0, size.y, 0),
+                }
+            );
+        }
+    }
+
+    private void EndMoveBuilding()
+    {
+        var entityInstance = entityManager.GetInstantiatedEntity(selectedInstanceId);
         if (entityInstance == null)
         {
-            Debug.LogError($"Cannot find entity instance with ID: {entityInstanceId}");
+            Debug.LogError($"Cannot find entity instance with ID: {selectedInstanceId}");
             return;
         }
         if (entityInstance is BuildableEntity buildableEntity)
         {
-            buildingData = buildableEntity.Data;
-            ghostBuilding.SetSkin(buildingData.Skin);
-            ghostBuilding.transform.position = buildableEntity.transform.position;
-            ghostBuilding.SetSize(buildableEntity.DisplaySize);
-            ghostBuilding.gameObject.SetActive(true);
-            ghostBuilding.SetSkinColor(Color.green);
-            buildableEntity.gameObject.SetActive(false);
-            MoveGhostBuilding();
+            if (isOverlapping)
+            {
+                return;
+            }
+            var position = ghostBuilding.transform.position;
+            buildableEntity.transform.position = position;
+            gridSystem.ResetCellsOccupied(selectedInstanceId);
+            gridSystem.SetCellsOccupied(position, buildableEntity.Size, buildableEntity.InstanceId);
+            buildableEntity.gameObject.SetActive(true);
+            KillMoveTween();
+            HideGhostBuilding();
+            currentState = BuildingSystemState.NONE;
+            selectedInstanceId = -1;
+            var size = buildableEntity.Size;
+            EventBus.Publish(
+                new SelectEditingBuildingEvent
+                {
+                    instanceId = buildableEntity.InstanceId,
+                    worldPosition = position + new Vector3(0, size.y, 0),
+                }
+            );
         }
     }
 
-    private void MoveGhostBuilding()
+    private void MoveGhostBuilding(int instanceIdToIgnore = 0)
     {
         _moveTween?.Kill();
         var lastMousePosition = Mouse.current.position.ReadValue();
@@ -137,7 +248,11 @@ public class BuildingSystem : MonoBehaviour
                     return;
                 lastMousePosition = mousePosition;
                 var worldPos = GeneralUtils.GetMouseWorldPosition(mousePosition);
-                isOverlapping = gridSystem.IsCellOccupied(worldPos, buildingSize);
+                isOverlapping = gridSystem.IsCellOccupied(
+                    worldPos,
+                    buildingSize,
+                    instanceIdToIgnore
+                );
                 if (isOverlapping)
                 {
                     ghostBuilding.SetSkinColor(Color.red);
@@ -154,6 +269,8 @@ public class BuildingSystem : MonoBehaviour
 
     private void EndBuildBuilding()
     {
+        if (currentState == BuildingSystemState.NONE)
+            return;
         // If no building is currently being placed, ignore the click event
         if (!ghostBuilding.gameObject.activeSelf)
         {
@@ -176,10 +293,22 @@ public class BuildingSystem : MonoBehaviour
         );
         var currentBuildableEntity = buildingEntity;
         currentBuildableEntity.SetBuildingState(BuildingState.READY);
-        gridSystem.SetCellsOccupied(position, buildingEntity.Size, buildingEntity.GetInstanceID());
+        gridSystem.SetCellsOccupied(position, buildingEntity.Size, buildingEntity.InstanceId);
         KillMoveTween();
         HideGhostBuilding();
         currentState = BuildingSystemState.NONE;
+    }
+
+    private void HandleRightMouseClick()
+    {
+        if (currentState == BuildingSystemState.BUILD)
+        {
+            DestroyBuilding();
+        }
+        else if (currentState == BuildingSystemState.MOVE)
+        {
+            CancelMoving();
+        }
     }
 
     private void DestroyBuilding()
@@ -187,6 +316,32 @@ public class BuildingSystem : MonoBehaviour
         KillMoveTween();
         HideGhostBuilding();
         currentState = BuildingSystemState.NONE;
+    }
+
+    private void CancelMoving()
+    {
+        var entityInstance = entityManager.GetInstantiatedEntity(selectedInstanceId);
+        if (entityInstance == null)
+        {
+            Debug.LogError($"Cannot find entity instance with ID: {selectedInstanceId}");
+            return;
+        }
+        if (entityInstance is BuildableEntity buildableEntity)
+        {
+            buildableEntity.gameObject.SetActive(true);
+            KillMoveTween();
+            HideGhostBuilding();
+            currentState = BuildingSystemState.NONE;
+            selectedInstanceId = -1;
+            var size = buildableEntity.Size;
+            EventBus.Publish(
+                new SelectEditingBuildingEvent
+                {
+                    instanceId = buildableEntity.InstanceId,
+                    worldPosition = buildableEntity.transform.position + new Vector3(0, size.y, 0),
+                }
+            );
+        }
     }
 
     private void KillMoveTween()

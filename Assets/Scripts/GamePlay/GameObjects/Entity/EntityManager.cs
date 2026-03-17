@@ -168,7 +168,6 @@ public class EntityManager : MonoBehaviour
         instance.Init();
         entitiesPool.TryAdd(prefabId, new List<Entity>());
         entitiesPool[prefabId].Add(instance);
-        Debug.Log(instance.InstanceId);
         entityInstanceDict.Add(instance.InstanceId, instance);
         return instance;
     }

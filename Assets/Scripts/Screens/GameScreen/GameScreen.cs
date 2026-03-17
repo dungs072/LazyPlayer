@@ -3,6 +3,12 @@ using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public struct SelectEditingBuildingEvent
+{
+    public int instanceId;
+    public Vector3 worldPosition;
+}
+
 public class GameScreen : BaseScreen
 {
     [SerializeField]
@@ -11,6 +17,7 @@ public class GameScreen : BaseScreen
     public override void Initialize1()
     {
         EventBus.Subscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
+        EventBus.Subscribe<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
         view.preButton.AddListener(OnPreButtonClicked);
         view.nextButton.AddListener(OnNextButtonClicked);
         view.staffButton.AddListener(OnStaffButtonClicked);
@@ -19,6 +26,7 @@ public class GameScreen : BaseScreen
     private void OnDestroy()
     {
         EventBus.Unsubscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
+        EventBus.Unsubscribe<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
         view.preButton.RemoveListener(OnPreButtonClicked);
         view.nextButton.RemoveListener(OnNextButtonClicked);
         view.staffButton.RemoveListener(OnStaffButtonClicked);

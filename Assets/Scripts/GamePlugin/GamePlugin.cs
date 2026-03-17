@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+//TODO: consider block input for UI by using block raycast component
 // only pure class c# is allowed
 public class GamePlugin
 {

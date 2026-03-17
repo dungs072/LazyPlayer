@@ -34,7 +34,7 @@ public class GameScreenView
     private MenuGamePlayPanel menuPanel;
 
     [SerializeField]
-    private EditBuildingPanel editBuildingPanel;
+    public EditBuildingPanel editBuildingPanel;
 
     [HideInInspector]
     public int currentMapIndex = 0;
@@ -70,5 +70,15 @@ public class GameScreenView
     public void SetMenuGridData(IReadOnlyList<MenuGridData> data)
     {
         menuGamePlayPanel.scroller.SetData(data);
+    }
+
+    public void ShowEditBuildingPanel(SelectEditingBuildingEvent e)
+    {
+        var worldPosition = e.worldPosition;
+        var screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
+        editBuildingPanel.gameObject.SetActive(true);
+        var rectTransform = editBuildingPanel.GetComponent<RectTransform>();
+        rectTransform.position = screenPosition;
+        editBuildingPanel.SetCurrentInstanceId(e.instanceId);
     }
 }
