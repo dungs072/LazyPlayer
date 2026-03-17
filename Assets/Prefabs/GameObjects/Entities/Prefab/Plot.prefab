@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 662191682528327390, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.023
+      objectReference: {fileID: 0}
     - target: {fileID: 4558550658540160783, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -50,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4863197294119604379, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
       propertyPath: m_Name
-      value: Plot
+      value: BuildableEntity
       objectReference: {fileID: 0}
     - target: {fileID: 7462250577862674267, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
       propertyPath: m_LocalScale.x

@@ -16,6 +16,7 @@ public static class EntityPrefabConstant
 {
     public static readonly EntityPrefabId ENTITY = new("Entity");
     public static readonly EntityPrefabId BUILDABLE_ENTITY = new("BuildableEntity");
+    public static readonly EntityPrefabId PLOT_ENTITY = new("Plot");
 
     public static EntityPrefabId GetPrefabId(string prefabName)
     {
@@ -23,6 +24,7 @@ public static class EntityPrefabConstant
         {
             "Entity" => ENTITY,
             "BuildableEntity" => BUILDABLE_ENTITY,
+            "Plot" => PLOT_ENTITY,
             _ => throw new System.Exception($"Prefab ID not found for prefab name: {prefabName}"),
         };
     }
