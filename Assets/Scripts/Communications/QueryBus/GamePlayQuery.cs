@@ -48,14 +48,5 @@ public struct IsAvailableToCreateFoodQuery : IQueryResult<bool>
     }
 }
 
-public struct GetRecipeDataQuery : IQueryResult<RecipeData>
-{
-    public string recipeName;
-
-    public GetRecipeDataQuery(string recipeName)
-    {
-        this.recipeName = recipeName;
-    }
-}
 
 public struct GetOldestFoodOrderQuery : IQueryResult<FoodOrder> { }

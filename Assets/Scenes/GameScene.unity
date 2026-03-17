@@ -21080,7 +21080,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00005340576
+      value: 0.000034332275
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -24839,6 +24839,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 88f57a1346202a846af21437fba78b23, type: 2}
   <Recipes>k__BackingField:
   - {fileID: 11400000, guid: f00b36087cc85a44aa57c9aeb65bd994, type: 2}
+  <Crops>k__BackingField:
+  - {fileID: 11400000, guid: 323ade410be8d47c5a54824bd9f64624, type: 2}
 --- !u!1 &2025385781
 GameObject:
   m_ObjectHideFlags: 0
