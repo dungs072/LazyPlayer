@@ -30,26 +30,19 @@ public class Server : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        var order = QueryBus.Query(
-            new GetOldestFoodOrderQuery()
-        );
+        var entityManager = character.entityManager;
+        var order = QueryBus.Query(new GetOldestFoodOrderQuery());
         if (order == null)
         {
             character.EnqueueJob(this);
             return;
         }
 
-        var servingTable = QueryBus.Query(
-            new GetActiveEntityQuery(Building.SERVING_TABLE)
-        );
-        var orderTable = QueryBus.Query(
-            new GetActiveEntityQuery(Building.ORDER_TABLE)
-        );
+        var servingTable = entityManager.FindActiveEntity(EntityId.SERVING_TABLE);
+        var orderTable = entityManager.FindActiveEntity(EntityId.ORDER_TABLE);
         //! race conditions
         //isWorking = true;
-        var isAvailableFood = QueryBus.Query(
-            new IsAvailableFoodQuery(order.foodAmounts)
-        );
+        var isAvailableFood = QueryBus.Query(new IsAvailableFoodQuery(order.foodAmounts));
         if (isAvailableFood)
         {
             EventBus.Publish(new RemoveFoodOrderEvent());
@@ -66,9 +59,7 @@ public class Server : BaseWorker
 
             //TODO: eat duration based on what?
             order.diner.EnqueueJob(new DinerEatFood(order.diningTable, 5f));
-            var orderLeft = QueryBus.Query(
-                new GetOldestFoodOrderQuery()
-            );
+            var orderLeft = QueryBus.Query(new GetOldestFoodOrderQuery());
             if (orderLeft != null)
             {
                 //isWorking = false;
@@ -90,9 +81,7 @@ public class Server : BaseWorker
                 orderTable.transform.position
             );
 
-            var orderLeft = QueryBus.Query(
-                new GetOldestFoodOrderQuery()
-            );
+            var orderLeft = QueryBus.Query(new GetOldestFoodOrderQuery());
             if (orderLeft != null)
             {
                 HandleFoodOrderAdded();

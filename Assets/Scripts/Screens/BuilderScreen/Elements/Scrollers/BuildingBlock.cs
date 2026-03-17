@@ -28,13 +28,14 @@ public class BuildingBlock : MonoBehaviour, ICell
 
     public void SetInfo(BuildableEntity data, int index)
     {
-        nameText.text = data.EntityName;
+        //nameText.text = data.EntityName;
     }
 
     private async UniTask HandleBuildButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        EventBus.Publish(new SpawnEntityEvent { entityName = nameText.text });
+        Debug.Log(nameText.text);
+        EventBus.Publish(new SpawnEntityEvent { entityId = EntityId.ParseId(nameText.text) });
         await UniTask.WhenAll(
             new[]
             {

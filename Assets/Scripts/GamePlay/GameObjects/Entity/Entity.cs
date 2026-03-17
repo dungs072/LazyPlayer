@@ -4,28 +4,17 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     [SerializeField]
-    private string entityName = "Default";
+    protected SpriteRenderer spriteRenderer;
 
     [SerializeField]
     private TMP_Text displayNameText;
+    private EntityData entityData;
+    public EntityData Data => entityData;
 
-    [SerializeField]
-    private Sprite icon;
-
-    public string EntityName
+    public virtual void Initialize(EntityData data)
     {
-        get { return entityName; }
-    }
-
-    protected virtual void Awake()
-    {
-        if (displayNameText == null)
-            return;
-        displayNameText.text = entityName;
-    }
-
-    public Sprite Icon
-    {
-        get { return icon; }
+        entityData = data;
+        spriteRenderer.sprite = entityData.Skin;
+        displayNameText.text = entityData.DisplayName;
     }
 }

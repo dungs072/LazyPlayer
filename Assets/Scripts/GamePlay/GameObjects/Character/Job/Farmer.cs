@@ -20,7 +20,9 @@ public class Farmer : BaseWorker
 
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
-        Plot plot = QueryBus.Query(new GetEmptyPlotQuery());
+        var entityManager = character.entityManager;
+        Debug.Log(character);
+        var plot = GetEmptyPlot();
         while (plot != null)
         {
             await character.MovementComponent.Move(cancellationToken, plot.transform.position);
@@ -28,18 +30,18 @@ public class Farmer : BaseWorker
             plot.PlantCrop(FoodDictionary.WheatId, 10);
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
 
-            plot = QueryBus.Query(new GetEmptyPlotQuery());
+            plot = GetEmptyPlot();
         }
-        plot = QueryBus.Query(new GetHarvestablePlotQuery());
+        plot = GetHarvestablePlot();
 
         while (plot == null)
         {
             await DoNothing(cancellationToken);
 
-            plot = QueryBus.Query(new GetHarvestablePlotQuery());
+            plot = GetHarvestablePlot();
         }
 
-        var storage = QueryBus.Query(new GetActiveEntityQuery(Building.FARM_STORAGE));
+        var storage = entityManager.FindActiveEntity(EntityId.FARM_STORAGE);
         while (plot != null)
         {
             await character.MovementComponent.Move(cancellationToken, plot.transform.position);
@@ -50,10 +52,36 @@ public class Farmer : BaseWorker
             await character.MovementComponent.Move(cancellationToken, storage.transform.position);
 
             EventBus.Publish(new AddResourceEvent(harvestedCrop.Item1, harvestedCrop.Item2));
-            plot = QueryBus.Query(new GetHarvestablePlotQuery());
+            plot = GetHarvestablePlot();
         }
 
         character.EnqueueJob(this);
+    }
+
+    private Plot GetEmptyPlot()
+    {
+        var entityManager = character.entityManager;
+        Plot plot = entityManager.FindActiveEntity<Plot>(
+            EntityId.PLOT,
+            (plot) =>
+            {
+                return plot.IsEmpty && plot.BuildingState == BuildingState.READY;
+            }
+        );
+        return plot;
+    }
+
+    private Plot GetHarvestablePlot()
+    {
+        var entityManager = character.entityManager;
+        Plot plot = entityManager.FindActiveEntity<Plot>(
+            EntityId.PLOT,
+            (plot) =>
+            {
+                return plot.IsReady && plot.BuildingState == BuildingState.READY;
+            }
+        );
+        return plot;
     }
 
     private async UniTask DoNothing(CancellationToken cancellationToken)
