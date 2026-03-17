@@ -3,6 +3,12 @@ using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public struct SelectEditingBuildingEvent
+{
+    public int instanceId;
+    public Vector3 worldPosition;
+}
+
 public class GameScreen : BaseScreen
 {
     [SerializeField]
@@ -11,19 +17,19 @@ public class GameScreen : BaseScreen
     public override void Initialize1()
     {
         EventBus.Subscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
+        EventBus.Subscribe<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
         view.preButton.AddListener(OnPreButtonClicked);
         view.nextButton.AddListener(OnNextButtonClicked);
         view.staffButton.AddListener(OnStaffButtonClicked);
-        view.builderButton.AddListener(OnBuilderButtonClicked);
     }
 
     private void OnDestroy()
     {
         EventBus.Unsubscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
+        EventBus.Unsubscribe<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
         view.preButton.RemoveListener(OnPreButtonClicked);
         view.nextButton.RemoveListener(OnNextButtonClicked);
         view.staffButton.RemoveListener(OnStaffButtonClicked);
-        view.builderButton.RemoveListener(OnBuilderButtonClicked);
     }
 
     public void OnPreButtonClicked()
@@ -89,7 +95,6 @@ public class GameScreen : BaseScreen
 
     public override UniTask FadeOutAsync()
     {
-        ////throw new System.NotImplementedException();
         return UniTask.CompletedTask;
     }
 }

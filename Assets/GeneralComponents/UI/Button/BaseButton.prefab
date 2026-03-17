@@ -273,8 +273,8 @@ MonoBehaviour:
   increasePercentHitArea: 0.1
   isClickedOnHitArea: 0
   buttonType: 1
-  scaleDownFactor: 0.9
-  scaleUpFactor: 1
+  scaleDownFactor: 0.25
+  scaleUpFactor: 0.25
   scaleDuration: 0.3
   buttonState: 0
   bubbleUpFactor: 1.2

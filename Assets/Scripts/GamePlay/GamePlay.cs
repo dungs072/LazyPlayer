@@ -9,6 +9,9 @@ public class GamePlay : MonoBehaviour
     public EntityManager EntityManager { get; private set; }
 
     [field: SerializeField]
+    public GridSystem GridSystem { get; private set; }
+
+    [field: SerializeField]
     public CharacterManager CharacterManager { get; private set; }
 
     [field: SerializeField]
@@ -43,9 +46,9 @@ public class GamePlay : MonoBehaviour
         TableOrderManager.Initialize1();
         FoodOrderManager.Initialize1();
         StaffManager.Initialize1();
-        BuildingSystem.Initialize1(EntityManager);
+        BuildingSystem.Initialize1(EntityManager, GridSystem);
         CharacterManager.Initialize1(EntityManager);
-        MapManager.Initialize1(EntityManager, CharacterManager, StaffManager);
+        MapManager.Initialize1(EntityManager, CharacterManager, StaffManager, GridSystem);
     }
 
     public void Initialize2()

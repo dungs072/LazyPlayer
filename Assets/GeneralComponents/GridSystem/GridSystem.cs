@@ -2,19 +2,36 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+public struct GetSnapGridPositionQuery : IQueryResult<Vector3>
+{
+    public Vector3 position;
+}
+
+public struct IsOverlappingGridQuery : IQueryResult<bool>
+{
+    public Vector3 position;
+    public Vector2 size;
+}
+
+public struct GetEntityIdAtPositionQuery : IQueryResult<int>
+{
+    public Vector3 position;
+}
 
 public struct CellGrid
 {
     public int Row;
     public int Column;
-    public bool IsOccupied;
+    public int OccupiedByEntityId; // 0 means unoccupied, otherwise holds the instanceId of the occupying entity
 
-    public CellGrid(int row, int column, bool isOccupied)
+    public CellGrid(int row, int column, int occupiedByEntityId)
     {
         Row = row;
         Column = column;
-        IsOccupied = isOccupied;
+        OccupiedByEntityId = occupiedByEntityId;
     }
+
+    public bool IsOccupied => OccupiedByEntityId != 0;
 }
 
 public class GridSystem : MonoBehaviour
@@ -54,28 +71,34 @@ public class GridSystem : MonoBehaviour
 
     void Awake()
     {
+        InitGrid();
+        SubscribeEvents();
+    }
+
+    private void InitGrid()
+    {
         _grid = new CellGrid[_rowCount][];
         for (int i = 0; i < _rowCount; i++)
         {
             _grid[i] = new CellGrid[_columnCount];
             for (int j = 0; j < _columnCount; j++)
             {
-                _grid[i][j] = new CellGrid(i, j, false);
+                _grid[i][j] = new CellGrid(i, j, 0);
             }
         }
+    }
 
+    private void SubscribeEvents()
+    {
         QueryBus.Subscribe<GetSnapGridPositionQuery, Vector3>(query =>
             GetSnapGridPosition(query.position)
         );
         QueryBus.Subscribe<IsOverlappingGridQuery, bool>(query =>
             IsCellOccupied(query.position, query.size)
         );
-        EventBus.Subscribe<SetOccupiedGridEvent>(SetCellOccupied);
-    }
-
-    void OnDestroy()
-    {
-        EventBus.Unsubscribe<SetOccupiedGridEvent>(SetCellOccupied);
+        QueryBus.Subscribe<GetEntityIdAtPositionQuery, int>(query =>
+            GetEntityIdAtPosition(query.position)
+        );
     }
 
     void Start()
@@ -249,11 +272,10 @@ public class GridSystem : MonoBehaviour
         return transform.position + new Vector3(cellPos.x, cellPos.y, 0);
     }
 
-    public void SetCellOccupied(SetOccupiedGridEvent e)
+    public void SetCellsOccupied(Vector3 position, Vector2 size, int entityInstanceId)
     {
-        var position = e.position;
-        var widthSize = e.size.x;
-        var heightSize = e.size.y;
+        var widthSize = size.x;
+        var heightSize = size.y;
         // Convert world position to local position
         Vector3 localPos = position - transform.position;
 
@@ -290,14 +312,29 @@ public class GridSystem : MonoBehaviour
                 // Check if cell is within grid bounds
                 if (row >= 0 && row < _rowCount && col >= 0 && col < _columnCount)
                 {
-                    // Create new struct with updated IsOccupied value
-                    _grid[row][col] = new CellGrid(row, col, true);
+                    // Create new struct with updated OccupiedByEntityId value
+                    _grid[row][col] = new CellGrid(row, col, entityInstanceId);
                 }
             }
         }
     }
 
-    public bool IsCellOccupied(Vector3 position, Vector2 size)
+    public void ResetCellsOccupied(int entityInstanceId)
+    {
+        for (int row = 0; row < _rowCount; row++)
+        {
+            for (int col = 0; col < _columnCount; col++)
+            {
+                if (_grid[row][col].OccupiedByEntityId == entityInstanceId)
+                {
+                    // Create new struct with OccupiedByEntityId set to 0
+                    _grid[row][col] = new CellGrid(row, col, 0);
+                }
+            }
+        }
+    }
+
+    public bool IsCellOccupied(Vector3 position, Vector2 size, int instanceIdToIgnore = 0)
     {
         Vector3 localPos = position - transform.position;
 
@@ -327,10 +364,36 @@ public class GridSystem : MonoBehaviour
             {
                 if (row < 0 || row >= _rowCount || col < 0 || col >= _columnCount)
                     return true;
-                if (_grid[row][col].IsOccupied)
+                if (
+                    _grid[row][col].IsOccupied
+                    && _grid[row][col].OccupiedByEntityId != instanceIdToIgnore
+                )
                     return true;
             }
         }
         return false;
+    }
+
+    public int GetEntityIdAtPosition(Vector3 position)
+    {
+        Vector3 localPos = position - transform.position;
+
+        float totalWidth = _columnCount * _cellSize.x + (_columnCount - 1) * _spacing.x;
+        float totalHeight = _rowCount * _cellSize.y + (_rowCount - 1) * _spacing.y;
+
+        float firstCellCenterX = -totalWidth / 2 + _cellSize.x / 2;
+        float firstCellCenterY = -totalHeight / 2 + _cellSize.y / 2;
+
+        float stepX = _cellSize.x + _spacing.x;
+        float stepY = _cellSize.y + _spacing.y;
+
+        int column = Mathf.RoundToInt((localPos.x - firstCellCenterX) / stepX);
+        int row = Mathf.RoundToInt((localPos.y - firstCellCenterY) / stepY);
+
+        if (row >= 0 && row < _rowCount && column >= 0 && column < _columnCount)
+        {
+            return _grid[row][column].OccupiedByEntityId;
+        }
+        return 0; // Return 0 for out of bounds, meaning unoccupied
     }
 }

@@ -6,7 +6,7 @@ public enum BuildingState
     READY,
 }
 
-public class BuildableEntity : Entity, Buildable
+public class BuildableEntity : Entity
 {
     private BuildingState buildingState = BuildingState.READY;
     public BuildingState BuildingState => buildingState;
