@@ -21,7 +21,6 @@ public class Farmer : BaseWorker
     public override async UniTask DoJobAsync(CancellationToken cancellationToken)
     {
         var entityManager = character.entityManager;
-        Debug.Log(character);
         var plot = GetEmptyPlot();
         while (plot != null)
         {
