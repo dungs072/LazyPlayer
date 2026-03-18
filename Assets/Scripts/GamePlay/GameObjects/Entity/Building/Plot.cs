@@ -1,78 +1,68 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public enum PlotState
-{
-    EMPTY,
-    GROWING,
-    READY,
-}
-
 public class Plot : BuildableEntity
 {
-    [SerializeField]
-    private float growthTime = 10f;
+    [SerializeField] private SpriteRenderer cropSpriteRenderer;
+    public bool IsEmpty => currentCrop == null;
+    public bool IsReady => currentCrop != null && currentGrowthState == currentCrop.GetCropGrowthStates().Count;
 
-    private PlotState state = PlotState.EMPTY;
+    private CropData currentCrop;
+    private int currentGrowthState = -1;
 
-    private string currentCropId = string.Empty;
-    private int harvestedAmount = 0;
-    public bool IsEmpty => state == PlotState.EMPTY;
-    public bool IsReady => state == PlotState.READY;
-
-    private void Awake()
+    public void PlantCrop(CropId cropId)
     {
-        SwitchState(PlotState.EMPTY);
-    }
-
-    public void PlantCrop(string cropId, int harvestedAmount)
-    {
-        if (state != PlotState.EMPTY)
+        if (currentGrowthState != -1)
         {
             Debug.LogWarning("Plot is not empty!");
             return;
         }
-        currentCropId = cropId;
-        this.harvestedAmount = harvestedAmount;
-        GrowAsync().Forget();
+        GrowCropAsync(cropId).Forget();
     }
 
-    private async UniTask GrowAsync()
+    private async UniTask GrowCropAsync(CropId cropId)
     {
-        SwitchState(PlotState.GROWING);
-        await UniTask.Delay(System.TimeSpan.FromSeconds(growthTime));
-        SwitchState(PlotState.READY);
+        cropSpriteRenderer.enabled = true;
+        currentCrop = QueryBus.Query(new GetCropDataQuery(cropId));
+        
+        if (currentCrop == null)
+        {
+            Debug.LogError("current crop is null!");
+            return;
+        }
+        
+        currentGrowthState = 0;
+        while (currentGrowthState < currentCrop.GetCropGrowthStates().Count)
+        {
+            var currentCropState = currentCrop.GetCropGrowthStates()[currentGrowthState];
+            cropSpriteRenderer.sprite = currentCropState.StateImage;
+            
+            var growthTime = currentCropState.GrowthTimeSecond;
+
+            await UniTask.Delay(System.TimeSpan.FromSeconds(growthTime));
+            currentGrowthState += 1;
+        }
     }
-
-    public (string, int) Harvest()
+    
+    public List<IngredientAmount> HarvestCrop()
     {
-        if (state != PlotState.READY)
+        if (currentCrop == null)
         {
-            UnityEngine.Debug.LogWarning("Plot is not ready for harvest!");
-            return (string.Empty, 0);
+            Debug.LogError("current crop is null!");
+            return new List<IngredientAmount>();
+        }
+        
+        if (currentGrowthState != currentCrop.GetCropGrowthStates().Count)
+        {
+            Debug.LogWarning("Plot is not ready for harvest!");
+            return new List<IngredientAmount>();
         }
 
-        string harvestedCropId = currentCropId;
-        int harvestedAmount = this.harvestedAmount;
-        currentCropId = string.Empty;
-        SwitchState(PlotState.EMPTY);
-        return (harvestedCropId, harvestedAmount);
-    }
-
-    private void SwitchState(PlotState newState)
-    {
-        state = newState;
-        if (state == PlotState.EMPTY)
-        {
-            spriteRenderer.color = Color.gray;
-        }
-        else if (state == PlotState.GROWING)
-        {
-            spriteRenderer.color = Color.green;
-        }
-        else if (state == PlotState.READY)
-        {
-            spriteRenderer.color = Color.yellow;
-        }
+        var current = currentCrop;
+        currentCrop = null;
+        currentGrowthState = -1;
+        cropSpriteRenderer.enabled = false;
+        return current.GetHarvestAmounts();
     }
 }

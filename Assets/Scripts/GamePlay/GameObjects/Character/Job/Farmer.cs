@@ -26,7 +26,7 @@ public class Farmer : BaseWorker
         {
             await character.MovementComponent.Move(cancellationToken, plot.transform.position);
 
-            plot.PlantCrop(FoodDictionary.WheatId, 10);
+            plot.PlantCrop(CropId.CROP_WHEAT);
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
 
             plot = GetEmptyPlot();
@@ -47,10 +47,13 @@ public class Farmer : BaseWorker
 
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
 
-            var harvestedCrop = plot.Harvest();
+            var harvestedCrop = plot.HarvestCrop();
             await character.MovementComponent.Move(cancellationToken, storage.transform.position);
 
-            EventBus.Publish(new AddResourceEvent(harvestedCrop.Item1, harvestedCrop.Item2));
+            foreach (var ingredientData in harvestedCrop)
+            {
+                EventBus.Publish(new AddResourceEvent(ingredientData.ingredient.GetId(), ingredientData.amount));
+            }
             plot = GetHarvestablePlot();
         }
 
