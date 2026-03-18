@@ -42,12 +42,14 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     [SerializeField]
     public MenuGridScroller scroller;
+
     private float originalWidth;
     private Vector2 openPosition;
     private float slideDistance;
-    private List<MagicButtonWithIcon> tab1Buttons;
-    private MagicButtonWithIcon selectedTab1Button;
+    private List<MagicButtonWithIcon> tab1Buttons = null;
+    private MagicButtonWithIcon selectedTab1Button = null;
     private ReadOnlyArray<MenuGridData> previousMenuGridData;
+    private CanvasGroup canvasGroup;
 
     void Awake()
     {
@@ -61,6 +63,8 @@ public class MenuGamePlayPanel : MonoBehaviour
             galleryButton,
             settingButton,
         };
+        canvasGroup = GetComponent<CanvasGroup>();
+
         SubcribeEvents();
         CloseTabsMenu();
     }
@@ -72,9 +76,9 @@ public class MenuGamePlayPanel : MonoBehaviour
         galleryButton.AddListener(HandleGalleryButtonClicked);
         settingButton.AddListener(HandleSettingButtonClicked);
         closeButton.AddListener(HandleCloseButtonClicked);
-
         tab2ButtonPanel.OnRequestMenuGridData += HandleTab2ButtonPanelRequestMenuGridData;
         scroller.OnGridBlockItemClicked += HandleGridBlockItemClicked;
+        EventBus.Subscribe<CancelSelectEvent>(HandleCancelEdit);
     }
 
     void OnDestroy()
@@ -86,6 +90,7 @@ public class MenuGamePlayPanel : MonoBehaviour
         closeButton.RemoveListener(HandleCloseButtonClicked);
         tab2ButtonPanel.OnRequestMenuGridData -= HandleTab2ButtonPanelRequestMenuGridData;
         scroller.OnGridBlockItemClicked -= HandleGridBlockItemClicked;
+        EventBus.Unsubscribe<CancelSelectEvent>(HandleCancelEdit);
     }
 
     private void HandleTab2ButtonPanelRequestMenuGridData(ReadOnlyArray<MenuGridData> data)
@@ -233,6 +238,7 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     private void HandleClickEditButton()
     {
+        canvasGroup.blocksRaycasts = false;
         EventBus.Publish(new EditBuildingEvent());
     }
 
@@ -244,6 +250,11 @@ public class MenuGamePlayPanel : MonoBehaviour
     private void HandleClickBuildingListButton(string entityName)
     {
         EventBus.Publish(new BuildBuildingEvent { entityId = EntityId.ParseId(entityName) });
+    }
+
+    private void HandleCancelEdit(CancelSelectEvent e)
+    {
+        canvasGroup.blocksRaycasts = true;
     }
 
     public void PrepareFadeIn()

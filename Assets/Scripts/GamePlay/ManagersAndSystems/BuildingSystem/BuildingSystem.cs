@@ -156,6 +156,10 @@ public class BuildingSystem : MonoBehaviour
 
     private void HandleLeftMouseClick()
     {
+        if (GamePlugin.IsPointerOverUI())
+        {
+            return;
+        }
         if (currentState == BuildingSystemState.BUILD)
         {
             EndBuildBuilding();
@@ -278,10 +282,6 @@ public class BuildingSystem : MonoBehaviour
             return;
         }
         if (isOverlapping)
-        {
-            return;
-        }
-        if (GamePlugin.IsPointerOverUI())
         {
             return;
         }

@@ -62,6 +62,7 @@ GameObject:
   - component: {fileID: 8609728354407776230}
   - component: {fileID: 2582849400398133453}
   - component: {fileID: 8446851252806280938}
+  - component: {fileID: 3283041334608694290}
   m_Layer: 5
   m_Name: MenuGamePlayPanel
   m_TagString: Untagged
@@ -152,6 +153,18 @@ MonoBehaviour:
   closeButton: {fileID: 901202619273565728}
   tab2ButtonPanel: {fileID: 3722388242154362809}
   scroller: {fileID: 6226765866438408989}
+--- !u!225 &3283041334608694290
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530557650691237322}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1866650562213026413
 GameObject:
   m_ObjectHideFlags: 0
