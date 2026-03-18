@@ -43,15 +43,15 @@ public class GameScreenView
     {
         var resourceId = e.id;
         var amount = e.amount;
-        if (resourceId == FoodDictionary.WheatId)
+        if (resourceId == InventoryItemId.WHEAT)
         {
             wheatAmount.text = amount.ToString();
         }
-        if (resourceId == FoodDictionary.BreadId)
+        if (resourceId == InventoryItemId.BREAD)
         {
             breadAmount.text = amount.ToString();
         }
-        if (resourceId == "money")
+        if (resourceId == InventoryItemId.MONEY)
         {
             moneyAmount.text = amount.ToString();
         }

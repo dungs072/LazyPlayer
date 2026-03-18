@@ -11,7 +11,7 @@ public class Plot : BuildableEntity
     private CropData currentCrop;
     private int currentGrowthState = -1;
 
-    public void PlantCrop(string cropId)
+    public void PlantCrop(CropId cropId)
     {
         if (currentGrowthState != -1)
         {
@@ -21,7 +21,7 @@ public class Plot : BuildableEntity
         GrowCropAsync(cropId).Forget();
     }
 
-    private async UniTask GrowCropAsync(string cropId)
+    private async UniTask GrowCropAsync(CropId cropId)
     {
         cropSpriteRenderer.enabled = true;
         currentCrop = QueryBus.Query(new GetCropDataQuery(cropId));

@@ -26,7 +26,7 @@ public class Farmer : BaseWorker
         {
             await character.MovementComponent.Move(cancellationToken, plot.transform.position);
 
-            plot.PlantCrop(FoodDictionary.CropWheatId);
+            plot.PlantCrop(CropId.CROP_WHEAT);
             await UniTask.WaitForSeconds(workDuration, cancellationToken: cancellationToken);
 
             plot = GetEmptyPlot();

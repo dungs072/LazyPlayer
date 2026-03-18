@@ -18,7 +18,7 @@ public class CropData : ScriptableObject
     //TODO: Should we redefine another "IngredientAmount" struct?
     [SerializeField] private List<IngredientAmount> HarvestAmounts = new();
     
-    public string GetId() => Id;
+    public CropId GetId() => CropId.ParseId(Id);
     public string GetDisplayName() => DisplayName;
     public List<CropGrowthState> GetCropGrowthStates() => CropGrowthStates;
     public List<IngredientAmount> GetHarvestAmounts() => HarvestAmounts;

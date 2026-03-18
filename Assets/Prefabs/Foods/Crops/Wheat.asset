@@ -22,7 +22,7 @@ MonoBehaviour:
   - StateImage: {fileID: 5088316998373936774, guid: 01105d07c7116844e9dbb0f0e982cf5f, type: 3}
     GrowthTimeSecond: 10
   - StateImage: {fileID: 5088316998373936774, guid: 678902b97e61bf3438a569373c48b258, type: 3}
-    GrowthTimeSecond: 10
+    GrowthTimeSecond: 0
   HarvestAmounts:
   - ingredient: {fileID: 11400000, guid: 88f57a1346202a846af21437fba78b23, type: 2}
     amount: 5

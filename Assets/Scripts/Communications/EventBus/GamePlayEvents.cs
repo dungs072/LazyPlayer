@@ -19,12 +19,12 @@ public struct SetOccupiedGridEvent
 
 public struct AddResourceEvent
 {
-    public string resourceName;
+    public InventoryItemId inventoryItemId;
     public int amount;
 
-    public AddResourceEvent(string resourceName, int amount)
+    public AddResourceEvent(InventoryItemId inventoryItemId, int amount)
     {
-        this.resourceName = resourceName;
+        this.inventoryItemId = inventoryItemId;
         this.amount = amount;
     }
 }

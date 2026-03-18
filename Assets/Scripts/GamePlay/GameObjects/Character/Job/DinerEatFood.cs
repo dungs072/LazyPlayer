@@ -21,7 +21,7 @@ public class DinerEatFood : BaseWorker
     {
         character.ChatPanelComponent.ShowChat("Yummy!");
         await UniTask.WaitForSeconds(eatDuration, cancellationToken: cancellationToken);
-        EventBus.Publish(new AddResourceEvent("money", 5));
+        EventBus.Publish(new AddResourceEvent(InventoryItemId.MONEY, 5));
         diningTable.VacateSeat(character.transform);
         character.EnqueueJob(new Pedestrian());
         character.ChatPanelComponent.HideChat();

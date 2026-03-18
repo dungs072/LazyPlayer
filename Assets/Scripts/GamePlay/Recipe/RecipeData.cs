@@ -14,7 +14,7 @@ public class RecipeData : ScriptableObject
     [SerializeField] private Sprite Icon;
     [SerializeField] private IngredientAmount[] Ingredients;
 
-    public string GetId() => Id;
+    public RecipeId GetId() => RecipeId.ParseId(Id);
     public IngredientAmount[] GetIngredients() => Ingredients;
 
 

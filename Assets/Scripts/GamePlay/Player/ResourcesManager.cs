@@ -5,14 +5,14 @@ using UnityEditor.Search;
 
 public class ResourcesManager : MonoBehaviour
 {
-    private Dictionary<string, int> resources = new();
+    private Dictionary<InventoryItemId, int> resources = new();
 
     public void Initialize1()
     {
         // Initialize resources with default values
-        SetResourceAmount(FoodDictionary.WheatId, 0);
-        SetResourceAmount(FoodDictionary.BreadId, 0);
-        SetResourceAmount("money", 0);
+        SetResourceAmount(InventoryItemId.WHEAT, 0);
+        SetResourceAmount(InventoryItemId.BREAD, 0);
+        SetResourceAmount(InventoryItemId.MONEY, 0);
         
         QueryBus.Subscribe<IsAvailableToCreateFoodQuery, bool>(query => IsAvailableToCreateFood(query.ingredientAmounts));
         QueryBus.Subscribe<IsAvailableFoodQuery, bool>(query => IsAvailableFood(query.foodAmounts));
@@ -20,12 +20,12 @@ public class ResourcesManager : MonoBehaviour
         EventBus.Subscribe<ConsumeFoodEvent>(query => ConsumeFood(query.foodAmounts));
     }
 
-    public void SetResourceAmount(string resourceName, int amount)
+    public void SetResourceAmount(InventoryItemId resourceName, int amount)
     {
         resources[resourceName] = amount;
         EventBus.Publish(new ResourceAmountChangedEvent { id = resourceName, amount = amount });
     }
-    public void AddResource(string resourceName, int amount)
+    public void AddResource(InventoryItemId resourceName, int amount)
     {
         var currentAmount = resources.ContainsKey(resourceName) ? resources[resourceName] : 0;
         SetResourceAmount(resourceName, currentAmount + amount);

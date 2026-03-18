@@ -1,23 +1,24 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public struct GetRecipeDataQuery : IQueryResult<RecipeData>
 {
-    public string recipeName;
+    public RecipeId Id;
 
-    public GetRecipeDataQuery(string recipeName)
+    public GetRecipeDataQuery(RecipeId id)
     {
-        this.recipeName = recipeName;
+        Id = id;
     }
 }
 
 public struct GetCropDataQuery : IQueryResult<CropData>
 {
-    public string cropId;
+    public CropId Id;
 
-    public GetCropDataQuery(string cropId)
+    public GetCropDataQuery(CropId id)
     {
-        this.cropId = cropId;
+        Id = id;
     }
 }
 
@@ -27,13 +28,9 @@ public class FoodDictionary : MonoBehaviour
     [field: SerializeField] public RecipeData[] Recipes { get; private set; }
     [field: SerializeField] public CropData[] Crops { get; private set; }
 
-    private readonly Dictionary<string, RecipeData> recipeDictionary = new();
-    private readonly Dictionary<string, IngredientData> ingredientDictionary = new();
-    private readonly Dictionary<string, CropData> cropDictionary = new();
-
-    public const string WheatId = "wheat";
-    public const string BreadId = "bread";
-    public const string CropWheatId = "crop_wheat";   
+    private readonly Dictionary<RecipeId, RecipeData> recipeDictionary = new();
+    private readonly Dictionary<InventoryItemId, IngredientData> ingredientDictionary = new();
+    private readonly Dictionary<CropId, CropData> cropDictionary = new();
 
     public void Initialize1()
     {
@@ -51,10 +48,10 @@ public class FoodDictionary : MonoBehaviour
             cropDictionary[Crops[i].GetId()] = Crops[i];
         }
         
-        QueryBus.Subscribe<GetRecipeDataQuery, RecipeData>(query => GetRecipeData(query.recipeName));
-        QueryBus.Subscribe<GetCropDataQuery, CropData>(query => GetCropData(query.cropId));
+        QueryBus.Subscribe<GetRecipeDataQuery, RecipeData>(query => GetRecipeData(query.Id));
+        QueryBus.Subscribe<GetCropDataQuery, CropData>(query => GetCropData(query.Id));
     }
-    public RecipeData GetRecipeData(string recipeId)
+    public RecipeData GetRecipeData(RecipeId recipeId)
     {
         if (recipeDictionary.TryGetValue(recipeId, out var recipeData))
         {
@@ -64,7 +61,7 @@ public class FoodDictionary : MonoBehaviour
         return null;
     }
 
-    public CropData GetCropData(string cropId)
+    public CropData GetCropData(CropId cropId)
     {
         if (cropDictionary.TryGetValue(cropId, out var cropData))
         {
@@ -74,7 +71,7 @@ public class FoodDictionary : MonoBehaviour
         return null;
     }
     
-    public IngredientData GetIngredientData(string ingredientId)
+    public IngredientData GetIngredientData(InventoryItemId ingredientId)
     {
         if (ingredientDictionary.TryGetValue(ingredientId, out var ingredientData))
         {
