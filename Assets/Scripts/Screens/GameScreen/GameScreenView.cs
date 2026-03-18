@@ -72,13 +72,11 @@ public class GameScreenView
         menuGamePlayPanel.scroller.SetData(data);
     }
 
-    public void ShowEditBuildingPanel(SelectEditingBuildingEvent e)
+    public async UniTask ShowEditBuildingPanel(SelectEditingBuildingEvent e)
     {
-        var worldPosition = e.worldPosition;
-        var screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
         editBuildingPanel.gameObject.SetActive(true);
-        var rectTransform = editBuildingPanel.GetComponent<RectTransform>();
-        rectTransform.position = screenPosition;
+        editBuildingPanel.SetRectPosition(e.worldPosition, e.size);
         editBuildingPanel.SetCurrentInstanceId(e.instanceId);
+        await editBuildingPanel.FadeInAsync();
     }
 }

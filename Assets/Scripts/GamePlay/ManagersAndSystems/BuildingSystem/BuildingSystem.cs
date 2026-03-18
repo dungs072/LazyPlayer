@@ -186,11 +186,12 @@ public class BuildingSystem : MonoBehaviour
         {
             var entityPosition = buildableEntity.transform.position;
             var size = buildableEntity.Size;
-            EventBus.Publish(
+            _ = EventBus.PublishAsync(
                 new SelectEditingBuildingEvent
                 {
                     instanceId = entityInstanceId,
-                    worldPosition = entityPosition + new Vector3(0, size.y, 0),
+                    worldPosition = entityPosition,
+                    size = size,
                 }
             );
         }
@@ -220,11 +221,12 @@ public class BuildingSystem : MonoBehaviour
             currentState = BuildingSystemState.NONE;
             selectedInstanceId = -1;
             var size = buildableEntity.Size;
-            EventBus.Publish(
+            _ = EventBus.PublishAsync(
                 new SelectEditingBuildingEvent
                 {
                     instanceId = buildableEntity.InstanceId,
-                    worldPosition = position + new Vector3(0, size.y, 0),
+                    worldPosition = position,
+                    size = size,
                 }
             );
         }
@@ -334,11 +336,12 @@ public class BuildingSystem : MonoBehaviour
             currentState = BuildingSystemState.NONE;
             selectedInstanceId = -1;
             var size = buildableEntity.Size;
-            EventBus.Publish(
+            _ = EventBus.PublishAsync(
                 new SelectEditingBuildingEvent
                 {
                     instanceId = buildableEntity.InstanceId,
-                    worldPosition = buildableEntity.transform.position + new Vector3(0, size.y, 0),
+                    worldPosition = buildableEntity.transform.position,
+                    size = size,
                 }
             );
         }
