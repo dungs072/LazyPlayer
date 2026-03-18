@@ -7,7 +7,7 @@ public class IngredientData : ScriptableObject
     [SerializeField] private string DisplayName; // "Tomato"
     [SerializeField] private Sprite Icon;
 
-    public string GetId() => Id;
+    public InventoryItemId GetId() => InventoryItemId.ParseId(Id);
     public string GetDisplayName() => DisplayName;
     public Sprite GetIcon() => Icon;
 }

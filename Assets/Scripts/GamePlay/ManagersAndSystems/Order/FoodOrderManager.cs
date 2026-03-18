@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class FoodAmount
 {
-    public string foodId;
+    public InventoryItemId foodId;
     public int amount;
 }
 public class FoodOrder
