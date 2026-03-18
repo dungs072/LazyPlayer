@@ -7,6 +7,7 @@ public struct SelectEditingBuildingEvent
 {
     public int instanceId;
     public Vector3 worldPosition;
+    public Vector3 size;
 }
 
 public class GameScreen : BaseScreen
@@ -17,7 +18,7 @@ public class GameScreen : BaseScreen
     public override void Initialize1()
     {
         EventBus.Subscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
-        EventBus.Subscribe<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
+        EventBus.SubscribeAsync<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
         view.preButton.AddListener(OnPreButtonClicked);
         view.nextButton.AddListener(OnNextButtonClicked);
         view.staffButton.AddListener(OnStaffButtonClicked);
@@ -26,7 +27,7 @@ public class GameScreen : BaseScreen
     private void OnDestroy()
     {
         EventBus.Unsubscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
-        EventBus.Unsubscribe<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
+        EventBus.UnsubscribeAsync<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
         view.preButton.RemoveListener(OnPreButtonClicked);
         view.nextButton.RemoveListener(OnNextButtonClicked);
         view.staffButton.RemoveListener(OnStaffButtonClicked);
