@@ -44,8 +44,12 @@ public class BuildingSystem : MonoBehaviour
 
     //for edit, move mode only
     private int selectedInstanceId = -1;
+
+    // general
     private bool isOverlapping = false;
-    private Tween _moveTween = null;
+    private Tween moveTween = null;
+    private Tween snapTween = null;
+    private Vector3 lastSnappedPosition = Vector3.zero;
     private BuildingSystemState currentState = BuildingSystemState.NONE;
 
     public void Initialize1(EntityManager entityManager, GridSystem gridSystem)
@@ -119,6 +123,7 @@ public class BuildingSystem : MonoBehaviour
             buildingData = buildableEntity.Data;
             ghostBuilding.SetSkin(buildingData.Skin);
             ghostBuilding.transform.position = buildableEntity.transform.position;
+            ghostBuilding.transform.rotation = buildableEntity.transform.rotation;
             ghostBuilding.SetSize(buildableEntity.DisplaySize);
             ghostBuilding.gameObject.SetActive(true);
             ghostBuilding.SetSkinColor(Color.green);
@@ -135,17 +140,24 @@ public class BuildingSystem : MonoBehaviour
             Debug.LogError($"Cannot find entity instance with ID: {e.instanceId}");
             return;
         }
+
         if (entityInstance is BuildableEntity buildableEntity)
         {
             var currentRotation = buildableEntity.transform.rotation.eulerAngles.z;
             var newRotation = currentRotation + 90f;
-            buildableEntity.transform.rotation = Quaternion.Euler(0, 0, newRotation);
+            buildableEntity.transform.DOKill();
             gridSystem.ResetCellsOccupied(e.instanceId);
-            gridSystem.SetCellsOccupied(
-                buildableEntity.transform.position,
-                buildableEntity.Size,
-                buildableEntity.InstanceId
-            );
+            buildableEntity
+                .transform.DORotate(new Vector3(0, 0, newRotation), 0.1f)
+                .SetEase(Ease.OutQuad)
+                .OnComplete(() =>
+                {
+                    gridSystem.SetCellsOccupied(
+                        buildableEntity.transform.position,
+                        buildableEntity.Size,
+                        buildableEntity.InstanceId
+                    );
+                });
         }
     }
 
@@ -211,30 +223,46 @@ public class BuildingSystem : MonoBehaviour
             {
                 return;
             }
-            var position = ghostBuilding.transform.position;
-            buildableEntity.transform.position = position;
-            gridSystem.ResetCellsOccupied(selectedInstanceId);
-            gridSystem.SetCellsOccupied(position, buildableEntity.Size, buildableEntity.InstanceId);
-            buildableEntity.gameObject.SetActive(true);
+            var originalScale = ghostBuilding.transform.localScale;
+            var t = ghostBuilding.transform;
+            var punchTween = DOTween
+                .Sequence()
+                .Append(t.DOScale(originalScale * 1.08f, 0.06f).SetEase(Ease.OutQuad))
+                .Append(t.DOScale(originalScale * 0.9f, 0.08f).SetEase(Ease.InQuad))
+                .Append(t.DOScale(originalScale * 1.03f, 0.08f).SetEase(Ease.OutQuad))
+                .Append(t.DOScale(originalScale, 0.1f).SetEase(Ease.OutQuad));
+            punchTween.OnComplete(() =>
+            {
+                var position = ghostBuilding.transform.position;
+                buildableEntity.transform.position = position;
+                gridSystem.ResetCellsOccupied(selectedInstanceId);
+                gridSystem.SetCellsOccupied(
+                    position,
+                    buildableEntity.Size,
+                    buildableEntity.InstanceId
+                );
+                buildableEntity.gameObject.SetActive(true);
+
+                HideGhostBuilding();
+                currentState = BuildingSystemState.NONE;
+                selectedInstanceId = -1;
+                var size = buildableEntity.Size;
+                _ = EventBus.PublishAsync(
+                    new SelectEditingBuildingEvent
+                    {
+                        instanceId = buildableEntity.InstanceId,
+                        worldPosition = position,
+                        size = size,
+                    }
+                );
+            });
             KillMoveTween();
-            HideGhostBuilding();
-            currentState = BuildingSystemState.NONE;
-            selectedInstanceId = -1;
-            var size = buildableEntity.Size;
-            _ = EventBus.PublishAsync(
-                new SelectEditingBuildingEvent
-                {
-                    instanceId = buildableEntity.InstanceId,
-                    worldPosition = position,
-                    size = size,
-                }
-            );
         }
     }
 
     private void MoveGhostBuilding(int instanceIdToIgnore = 0)
     {
-        _moveTween?.Kill();
+        moveTween?.Kill();
         var lastMousePosition = Mouse.current.position.ReadValue();
         var buildingPrefab = buildingData.EntityPrefab as BuildableEntity;
         var skin = buildingData.Skin;
@@ -242,7 +270,9 @@ public class BuildingSystem : MonoBehaviour
             skin.bounds.size.x * buildingPrefab.DisplaySize.x,
             skin.bounds.size.y * buildingPrefab.DisplaySize.y
         );
-        _moveTween = DOTween
+        var originalScale = ghostBuilding.transform.localScale;
+
+        moveTween = DOTween
             .To(() => 0f, _ => { }, 0f, 1f)
             .SetLoops(-1)
             .OnUpdate(() =>
@@ -268,7 +298,23 @@ public class BuildingSystem : MonoBehaviour
                     ghostBuilding.SetSkinColor(Color.green);
                 }
                 var snapGridPos = gridSystem.GetSnapGridPosition(worldPos);
-                ghostBuilding.transform.position = snapGridPos;
+                if ((lastSnappedPosition - snapGridPos).sqrMagnitude > 0.001f)
+                {
+                    snapTween?.Kill();
+                    ghostBuilding.transform.position = snapGridPos;
+                    ghostBuilding.transform.localScale = originalScale;
+                    lastSnappedPosition = snapGridPos;
+
+                    snapTween = ghostBuilding
+                        .transform.DOScale(originalScale * 1.08f, 0.08f)
+                        .SetEase(Ease.OutQuad)
+                        .OnComplete(() =>
+                        {
+                            ghostBuilding
+                                .transform.DOScale(originalScale, 0.22f)
+                                .SetEase(Ease.OutBack);
+                        });
+                }
                 GamePlugin.BlockInput(true);
             });
     }
@@ -287,18 +333,33 @@ public class BuildingSystem : MonoBehaviour
         {
             return;
         }
-        var position = ghostBuilding.transform.position;
-        var entityId = EntityId.ParseId(buildingData.EntityId);
-        var buildingEntity = entityManager.Acquire<BuildableEntity>(
-            entityId,
-            new EntityConfig { position = position }
-        );
-        var currentBuildableEntity = buildingEntity;
-        currentBuildableEntity.SetBuildingState(BuildingState.READY);
-        gridSystem.SetCellsOccupied(position, buildingEntity.Size, buildingEntity.InstanceId);
+        var originalScale = ghostBuilding.transform.localScale;
+        var t = ghostBuilding.transform;
+        var punchTween = DOTween
+            .Sequence()
+            // 1. Slight enlarge (anticipation)
+            .Append(t.DOScale(originalScale * 1.08f, 0.06f).SetEase(Ease.OutQuad))
+            // 2. Strong squash (impact)
+            .Append(t.DOScale(originalScale * 0.9f, 0.08f).SetEase(Ease.InQuad))
+            // 3. Bounce back
+            .Append(t.DOScale(originalScale * 1.03f, 0.08f).SetEase(Ease.OutQuad))
+            // 4. Settle
+            .Append(t.DOScale(originalScale, 0.1f).SetEase(Ease.OutQuad));
+        punchTween.OnComplete(() =>
+        {
+            var position = ghostBuilding.transform.position;
+            var entityId = EntityId.ParseId(buildingData.EntityId);
+            var buildingEntity = entityManager.Acquire<BuildableEntity>(
+                entityId,
+                new EntityConfig { position = position }
+            );
+            var currentBuildableEntity = buildingEntity;
+            currentBuildableEntity.SetBuildingState(BuildingState.READY);
+            gridSystem.SetCellsOccupied(position, buildingEntity.Size, buildingEntity.InstanceId);
+            HideGhostBuilding();
+            currentState = BuildingSystemState.NONE;
+        });
         KillMoveTween();
-        HideGhostBuilding();
-        currentState = BuildingSystemState.NONE;
     }
 
     private void HandleRightMouseClick()
@@ -349,8 +410,8 @@ public class BuildingSystem : MonoBehaviour
 
     private void KillMoveTween()
     {
-        _moveTween?.Kill();
-        _moveTween = null;
+        moveTween?.Kill();
+        moveTween = null;
         GamePlugin.BlockInput(false);
     }
 

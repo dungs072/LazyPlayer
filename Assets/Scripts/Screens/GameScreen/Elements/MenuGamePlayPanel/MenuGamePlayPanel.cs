@@ -268,6 +268,7 @@ public class MenuGamePlayPanel : MonoBehaviour
         scroller.SetData(data);
         SavePreviousScrollerData(data);
         SetSelectedTab2Button(buildButton);
+        await UniTask.NextFrame();
         GamePlugin.BlockInput(false);
     }
 
