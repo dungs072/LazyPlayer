@@ -4,9 +4,19 @@ using Cysharp.Threading.Tasks;
 using PolyAndCode.UI;
 using UnityEngine;
 
+//If you want to add list of gridbutton,
+//Make sure add the _LIST at the postfix of the enum
+public enum MenuGridType
+{
+    BUILD = 0,
+    EDIT = 1,
+    BUILD_BACK = 2,
+    BUILDING_LIST = 3,
+}
+
 public class MenuGridData
 {
-    public ButtonTab3Type Type { get; set; }
+    public MenuGridType Type { get; set; }
     public Sprite Icon { get; set; }
     public string Name { get; set; }
 }

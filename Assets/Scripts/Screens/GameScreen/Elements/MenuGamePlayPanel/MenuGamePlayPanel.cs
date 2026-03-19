@@ -8,20 +8,30 @@ using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.UI;
 
+public enum ButtonTab1Type
+{
+    MANAGEMENT,
+    SHOP,
+    GALLERY,
+    SETTING,
+}
+
+[Serializable]
+public class ButtonTab2Panel
+{
+    public ButtonTab1Type parentTab1Type;
+    public GameObject panel;
+}
+
 public class MenuGamePlayPanel : MonoBehaviour
 {
-    [SerializeField]
-    private RectTransform rectTransform;
-
     [SerializeField]
     private RectTransform tab1;
 
     [SerializeField]
-    private RectTransform tab2;
+    private List<ButtonTab2Panel> tab2ButtonPanels;
 
-    [SerializeField]
-    private RectTransform tab3;
-
+    [Header("Tab 1")]
     [SerializeField]
     private MagicButtonWithIcon manageButton;
 
@@ -37,22 +47,38 @@ public class MenuGamePlayPanel : MonoBehaviour
     [SerializeField]
     private MagicButtonWithIcon closeButton;
 
+    [Header("Tab 2")]
     [SerializeField]
-    private Tab2ButtonsPanel tab2ButtonPanel;
+    private MagicButtonWithIcon staffButton;
 
+    [SerializeField]
+    private MagicButtonWithIcon inventoryButton;
+
+    [SerializeField]
+    private MagicButtonWithIcon buildButton;
+
+    [Header("Tab 3")]
     [SerializeField]
     public MenuGridScroller scroller;
 
-    private float originalWidth;
-    private Vector2 openPosition;
-    private float slideDistance;
+    //Runtime state
+    private float originalWidth = 0;
+    private Vector2 openPosition = Vector2.zero;
+    private float slideDistance = 0;
+
+    //UI data
     private List<MagicButtonWithIcon> tab1Buttons = null;
-    private MagicButtonWithIcon selectedTab1Button = null;
-    private ReadOnlyArray<MenuGridData> previousMenuGridData;
-    private CanvasGroup canvasGroup;
+    private ReadOnlyArray<MenuGridData> previousMenuGridData = null;
+    private MagicButtonWithIcon previousTab1Button = null;
+    private MagicButtonWithIcon previousTab2Button = null;
+
+    //Component references
+    private CanvasGroup canvasGroup = null;
+    private RectTransform rectTransform = null;
 
     void Awake()
     {
+        rectTransform = GetComponent<RectTransform>();
         originalWidth = rectTransform.rect.width;
         openPosition = rectTransform.anchoredPosition;
         slideDistance = originalWidth - tab1.rect.width;
@@ -69,36 +95,6 @@ public class MenuGamePlayPanel : MonoBehaviour
         CloseTabsMenu();
     }
 
-    private void SubcribeEvents()
-    {
-        manageButton.AddListener(HandleManageButtonClicked);
-        shopButton.AddListener(HandleShopButtonClicked);
-        galleryButton.AddListener(HandleGalleryButtonClicked);
-        settingButton.AddListener(HandleSettingButtonClicked);
-        closeButton.AddListener(HandleCloseButtonClicked);
-        tab2ButtonPanel.OnRequestMenuGridData += HandleTab2ButtonPanelRequestMenuGridData;
-        scroller.OnGridBlockItemClicked += HandleGridBlockItemClicked;
-        EventBus.Subscribe<CancelSelectEvent>(HandleCancelEdit);
-    }
-
-    void OnDestroy()
-    {
-        manageButton.RemoveListener(HandleManageButtonClicked);
-        shopButton.RemoveListener(HandleShopButtonClicked);
-        galleryButton.RemoveListener(HandleGalleryButtonClicked);
-        settingButton.RemoveListener(HandleSettingButtonClicked);
-        closeButton.RemoveListener(HandleCloseButtonClicked);
-        tab2ButtonPanel.OnRequestMenuGridData -= HandleTab2ButtonPanelRequestMenuGridData;
-        scroller.OnGridBlockItemClicked -= HandleGridBlockItemClicked;
-        EventBus.Unsubscribe<CancelSelectEvent>(HandleCancelEdit);
-    }
-
-    private void HandleTab2ButtonPanelRequestMenuGridData(ReadOnlyArray<MenuGridData> data)
-    {
-        previousMenuGridData = data;
-        scroller.SetData(data);
-    }
-
     private void CloseTabsMenu()
     {
         var pos = openPosition;
@@ -106,11 +102,66 @@ public class MenuGamePlayPanel : MonoBehaviour
         rectTransform.anchoredPosition = pos;
     }
 
+    private void SubcribeEvents()
+    {
+        EventBus.Subscribe<CancelSelectEvent>(HandleCancelEdit);
+        //tab1 buttons
+        manageButton.AddListener(HandleManageButtonClicked);
+        shopButton.AddListener(HandleShopButtonClicked);
+        galleryButton.AddListener(HandleGalleryButtonClicked);
+        settingButton.AddListener(HandleSettingButtonClicked);
+        //tab2 buttons
+        closeButton.AddListener(HandleCloseButtonClicked);
+        buildButton.AddListener(HandleBuildButtonClicked);
+        //tab3
+        scroller.OnGridBlockItemClicked += HandleGridBlockItemClicked;
+    }
+
+    void OnDestroy()
+    {
+        EventBus.Unsubscribe<CancelSelectEvent>(HandleCancelEdit);
+        //tab1 buttons
+        manageButton.RemoveListener(HandleManageButtonClicked);
+        shopButton.RemoveListener(HandleShopButtonClicked);
+        galleryButton.RemoveListener(HandleGalleryButtonClicked);
+        settingButton.RemoveListener(HandleSettingButtonClicked);
+        //tab2 buttons
+        closeButton.RemoveListener(HandleCloseButtonClicked);
+        buildButton.RemoveListener(HandleBuildButtonClicked);
+        //tab3
+        scroller.OnGridBlockItemClicked -= HandleGridBlockItemClicked;
+    }
+
+    #region Animations
+
+    public void PrepareFadeIn()
+    {
+        foreach (var button in tab1Buttons)
+        {
+            button.transform.localScale = Vector3.zero;
+        }
+    }
+
+    public async UniTask FadeInAsync()
+    {
+        var seq = DOTween.Sequence();
+
+        foreach (var button in tab1Buttons)
+        {
+            seq.Join(button.transform.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutBack));
+        }
+
+        await seq.AsyncWaitForCompletion();
+    }
+    #endregion
+
+    #region Tab 1 Button Handlers
+
     private async UniTask HandleManageButtonClicked()
     {
         GamePlugin.BlockInput(true);
+        SwitchTab2Panel(ButtonTab1Type.MANAGEMENT);
         SetSelectedTab1Button(manageButton);
-        tab2ButtonPanel.SetTab2Buttons(ButtonTab1Type.MANAGEMENT);
         await OpenTabsMenuAsync();
         GamePlugin.BlockInput(false);
     }
@@ -118,8 +169,8 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleShopButtonClicked()
     {
         GamePlugin.BlockInput(true);
+        SwitchTab2Panel(ButtonTab1Type.SHOP);
         SetSelectedTab1Button(shopButton);
-        tab2ButtonPanel.SetTab2Buttons(ButtonTab1Type.SHOP);
         await OpenTabsMenuAsync();
         GamePlugin.BlockInput(false);
     }
@@ -127,8 +178,8 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleGalleryButtonClicked()
     {
         GamePlugin.BlockInput(true);
+        SwitchTab2Panel(ButtonTab1Type.GALLERY);
         SetSelectedTab1Button(galleryButton);
-        tab2ButtonPanel.SetTab2Buttons(ButtonTab1Type.GALLERY);
         await OpenTabsMenuAsync();
         GamePlugin.BlockInput(false);
     }
@@ -136,24 +187,32 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleSettingButtonClicked()
     {
         GamePlugin.BlockInput(true);
+        SwitchTab2Panel(ButtonTab1Type.SETTING);
         SetSelectedTab1Button(settingButton);
-        tab2ButtonPanel.SetTab2Buttons(ButtonTab1Type.SETTING);
         await OpenTabsMenuAsync();
         GamePlugin.BlockInput(false);
     }
 
+    private void SwitchTab2Panel(ButtonTab1Type tab1Type)
+    {
+        foreach (var panel in tab2ButtonPanels)
+        {
+            panel.panel.SetActive(panel.parentTab1Type == tab1Type);
+        }
+        SetSelectedTab2Button(null);
+    }
+
     private void SetSelectedTab1Button(MagicButtonWithIcon button)
     {
-        if (selectedTab1Button != null)
+        if (previousTab1Button != null)
         {
-            var prevImage = selectedTab1Button.GetComponent<Image>();
+            var prevImage = previousTab1Button.GetComponent<Image>();
             prevImage.color = Color.white;
         }
-        selectedTab1Button = button;
+        previousTab1Button = button;
         if (button == null)
             return;
         var image = button.GetComponent<Image>();
-
         image.color = Color.gray;
         scroller.SetData(new ReadOnlyArray<MenuGridData>());
     }
@@ -172,42 +231,92 @@ public class MenuGamePlayPanel : MonoBehaviour
         await seq.AsyncWaitForCompletion();
     }
 
+    #endregion
+
+    #region Tab 2 Button Handlers
     private async UniTask HandleCloseButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        SetSelectedTab1Button(null);
         float closedX = openPosition.x + slideDistance;
         await rectTransform
             .DOAnchorPosX(closedX, 0.35f)
             .SetEase(Ease.InQuart)
             .AsyncWaitForCompletion();
-
+        SetSelectedTab1Button(null);
         GamePlugin.BlockInput(false);
     }
+
+    private async UniTask HandleBuildButtonClicked()
+    {
+        GamePlugin.BlockInput(true);
+        var gridData = new MenuGridData[2]
+        {
+            new MenuGridData
+            {
+                Type = MenuGridType.BUILD,
+                Name = "Build",
+                Icon = null, //! need to query the build icon
+            },
+            new MenuGridData
+            {
+                Type = MenuGridType.EDIT,
+                Name = "Edit",
+                Icon = null, //! need to query the edit icon
+            },
+        };
+        var data = new ReadOnlyArray<MenuGridData>(gridData);
+        scroller.SetData(data);
+        SavePreviousScrollerData(data);
+        SetSelectedTab2Button(buildButton);
+        GamePlugin.BlockInput(false);
+    }
+
+    private void SavePreviousScrollerData(ReadOnlyArray<MenuGridData> data)
+    {
+        previousMenuGridData = data;
+        scroller.SetData(data);
+    }
+
+    private void SetSelectedTab2Button(MagicButtonWithIcon button)
+    {
+        if (previousTab2Button != null)
+        {
+            var prevImage = previousTab2Button.GetComponent<Image>();
+            prevImage.color = Color.white;
+        }
+        previousTab2Button = button;
+        if (button == null)
+            return;
+        var image = button.GetComponent<Image>();
+        image.color = Color.gray;
+    }
+    #endregion
+
+    #region Tab 3 Button Handlers
 
     private async UniTask HandleGridBlockItemClicked(MenuGridData data)
     {
         GamePlugin.BlockInput(true);
         var type = data.Type;
-        if (type == ButtonTab3Type.BUILD)
+        if (type == MenuGridType.BUILD)
         {
             HandleClickBuildButton();
         }
-        else if (type == ButtonTab3Type.EDIT)
+        else if (type == MenuGridType.EDIT)
         {
             HandleClickEditButton();
         }
-        else if (type == ButtonTab3Type.BUILD_BACK)
+        else if (type == MenuGridType.BUILD_BACK)
         {
             HandleClickBuildBackButton();
         }
-        else if (type == ButtonTab3Type.BUILDING_LIST)
+        else if (type == MenuGridType.BUILDING_LIST)
         {
             HandleClickBuildingListButton(data.Name);
         }
         else
         {
-            Debug.Log($"Clicked grid block with type {type}");
+            Debug.LogWarning($"No handler for clicking grid block with type {type}");
         }
         await UniTask.NextFrame();
         GamePlugin.BlockInput(false);
@@ -215,25 +324,27 @@ public class MenuGamePlayPanel : MonoBehaviour
 
     private void HandleClickBuildButton()
     {
+        GamePlugin.BlockInput(true);
         var buildingDataList = QueryBus.Query(new GetBuildingDataListQuery());
         var gridData = new MenuGridData[buildingDataList.Count + 1];
         for (int i = 0; i < buildingDataList.Count; i++)
         {
             gridData[i] = new MenuGridData
             {
-                Type = ButtonTab3Type.BUILDING_LIST,
+                Type = MenuGridType.BUILDING_LIST,
                 Name = buildingDataList[i].DisplayName,
-                Icon = null,
+                Icon = null, //! need to query the building icon
             };
         }
         gridData[buildingDataList.Count] = new MenuGridData
         {
-            Type = ButtonTab3Type.BUILD_BACK,
+            Type = MenuGridType.BUILD_BACK,
             Name = "Back",
             Icon = null, // need to query the back icon
         };
 
         scroller.SetData(new ReadOnlyArray<MenuGridData>(gridData));
+        GamePlugin.BlockInput(false);
     }
 
     private void HandleClickEditButton()
@@ -256,24 +367,5 @@ public class MenuGamePlayPanel : MonoBehaviour
     {
         canvasGroup.blocksRaycasts = true;
     }
-
-    public void PrepareFadeIn()
-    {
-        foreach (var button in tab1Buttons)
-        {
-            button.transform.localScale = Vector3.zero;
-        }
-    }
-
-    public async UniTask FadeInAsync()
-    {
-        var seq = DOTween.Sequence();
-
-        foreach (var button in tab1Buttons)
-        {
-            seq.Join(button.transform.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutBack));
-        }
-
-        await seq.AsyncWaitForCompletion();
-    }
+    #endregion
 }
