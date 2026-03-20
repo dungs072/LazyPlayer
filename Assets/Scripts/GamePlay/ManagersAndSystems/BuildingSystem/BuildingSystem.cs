@@ -20,7 +20,7 @@ public class BuildingSystem : MonoBehaviour
         new EditLogic(this, entityManager, gridSystem);
         new MoveLogic(this, entityManager, gridSystem);
 
-        GB.gameObject.SetActive(false);
+        //GB.gameObject.SetActive(false);
     }
 
     public void MoveGhostBuilding(int instanceIdToIgnore = 0)

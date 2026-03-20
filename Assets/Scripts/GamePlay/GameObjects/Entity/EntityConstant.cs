@@ -12,6 +12,7 @@ public readonly struct EntityId
 
     public override string ToString() => Value.ToString();
 
+    public static readonly EntityId FIELD = new("Field");
     public static readonly EntityId PLOT = new("Plot");
     public static readonly EntityId FARM_STORAGE = new("FarmStorage");
     public static readonly EntityId KITCHEN = new("Kitchen");
@@ -23,6 +24,7 @@ public readonly struct EntityId
     {
         return value switch
         {
+            "Field" => FIELD,
             "Plot" => PLOT,
             "FarmStorage" => FARM_STORAGE,
             "Kitchen" => KITCHEN,

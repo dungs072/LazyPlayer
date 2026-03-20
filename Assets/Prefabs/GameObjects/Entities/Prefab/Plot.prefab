@@ -39,7 +39,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7923372391384853779}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -98,6 +98,10 @@ PrefabInstance:
     - target: {fileID: 662191682528327390, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0.023
+      objectReference: {fileID: 0}
+    - target: {fileID: 1866644075548275997, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4558550658540160783, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -190,9 +194,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc63e1ba74df8884cb24a3fa087fe409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  instanceId: 0
   spriteRenderer: {fileID: 3565913110698816560}
   displayNameText: {fileID: 8467328925040934348}
-  cropSpriteRenderer: {fileID: 3065131278358962655}
+  cropRenderer: {fileID: 3065131278358962655}
 --- !u!114 &8467328925040934348 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4806667624730857330, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}

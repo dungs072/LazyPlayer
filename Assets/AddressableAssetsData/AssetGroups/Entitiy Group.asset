@@ -21,6 +21,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - entity_data
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a962326efc7bc4249970cc83efd71659
+    m_Address: Assets/Prefabs/GameObjects/Entities/Data/Field.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - entity_data
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b17518c9459f88744a8a8fe8c3a8dba6
+    m_Address: Assets/Prefabs/GameObjects/Entities/Prefab/Field.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - entity
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ea0cab4dba9c3b24c98aca7f5b4ff7e9
     m_Address: Assets/Prefabs/GameObjects/Entities/Entity.prefab
     m_ReadOnly: 0

@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class Plot : BuildableEntity
+public class Plot : Entity
 {
-    [SerializeField] private SpriteRenderer cropSpriteRenderer;
+    [SerializeField]
+    private SpriteRenderer cropRenderer;
     public bool IsEmpty => currentCrop == null;
-    public bool IsReady => currentCrop != null && currentGrowthState == currentCrop.GetCropGrowthStates().Count;
+    public bool IsReady =>
+        currentCrop != null && currentGrowthState == currentCrop.GetCropGrowthStates().Count;
 
     private CropData currentCrop;
     private int currentGrowthState = -1;
@@ -23,28 +25,27 @@ public class Plot : BuildableEntity
 
     private async UniTask GrowCropAsync(CropId cropId)
     {
-        cropSpriteRenderer.enabled = true;
         currentCrop = QueryBus.Query(new GetCropDataQuery(cropId));
-        
+
         if (currentCrop == null)
         {
             Debug.LogError("current crop is null!");
             return;
         }
-        
+
         currentGrowthState = 0;
         while (currentGrowthState < currentCrop.GetCropGrowthStates().Count)
         {
             var currentCropState = currentCrop.GetCropGrowthStates()[currentGrowthState];
-            cropSpriteRenderer.sprite = currentCropState.StateImage;
-            
+            cropRenderer.sprite = currentCropState.StateImage;
+
             var growthTime = currentCropState.GrowthTimeSecond;
 
             await UniTask.Delay(System.TimeSpan.FromSeconds(growthTime));
             currentGrowthState += 1;
         }
     }
-    
+
     public List<IngredientAmount> HarvestCrop()
     {
         if (currentCrop == null)
@@ -52,7 +53,7 @@ public class Plot : BuildableEntity
             Debug.LogError("current crop is null!");
             return new List<IngredientAmount>();
         }
-        
+
         if (currentGrowthState != currentCrop.GetCropGrowthStates().Count)
         {
             Debug.LogWarning("Plot is not ready for harvest!");
@@ -62,7 +63,7 @@ public class Plot : BuildableEntity
         var current = currentCrop;
         currentCrop = null;
         currentGrowthState = -1;
-        cropSpriteRenderer.enabled = false;
+        cropRenderer.sprite = null;
         return current.GetHarvestAmounts();
     }
 }

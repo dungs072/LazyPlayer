@@ -15,14 +15,20 @@ MonoBehaviour:
   Id: crop_wheat
   DisplayName: Wheat
   CropGrowthStates:
-  - StateImage: {fileID: 5088316998373936774, guid: dcafa56e94472d3478ec14a736a809c5, type: 3}
+  - StateImage: {fileID: 5250483480221852296, guid: 577de0689caebe347a5d01fa5136e81d, type: 3}
     GrowthTimeSecond: 10
-  - StateImage: {fileID: 5088316998373936774, guid: 2754d43290b9d1148ab7fcae4ec524ee, type: 3}
+  - StateImage: {fileID: -8122386360579468840, guid: 577de0689caebe347a5d01fa5136e81d, type: 3}
     GrowthTimeSecond: 10
-  - StateImage: {fileID: 5088316998373936774, guid: 01105d07c7116844e9dbb0f0e982cf5f, type: 3}
-    GrowthTimeSecond: 10
-  - StateImage: {fileID: 5088316998373936774, guid: 678902b97e61bf3438a569373c48b258, type: 3}
-    GrowthTimeSecond: 0
+  - StateImage: {fileID: -1450777040912161850, guid: 577de0689caebe347a5d01fa5136e81d, type: 3}
+    GrowthTimeSecond: 5
+  - StateImage: {fileID: 6330181235358955310, guid: 577de0689caebe347a5d01fa5136e81d, type: 3}
+    GrowthTimeSecond: 5
+  - StateImage: {fileID: -5822381385794177716, guid: 577de0689caebe347a5d01fa5136e81d, type: 3}
+    GrowthTimeSecond: 5
+  - StateImage: {fileID: -2704957363787251630, guid: 577de0689caebe347a5d01fa5136e81d, type: 3}
+    GrowthTimeSecond: 5
+  - StateImage: {fileID: 5126506097236774899, guid: 577de0689caebe347a5d01fa5136e81d, type: 3}
+    GrowthTimeSecond: 5
   HarvestAmounts:
   - ingredient: {fileID: 11400000, guid: 88f57a1346202a846af21437fba78b23, type: 2}
     amount: 5

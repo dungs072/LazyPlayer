@@ -51,12 +51,11 @@ public class MapManager : MonoBehaviour
         {
             var position = new Vector3(basePos.x + i * xOffset, basePos.y + row * yOffset, 0);
             var gridPosition = QueryBus.Query(new GetSnapGridPositionQuery { position = position });
-            var plot = entityManager.Acquire<Plot>(
-                EntityId.PLOT,
+            var field = entityManager.Acquire<BuildableEntity>(
+                EntityId.FIELD,
                 new EntityConfig { position = gridPosition }
             );
-            var buildableEntity = plot as BuildableEntity;
-            gridSystem.SetCellsOccupied(gridPosition, buildableEntity.Size, plot.InstanceId);
+            gridSystem.SetCellsOccupied(gridPosition, field.Size, field.InstanceId);
             row = (i + 1) % 2;
         }
     }
