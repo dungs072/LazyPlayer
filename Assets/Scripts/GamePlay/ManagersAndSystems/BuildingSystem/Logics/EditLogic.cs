@@ -40,6 +40,11 @@ public class EditLogic
 
     private void StartEditBuilding(EditBuildingEvent e)
     {
+        if (system.GB == null)
+        {
+            //Debug.LogError("GhostBuilding (GB) is null or destroyed. Cannot start editing.");
+            return;
+        }
         InputHandler.OnMouseLeftClick += SelectBuildingToEdit;
         EventBus.Unsubscribe<CancelSelectEvent>(CancelSelectBuilding);
     }

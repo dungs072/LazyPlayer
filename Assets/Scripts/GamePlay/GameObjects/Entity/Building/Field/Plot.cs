@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class Plot : Entity
+public class Plot : MonoBehaviour
 {
     [SerializeField]
     private SpriteRenderer cropRenderer;

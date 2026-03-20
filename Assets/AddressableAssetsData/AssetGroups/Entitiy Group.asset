@@ -15,12 +15,6 @@ MonoBehaviour:
   m_GroupName: Entitiy Group
   m_GUID: 33b4bb02b09a52b4ba1eeea6c277330b
   m_SerializeEntries:
-  - m_GUID: 91636a167295a9847b38afeaa0ae9cd0
-    m_Address: Assets/Prefabs/GameObjects/Entities/Plot.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - entity_data
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a962326efc7bc4249970cc83efd71659
     m_Address: Assets/Prefabs/GameObjects/Entities/Data/Field.asset
     m_ReadOnly: 0

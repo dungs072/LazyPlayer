@@ -31,6 +31,11 @@ public class BuildLogic
 
     private void StartBuildBuilding(BuildBuildingEvent e)
     {
+        if (system.GB == null)
+        {
+            //Debug.LogError("GhostBuilding (GB) is null or destroyed. Cannot start building.");
+            return;
+        }
         var centerWorldPos = QueryBus.Query(new GetCenterCameraPositionQuery());
         system.Data = entityManager.GetEntityData(e.entityId);
         var buildingPrefab = system.Data.EntityPrefab;

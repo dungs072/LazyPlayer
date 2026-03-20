@@ -46,10 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityPrefabs:
   - {fileID: 6582900714397633962, guid: ea0cab4dba9c3b24c98aca7f5b4ff7e9, type: 3}
-  - {fileID: -1214924741264129812, guid: 860aa3c8c216d480a96fa770eac7ac64, type: 3}
   - {fileID: -2226018069198887508, guid: 1e4f56b690672a64883fc441b6e3ea62, type: 3}
   - {fileID: 2486758446720919789, guid: b17518c9459f88744a8a8fe8c3a8dba6, type: 3}
   entityDataList:
-  - {fileID: 11400000, guid: 91636a167295a9847b38afeaa0ae9cd0, type: 2}
   - {fileID: 11400000, guid: 99ef9aba64ae0944289d4067fff77b15, type: 2}
   - {fileID: 11400000, guid: a962326efc7bc4249970cc83efd71659, type: 2}
