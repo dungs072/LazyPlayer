@@ -206,6 +206,30 @@ public class EntityManager : MonoBehaviour
         return null;
     }
 
+    public List<T> FindActiveEntites<T>(EntityId entityId, Func<T, bool> condition = null)
+        where T : Entity
+    {
+        var entityData = entityDataDict[entityId];
+        var prefabId = EntityPrefabConstant.GetPrefabId(entityData.EntityPrefab.name);
+        var result = new List<T>();
+        if (entitiesPool.TryGetValue(prefabId, out var pool))
+        {
+            for (int i = 0; i < pool.Count; i++)
+            {
+                if (pool[i] is not T entity)
+                    continue;
+
+                if (!entity.gameObject.activeSelf)
+                    continue;
+
+                if (condition == null || condition(entity))
+                    result.Add(entity);
+            }
+        }
+
+        return result;
+    }
+
     public IReadOnlyList<T> GetEntityDataList<T>(Func<T, bool> condition = null)
         where T : EntityData
     {

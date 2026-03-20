@@ -52,7 +52,9 @@ public class Farmer : BaseWorker
 
             foreach (var ingredientData in harvestedCrop)
             {
-                EventBus.Publish(new AddResourceEvent(ingredientData.ingredient.GetId(), ingredientData.amount));
+                EventBus.Publish(
+                    new AddResourceEvent(ingredientData.ingredient.GetId(), ingredientData.amount)
+                );
             }
             plot = GetHarvestablePlot();
         }
@@ -63,27 +65,44 @@ public class Farmer : BaseWorker
     private Plot GetEmptyPlot()
     {
         var entityManager = character.entityManager;
-        Plot plot = entityManager.FindActiveEntity<Plot>(
-            EntityId.PLOT,
-            (plot) =>
+        var fields = entityManager.FindActiveEntites<Field>(
+            EntityId.FIELD,
+            (field) =>
             {
-                return plot.IsEmpty && plot.BuildingState == BuildingState.READY;
+                return field.BuildingState == BuildingState.READY;
             }
         );
-        return plot;
+        foreach (var field in fields)
+        {
+            var plot = field.FindEmptyPlot();
+            if (plot != null)
+            {
+                return plot;
+            }
+        }
+
+        return null;
     }
 
     private Plot GetHarvestablePlot()
     {
         var entityManager = character.entityManager;
-        Plot plot = entityManager.FindActiveEntity<Plot>(
-            EntityId.PLOT,
-            (plot) =>
+        var fields = entityManager.FindActiveEntites<Field>(
+            EntityId.FIELD,
+            (field) =>
             {
-                return plot.IsReady && plot.BuildingState == BuildingState.READY;
+                return field.BuildingState == BuildingState.READY;
             }
         );
-        return plot;
+        foreach (var field in fields)
+        {
+            var plot = field.FindHarvestablePlot();
+            if (plot != null)
+            {
+                return plot;
+            }
+        }
+        return null;
     }
 
     private async UniTask DoNothing(CancellationToken cancellationToken)
