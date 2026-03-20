@@ -33,6 +33,11 @@ public class MoveLogic
 
     private void StartMoveBuilding(MoveSelectBuildingEvent e)
     {
+        if (system.GB == null)
+        {
+            // Debug.LogError("GhostBuilding (GB) is null or destroyed. Cannot start moving.");
+            return;
+        }
         selectedInstanceId = e.instanceId;
         var entityInstance = entityManager.GetInstantiatedEntity(selectedInstanceId);
         if (entityInstance == null)

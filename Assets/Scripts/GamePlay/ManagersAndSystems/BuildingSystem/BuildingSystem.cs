@@ -4,8 +4,9 @@ using UnityEngine.InputSystem;
 
 public class BuildingSystem : MonoBehaviour
 {
-    [field: SerializeField]
-    public GhostBuilding GB { get; private set; }
+    [SerializeField]
+    private GhostBuilding gb;
+    public GhostBuilding GB => gb;
     private GridSystem gridSystem = null;
     public bool IsOverlapping { get; private set; } = false;
     public EntityData Data { get; set; } = null;
