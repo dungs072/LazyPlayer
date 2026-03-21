@@ -4,6 +4,7 @@ using System.Linq;
 using BaseEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.UI;
@@ -249,7 +250,7 @@ public class MenuGamePlayPanel : MonoBehaviour
     private async UniTask HandleBuildButtonClicked()
     {
         GamePlugin.BlockInput(true);
-        var gridData = new MenuGridData[2]
+        var gridData = new MenuGridData[3]
         {
             new MenuGridData
             {
@@ -262,6 +263,12 @@ public class MenuGamePlayPanel : MonoBehaviour
                 Type = MenuGridType.EDIT,
                 Name = "Edit",
                 Icon = null, //! need to query the edit icon
+            },
+            new MenuGridData
+            {
+                Type = MenuGridType.DESTROY,
+                Name = "Destroy",
+                Icon = null, //! need to query the destroy icon
             },
         };
         var data = new ReadOnlyArray<MenuGridData>(gridData);
@@ -306,6 +313,10 @@ public class MenuGamePlayPanel : MonoBehaviour
         else if (type == MenuGridType.EDIT)
         {
             HandleClickEditButton();
+        }
+        else if (type == MenuGridType.DESTROY)
+        {
+            HandleClickDestroyButton();
         }
         else if (type == MenuGridType.BUILD_BACK)
         {
@@ -354,6 +365,14 @@ public class MenuGamePlayPanel : MonoBehaviour
         EventBus.Publish(new EditBuildingEvent());
     }
 
+    private void HandleClickDestroyButton()
+    {
+        GamePlugin.BlockInput(true);
+        canvasGroup.blocksRaycasts = false;
+        EventBus.Publish(new DestroyBuildingEvent());
+        GamePlugin.BlockInput(false);
+    }
+
     private void HandleClickBuildBackButton()
     {
         scroller.SetData(previousMenuGridData);
@@ -365,6 +384,11 @@ public class MenuGamePlayPanel : MonoBehaviour
     }
 
     private void HandleCancelEdit(CancelSelectEvent e)
+    {
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    public void UnblockInput()
     {
         canvasGroup.blocksRaycasts = true;
     }

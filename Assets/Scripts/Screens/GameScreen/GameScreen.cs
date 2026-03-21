@@ -10,6 +10,15 @@ public struct SelectEditingBuildingEvent
     public Vector3 size;
 }
 
+public struct SelectDestroyingBuildingEvent
+{
+    public int instanceId;
+    public Vector3 worldPosition;
+    public float duration;
+}
+
+public struct ExitDestroyBuildingUIEvent { }
+
 public class GameScreen : BaseScreen
 {
     [SerializeField]
@@ -19,6 +28,8 @@ public class GameScreen : BaseScreen
     {
         EventBus.Subscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
         EventBus.SubscribeAsync<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
+        EventBus.Subscribe<SelectDestroyingBuildingEvent>(view.ShowDestroyBuildingPanel);
+        EventBus.Subscribe<ExitDestroyBuildingUIEvent>(view.HideDestroyBuildingPanel);
         view.preButton.AddListener(OnPreButtonClicked);
         view.nextButton.AddListener(OnNextButtonClicked);
         view.staffButton.AddListener(OnStaffButtonClicked);

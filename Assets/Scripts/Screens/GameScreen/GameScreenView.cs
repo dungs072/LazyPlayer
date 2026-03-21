@@ -36,6 +36,9 @@ public class GameScreenView
     [SerializeField]
     public EditBuildingPanel editBuildingPanel;
 
+    [SerializeField]
+    public DestroyBuildingPanel destroyBuildingPanel;
+
     [HideInInspector]
     public int currentMapIndex = 0;
 
@@ -78,5 +81,24 @@ public class GameScreenView
         editBuildingPanel.SetRectPosition(e.worldPosition, e.size);
         editBuildingPanel.SetCurrentInstanceId(e.instanceId);
         await editBuildingPanel.FadeInAsync();
+    }
+
+    public void ShowDestroyBuildingPanel(SelectDestroyingBuildingEvent e)
+    {
+        destroyBuildingPanel.gameObject.SetActive(true);
+        destroyBuildingPanel.SetRectPosition(e.worldPosition);
+        destroyBuildingPanel.FadeIn(
+            e.duration,
+            () =>
+            {
+                EventBus.Publish(new ConfirmDestroyBuildingEvent { instanceId = e.instanceId });
+            }
+        );
+    }
+
+    public void HideDestroyBuildingPanel(ExitDestroyBuildingUIEvent e)
+    {
+        destroyBuildingPanel.FadeOut();
+        menuGamePlayPanel.UnblockInput();
     }
 }

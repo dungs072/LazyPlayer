@@ -24,18 +24,15 @@ public class BuildableEntity : Entity
         buildingState = newState;
     }
 
-    public void Move(Vector3 newPosition)
+    public virtual void ShowVisualForBuilding()
     {
-        transform.position = newPosition;
+        spriteRenderer.enabled = true;
+        buildingState = BuildingState.READY;
     }
 
-    public void Place(Vector3 position)
+    public virtual void HideVisualForBuilding()
     {
-        throw new System.NotImplementedException();
-    }
-
-    public void Destroy()
-    {
-        throw new System.NotImplementedException();
+        spriteRenderer.enabled = false;
+        buildingState = BuildingState.UNDER_CONSTRUCTION;
     }
 }

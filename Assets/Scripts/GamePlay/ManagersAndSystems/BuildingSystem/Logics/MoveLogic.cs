@@ -56,7 +56,7 @@ public class MoveLogic
             system.GB.SetSize(buildableEntity.DisplaySize);
             system.GB.gameObject.SetActive(true);
             system.GB.SetSkinColor(Color.green);
-            buildableEntity.gameObject.SetActive(false);
+            buildableEntity.HideVisualForBuilding();
             system.MoveGhostBuilding(selectedInstanceId);
             InputHandler.OnMouseLeftClick += EndMoveBuilding;
             InputHandler.OnMouseRightClick += CancelMoving;
@@ -96,7 +96,7 @@ public class MoveLogic
                     buildableEntity.Size,
                     buildableEntity.InstanceId
                 );
-                buildableEntity.gameObject.SetActive(true);
+                buildableEntity.ShowVisualForBuilding();
 
                 system.HideGhostBuilding();
                 selectedInstanceId = -1;

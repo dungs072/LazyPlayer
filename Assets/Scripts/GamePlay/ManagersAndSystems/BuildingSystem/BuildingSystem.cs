@@ -14,12 +14,18 @@ public class BuildingSystem : MonoBehaviour
     private Tween snapTween = null;
     private Vector3 lastSnappedPosition = Vector3.zero;
 
+    private BuildLogic buildLogic;
+    private EditLogic editLogic;
+    private MoveLogic moveLogic;
+    private DestroyLogic destroyLogic;
+
     public void Initialize1(EntityManager entityManager, GridSystem gridSystem)
     {
         this.gridSystem = gridSystem;
-        new BuildLogic(this, entityManager, gridSystem);
-        new EditLogic(this, entityManager, gridSystem);
-        new MoveLogic(this, entityManager, gridSystem);
+        buildLogic = new BuildLogic(this, entityManager, gridSystem);
+        editLogic = new EditLogic(this, entityManager, gridSystem);
+        moveLogic = new MoveLogic(this, entityManager, gridSystem);
+        destroyLogic = new DestroyLogic(this, entityManager, gridSystem);
     }
 
     public void MoveGhostBuilding(int instanceIdToIgnore = 0)
@@ -127,5 +133,27 @@ public class BuildingSystem : MonoBehaviour
             .Append(t.DOLocalMoveX(originalPos.x + 0.05f, 0.03f).SetEase(Ease.InOutQuad))
             .Append(t.DOLocalMoveX(originalPos.x, 0.02f).SetEase(Ease.OutQuad))
             .Join(t.DOScale(originalScale, 0.08f).SetEase(Ease.OutQuad));
+    }
+
+    public Tween CreateDestroyTween(Entity entity)
+    {
+        var t = entity.transform;
+        var originalScale = t.localScale;
+
+        return DOTween
+            .Sequence()
+            .Append(
+                t.DOScale(new Vector3(1.15f * originalScale.x, 0.85f * originalScale.y, 1f), 0.05f)
+                    .SetEase(Ease.OutQuad)
+            )
+            .Append(
+                t.DOScale(new Vector3(0.8f * originalScale.x, 1.2f * originalScale.y, 1f), 0.08f)
+                    .SetEase(Ease.InQuad)
+            )
+            .Append(
+                t.DOScale(new Vector3(1.1f * originalScale.x, 0.9f * originalScale.y, 1f), 0.08f)
+                    .SetEase(Ease.OutQuad)
+            )
+            .Append(t.DOScale(Vector3.zero, 0.1f).SetEase(Ease.InQuad));
     }
 }

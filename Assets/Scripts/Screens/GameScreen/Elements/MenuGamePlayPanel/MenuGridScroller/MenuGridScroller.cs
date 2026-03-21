@@ -10,8 +10,9 @@ public enum MenuGridType
 {
     BUILD = 0,
     EDIT = 1,
-    BUILD_BACK = 2,
-    BUILDING_LIST = 3,
+    DESTROY = 2,
+    BUILD_BACK = 3,
+    BUILDING_LIST = 4,
 }
 
 public class MenuGridData

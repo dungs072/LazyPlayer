@@ -84,6 +84,7 @@ public class BuildLogic
             );
             var currentBuildableEntity = buildingEntity;
             currentBuildableEntity.SetBuildingState(BuildingState.READY);
+            currentBuildableEntity.transform.localScale = Vector3.one;
             gridSystem.SetCellsOccupied(position, buildingEntity.Size, buildingEntity.InstanceId);
             system.HideGhostBuilding();
         });
