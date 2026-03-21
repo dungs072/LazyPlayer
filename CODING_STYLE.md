@@ -14,7 +14,7 @@ Coding conventions for the **LazyPlayer** Unity project.
 | Query methods | `Get` prefix | `GetScreenData<T>()` |
 | Private fields | camelCase | `private float originalWidth` |
 | Protected fields | camelCase | `protected ScreenData screenData` |
-| Public auto-properties | PascalCase with abbreviation | `public GamePlay GP { get; private set; }` |
+| Public auto-properties | PascalCase with abbreviation or prefix Prop | `public GamePlay GP { get; private set; }` |
 | Constants | UPPER_SNAKE_CASE | `public const string DEFAULT = "Default"` |
 | Enum values | UPPER_SNAKE_CASE | `MANAGEMENT, SHOP, GALLERY` |
 | Event types | PascalCase + `Event` suffix | `ResourceAmountChangedEvent` |
