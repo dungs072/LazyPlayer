@@ -6,7 +6,7 @@ public struct MoveSelectBuildingEvent
     public int instanceId;
 }
 
-public class MoveLogic
+public class MoveLogic : System.IDisposable
 {
     private readonly BuildingSystem system;
     private readonly EntityManager entityManager;
@@ -28,7 +28,7 @@ public class MoveLogic
         EventBus.Subscribe<MoveSelectBuildingEvent>(StartMoveBuilding);
     }
 
-    ~MoveLogic()
+    public void Dispose()
     {
         EventBus.Unsubscribe<MoveSelectBuildingEvent>(StartMoveBuilding);
     }

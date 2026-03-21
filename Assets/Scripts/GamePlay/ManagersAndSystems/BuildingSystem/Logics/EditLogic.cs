@@ -11,7 +11,7 @@ public struct RotateSelectBuildingEvent
     public int instanceId;
 }
 
-public class EditLogic
+public class EditLogic : System.IDisposable
 {
     private readonly BuildingSystem system;
     private readonly EntityManager entityManager;
@@ -32,7 +32,7 @@ public class EditLogic
         EventBus.Subscribe<CancelSelectEvent>(CancelSelectBuilding);
     }
 
-    ~EditLogic()
+    public void Dispose()
     {
         EventBus.Unsubscribe<EditBuildingEvent>(StartEditBuilding);
         EventBus.Unsubscribe<MoveSelectBuildingEvent>(ExitSelectBuilding);

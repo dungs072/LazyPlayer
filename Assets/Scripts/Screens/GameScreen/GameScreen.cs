@@ -39,6 +39,8 @@ public class GameScreen : BaseScreen
     {
         EventBus.Unsubscribe<ResourceAmountChangedEvent>(view.SetResourcesAmount);
         EventBus.UnsubscribeAsync<SelectEditingBuildingEvent>(view.ShowEditBuildingPanel);
+        EventBus.Unsubscribe<SelectDestroyingBuildingEvent>(view.ShowDestroyBuildingPanel);
+        EventBus.Unsubscribe<ExitDestroyBuildingUIEvent>(view.HideDestroyBuildingPanel);
         view.preButton.RemoveListener(OnPreButtonClicked);
         view.nextButton.RemoveListener(OnNextButtonClicked);
         view.staffButton.RemoveListener(OnStaffButtonClicked);

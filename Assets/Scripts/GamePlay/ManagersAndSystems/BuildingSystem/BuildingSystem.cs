@@ -19,6 +19,14 @@ public class BuildingSystem : MonoBehaviour
     private MoveLogic moveLogic;
     private DestroyLogic destroyLogic;
 
+    private void OnDestroy()
+    {
+        buildLogic?.Dispose();
+        editLogic?.Dispose();
+        moveLogic?.Dispose();
+        destroyLogic?.Dispose();
+    }
+
     public void Initialize1(EntityManager entityManager, GridSystem gridSystem)
     {
         this.gridSystem = gridSystem;

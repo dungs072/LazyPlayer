@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public struct DestroyBuildingEvent { }
 
-public class DestroyLogic
+public class DestroyLogic : System.IDisposable
 {
     private readonly BuildingSystem system;
     private readonly EntityManager entityManager;
@@ -25,9 +25,8 @@ public class DestroyLogic
         EventBus.Subscribe<ConfirmDestroyBuildingEvent>(HandleConfirmDestroyBuilding);
     }
 
-    ~DestroyLogic()
+    public void Dispose()
     {
-        Debug.Log($"<color=#11e2c2>DestroyLogic: </color>");
         EventBus.Unsubscribe<DestroyBuildingEvent>(HandleDestroyBuilding);
         EventBus.Unsubscribe<ConfirmDestroyBuildingEvent>(HandleConfirmDestroyBuilding);
     }

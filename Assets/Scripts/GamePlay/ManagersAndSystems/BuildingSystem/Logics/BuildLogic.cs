@@ -6,7 +6,7 @@ public struct BuildBuildingEvent
     public EntityId entityId;
 }
 
-public class BuildLogic
+public class BuildLogic : System.IDisposable
 {
     private readonly BuildingSystem system;
     private readonly EntityManager entityManager;
@@ -25,7 +25,7 @@ public class BuildLogic
         EventBus.Subscribe<BuildBuildingEvent>(StartBuildBuilding);
     }
 
-    ~BuildLogic()
+    public void Dispose()
     {
         EventBus.Unsubscribe<BuildBuildingEvent>(StartBuildBuilding);
     }
