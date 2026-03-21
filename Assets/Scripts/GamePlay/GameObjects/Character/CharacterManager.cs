@@ -12,10 +12,12 @@ public class CharacterManager : MonoBehaviour
 
     private readonly List<Character> characters = new();
     private EntityManager entityManager;
+    private PathFinder pathFinder;
 
-    public void Initialize1(EntityManager entityManager)
+    public void Initialize1(EntityManager entityManager, PathFinder pathFinder)
     {
         this.entityManager = entityManager;
+        this.pathFinder = pathFinder;
     }
 
     public Character[] SpawnCharacter(int amount, Vector3 startWorldPos)
@@ -44,7 +46,8 @@ public class CharacterManager : MonoBehaviour
             var instance = Instantiate(prefab, startWorldPos, Quaternion.identity);
             instance.Initialize(
                 entityManager,
-                characterAnimations[Random.Range(0, characterAnimations.Count)]
+                characterAnimations[Random.Range(0, characterAnimations.Count)],
+                pathFinder
             );
             characters.Add(instance);
             return instance;

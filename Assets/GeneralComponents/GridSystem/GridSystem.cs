@@ -34,8 +34,40 @@ public struct CellGrid
     public bool IsOccupied => OccupiedByEntityId != 0;
 }
 
+public class GridChunk
+{
+    public int ChunkRow;
+    public int ChunkCol;
+
+    public int Size;
+    public CellGrid[,] Cells;
+
+    public GridChunk(int chunkRow, int chunkCol, int size)
+    {
+        ChunkRow = chunkRow;
+        ChunkCol = chunkCol;
+        Size = size;
+
+        Cells = new CellGrid[size, size];
+
+        for (int r = 0; r < size; r++)
+        {
+            for (int c = 0; c < size; c++)
+            {
+                int globalRow = chunkRow * size + r;
+                int globalCol = chunkCol * size + c;
+
+                Cells[r, c] = new CellGrid(globalRow, globalCol, 0);
+            }
+        }
+    }
+}
+
 public class GridSystem : MonoBehaviour
 {
+    [SerializeField]
+    private int _chunkSize = 16;
+
     [SerializeField]
     private int _rowCount;
 
@@ -63,7 +95,9 @@ public class GridSystem : MonoBehaviour
     [SerializeField]
     private float _maxDrawDistance = 50f; // Only draw text when camera is close
 
-    private CellGrid[][] _grid;
+    private GridChunk[,] _chunks;
+    private int _chunkRowCount;
+    private int _chunkColCount;
 
 #if UNITY_EDITOR
     private static GUIStyle _cachedTextStyle; // Cache style to avoid creating every frame
@@ -77,15 +111,37 @@ public class GridSystem : MonoBehaviour
 
     private void InitGrid()
     {
-        _grid = new CellGrid[_rowCount][];
-        for (int i = 0; i < _rowCount; i++)
+        _chunkRowCount = Mathf.CeilToInt((float)_rowCount / _chunkSize);
+        _chunkColCount = Mathf.CeilToInt((float)_columnCount / _chunkSize);
+
+        _chunks = new GridChunk[_chunkRowCount, _chunkColCount];
+
+        for (int cr = 0; cr < _chunkRowCount; cr++)
         {
-            _grid[i] = new CellGrid[_columnCount];
-            for (int j = 0; j < _columnCount; j++)
+            for (int cc = 0; cc < _chunkColCount; cc++)
             {
-                _grid[i][j] = new CellGrid(i, j, 0);
+                _chunks[cr, cc] = new GridChunk(cr, cc, _chunkSize);
             }
         }
+    }
+
+    private (GridChunk chunk, int localRow, int localCol) GetChunkCell(int row, int col)
+    {
+        int chunkRow = row / _chunkSize;
+        int chunkCol = col / _chunkSize;
+
+        int localRow = row % _chunkSize;
+        int localCol = col % _chunkSize;
+
+        if (
+            chunkRow < 0
+            || chunkRow >= _chunkRowCount
+            || chunkCol < 0
+            || chunkCol >= _chunkColCount
+        )
+            return (null, 0, 0);
+
+        return (_chunks[chunkRow, chunkCol], localRow, localCol);
     }
 
     private void SubscribeEvents()
@@ -168,10 +224,18 @@ public class GridSystem : MonoBehaviour
         }
 
         // Draw occupied cells
-        if (_grid != null)
+        if (_chunks != null)
         {
             DrawOccupiedCells();
         }
+    }
+
+    private bool IsOccupied(int row, int col)
+    {
+        var (chunk, localRow, localCol) = GetChunkCell(row, col);
+        if (chunk == null)
+            return false;
+        return chunk.Cells[localRow, localCol].IsOccupied;
     }
 
     private void DrawOccupiedCells()
@@ -181,7 +245,7 @@ public class GridSystem : MonoBehaviour
         {
             for (int col = 0; col < _columnCount; col++)
             {
-                if (!_grid[row][col].IsOccupied)
+                if (!IsOccupied(row, col))
                     continue;
                 Vector2 cellPos = GetCellPosition(row, col);
                 Vector3 worldPos = transform.position + new Vector3(cellPos.x, cellPos.y, 0);
@@ -313,7 +377,11 @@ public class GridSystem : MonoBehaviour
                 if (row >= 0 && row < _rowCount && col >= 0 && col < _columnCount)
                 {
                     // Create new struct with updated OccupiedByEntityId value
-                    _grid[row][col] = new CellGrid(row, col, entityInstanceId);
+                    var (chunk, localRow, localCol) = GetChunkCell(row, col);
+                    if (chunk != null)
+                    {
+                        chunk.Cells[localRow, localCol] = new CellGrid(row, col, entityInstanceId);
+                    }
                 }
             }
         }
@@ -325,10 +393,14 @@ public class GridSystem : MonoBehaviour
         {
             for (int col = 0; col < _columnCount; col++)
             {
-                if (_grid[row][col].OccupiedByEntityId == entityInstanceId)
+                var (chunk, localRow, localCol) = GetChunkCell(row, col);
+                if (
+                    chunk != null
+                    && chunk.Cells[localRow, localCol].OccupiedByEntityId == entityInstanceId
+                )
                 {
                     // Create new struct with OccupiedByEntityId set to 0
-                    _grid[row][col] = new CellGrid(row, col, 0);
+                    chunk.Cells[localRow, localCol] = new CellGrid(row, col, 0);
                 }
             }
         }
@@ -365,8 +437,8 @@ public class GridSystem : MonoBehaviour
                 if (row < 0 || row >= _rowCount || col < 0 || col >= _columnCount)
                     return true;
                 if (
-                    _grid[row][col].IsOccupied
-                    && _grid[row][col].OccupiedByEntityId != instanceIdToIgnore
+                    IsOccupied(row, col)
+                    && GetEntityIdAtPosition(CellToWorld(row, col)) != instanceIdToIgnore
                 )
                     return true;
             }
@@ -392,8 +464,45 @@ public class GridSystem : MonoBehaviour
 
         if (row >= 0 && row < _rowCount && column >= 0 && column < _columnCount)
         {
-            return _grid[row][column].OccupiedByEntityId;
+            var (chunk, localRow, localCol) = GetChunkCell(row, column);
+            if (chunk != null)
+            {
+                return chunk.Cells[localRow, localCol].OccupiedByEntityId;
+            }
         }
         return 0; // Return 0 for out of bounds, meaning unoccupied
+    }
+
+    public bool IsWalkable(int row, int col)
+    {
+        if (row < 0 || row >= _rowCount || col < 0 || col >= _columnCount)
+            return false;
+
+        return !IsOccupied(row, col);
+    }
+
+    public (int row, int col) WorldToCell(Vector3 worldPosition)
+    {
+        Vector3 localPos = worldPosition - transform.position;
+
+        float totalWidth = _columnCount * _cellSize.x + (_columnCount - 1) * _spacing.x;
+        float totalHeight = _rowCount * _cellSize.y + (_rowCount - 1) * _spacing.y;
+
+        float firstCellCenterX = -totalWidth / 2 + _cellSize.x / 2;
+        float firstCellCenterY = -totalHeight / 2 + _cellSize.y / 2;
+
+        float stepX = _cellSize.x + _spacing.x;
+        float stepY = _cellSize.y + _spacing.y;
+
+        int col = Mathf.RoundToInt((localPos.x - firstCellCenterX) / stepX);
+        int row = Mathf.RoundToInt((localPos.y - firstCellCenterY) / stepY);
+
+        return (row, col);
+    }
+
+    public Vector3 CellToWorld(int row, int col)
+    {
+        Vector2 pos = GetCellPosition(row, col);
+        return transform.position + new Vector3(pos.x, pos.y, 0);
     }
 }

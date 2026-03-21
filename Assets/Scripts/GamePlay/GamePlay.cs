@@ -37,9 +37,11 @@ public class GamePlay : MonoBehaviour
 
     [field: SerializeField]
     public BuildingSystem BuildingSystem { get; private set; }
+    public PathFinder PathFinderProp { get; private set; }
 
     public void Initialize1()
     {
+        PathFinderProp = new PathFinder(GridSystem);
         EntityManager.Initialize1();
         ResourcesManager.Initialize1();
         FoodDictionary.Initialize1();
@@ -47,7 +49,7 @@ public class GamePlay : MonoBehaviour
         FoodOrderManager.Initialize1();
         StaffManager.Initialize1();
         BuildingSystem.Initialize1(EntityManager, GridSystem);
-        CharacterManager.Initialize1(EntityManager);
+        CharacterManager.Initialize1(EntityManager, PathFinderProp);
         MapManager.Initialize1(EntityManager, CharacterManager, StaffManager, GridSystem);
     }
 
