@@ -27,6 +27,7 @@ public class EditLogic
         this.entityManager = entityManager;
         this.gridSystem = gridSystem;
         EventBus.Subscribe<EditBuildingEvent>(StartEditBuilding);
+        EventBus.Subscribe<MoveSelectBuildingEvent>(ExitSelectBuilding);
         EventBus.Subscribe<RotateSelectBuildingEvent>(StartRotateBuilding);
         EventBus.Subscribe<CancelSelectEvent>(CancelSelectBuilding);
     }
@@ -34,6 +35,7 @@ public class EditLogic
     ~EditLogic()
     {
         EventBus.Unsubscribe<EditBuildingEvent>(StartEditBuilding);
+        EventBus.Unsubscribe<MoveSelectBuildingEvent>(ExitSelectBuilding);
         EventBus.Unsubscribe<RotateSelectBuildingEvent>(StartRotateBuilding);
         EventBus.Unsubscribe<CancelSelectEvent>(CancelSelectBuilding);
     }
@@ -46,7 +48,6 @@ public class EditLogic
             return;
         }
         InputHandler.OnMouseLeftClick += SelectBuildingToEdit;
-        EventBus.Unsubscribe<CancelSelectEvent>(CancelSelectBuilding);
     }
 
     private void SelectBuildingToEdit()
@@ -73,8 +74,12 @@ public class EditLogic
                     size = size,
                 }
             );
-            InputHandler.OnMouseLeftClick -= SelectBuildingToEdit;
         }
+    }
+
+    private void ExitSelectBuilding(MoveSelectBuildingEvent e)
+    {
+        InputHandler.OnMouseLeftClick -= SelectBuildingToEdit;
     }
 
     private void StartRotateBuilding(RotateSelectBuildingEvent e)
@@ -103,6 +108,7 @@ public class EditLogic
                         buildableEntity.InstanceId
                     );
                 });
+            InputHandler.OnMouseLeftClick -= SelectBuildingToEdit;
         }
     }
 

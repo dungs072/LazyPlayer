@@ -11,6 +11,7 @@ public class BuildLogic
     private readonly BuildingSystem system;
     private readonly EntityManager entityManager;
     private readonly GridSystem gridSystem;
+    private Tween blockTween = null;
 
     public BuildLogic(
         BuildingSystem buildingSystem,
@@ -66,10 +67,13 @@ public class BuildLogic
         }
         if (system.IsOverlapping)
         {
+            blockTween?.Kill();
+            system.GB.ResetOriginalValues();
+            blockTween = system.CreateBlockTween();
             return;
         }
         var originalScale = system.GB.transform.localScale;
-        var punchTween = system.CreatePunchTween(system.GB.transform);
+        var punchTween = system.CreatePunchTween();
         punchTween.OnComplete(() =>
         {
             var position = system.GB.transform.position;

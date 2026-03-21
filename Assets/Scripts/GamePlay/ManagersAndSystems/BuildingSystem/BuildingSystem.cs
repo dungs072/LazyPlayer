@@ -20,8 +20,6 @@ public class BuildingSystem : MonoBehaviour
         new BuildLogic(this, entityManager, gridSystem);
         new EditLogic(this, entityManager, gridSystem);
         new MoveLogic(this, entityManager, gridSystem);
-
-        //GB.gameObject.SetActive(false);
     }
 
     public void MoveGhostBuilding(int instanceIdToIgnore = 0)
@@ -68,6 +66,7 @@ public class BuildingSystem : MonoBehaviour
                     GB.transform.position = snapGridPos;
                     GB.transform.localScale = originalScale;
                     lastSnappedPosition = snapGridPos;
+                    gb.UpdateOriginalValues();
 
                     snapTween = GB
                         .transform.DOScale(originalScale * 1.08f, 0.08f)
@@ -97,14 +96,36 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    public Tween CreatePunchTween(Transform t)
+    public Tween CreatePunchTween()
     {
-        var originalScale = t.localScale;
+        var originalScale = GB.transform.localScale;
         return DOTween
             .Sequence()
-            .Append(t.DOScale(originalScale * 1.08f, 0.06f).SetEase(Ease.OutQuad))
-            .Append(t.DOScale(originalScale * 0.9f, 0.08f).SetEase(Ease.InQuad))
-            .Append(t.DOScale(originalScale * 1.03f, 0.08f).SetEase(Ease.OutQuad))
-            .Append(t.DOScale(originalScale, 0.1f).SetEase(Ease.OutQuad));
+            .Append(GB.transform.DOScale(originalScale * 1.08f, 0.06f).SetEase(Ease.OutQuad))
+            .Append(GB.transform.DOScale(originalScale * 0.9f, 0.08f).SetEase(Ease.InQuad))
+            .Append(GB.transform.DOScale(originalScale * 1.03f, 0.08f).SetEase(Ease.OutQuad))
+            .Append(GB.transform.DOScale(originalScale, 0.1f).SetEase(Ease.OutQuad));
+    }
+
+    public Tween CreateBlockTween()
+    {
+        var t = GB.transform;
+        var originalScale = t.localScale;
+        var originalPos = t.position;
+
+        t.DOKill();
+
+        return DOTween
+            .Sequence()
+            .Append(
+                t.DOScale(new Vector3(1.15f * originalScale.x, 0.85f * originalScale.y, 1f), 0.05f)
+                    .SetEase(Ease.OutQuad)
+            )
+            .Append(t.DOLocalMoveX(originalPos.x - 0.12f, 0.03f).SetEase(Ease.OutQuad))
+            .Append(t.DOLocalMoveX(originalPos.x + 0.12f, 0.04f).SetEase(Ease.InOutQuad))
+            .Append(t.DOLocalMoveX(originalPos.x - 0.08f, 0.03f).SetEase(Ease.InOutQuad))
+            .Append(t.DOLocalMoveX(originalPos.x + 0.05f, 0.03f).SetEase(Ease.InOutQuad))
+            .Append(t.DOLocalMoveX(originalPos.x, 0.02f).SetEase(Ease.OutQuad))
+            .Join(t.DOScale(originalScale, 0.08f).SetEase(Ease.OutQuad));
     }
 }
