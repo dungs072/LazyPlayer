@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class Plot : MonoBehaviour
 
     private CropData currentCrop;
     private int currentGrowthState = -1;
+    private CancellationTokenSource growCts;
 
     public void PlantCrop(CropId cropId)
     {
@@ -20,10 +22,12 @@ public class Plot : MonoBehaviour
             Debug.LogWarning("Plot is not empty!");
             return;
         }
-        GrowCropAsync(cropId).Forget();
+        growCts?.Cancel();
+        growCts = new CancellationTokenSource();
+        GrowCropAsync(cropId, growCts.Token).Forget();
     }
 
-    private async UniTask GrowCropAsync(CropId cropId)
+    private async UniTask GrowCropAsync(CropId cropId, CancellationToken token)
     {
         currentCrop = QueryBus.Query(new GetCropDataQuery(cropId));
 
@@ -41,7 +45,7 @@ public class Plot : MonoBehaviour
 
             var growthTime = currentCropState.GrowthTimeSecond;
 
-            await UniTask.Delay(System.TimeSpan.FromSeconds(growthTime));
+            await UniTask.Delay(System.TimeSpan.FromSeconds(growthTime), cancellationToken: token);
             currentGrowthState += 1;
         }
     }
@@ -65,5 +69,13 @@ public class Plot : MonoBehaviour
         currentGrowthState = -1;
         cropRenderer.sprite = null;
         return current.GetHarvestAmounts();
+    }
+
+    public void ClearCrop()
+    {
+        growCts?.Cancel();
+        currentCrop = null;
+        currentGrowthState = -1;
+        cropRenderer.sprite = null;
     }
 }
