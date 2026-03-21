@@ -13,6 +13,8 @@ public class MoveLogic
     private readonly GridSystem gridSystem;
     private int selectedInstanceId = -1;
 
+    private Tween blockTween = null;
+
     public MoveLogic(
         BuildingSystem buildingSystem,
         EntityManager entityManager,
@@ -77,10 +79,13 @@ public class MoveLogic
         {
             if (system.IsOverlapping)
             {
+                blockTween?.Kill();
+                system.GB.ResetOriginalValues();
+                blockTween = system.CreateBlockTween();
                 return;
             }
             var originalScale = system.GB.transform.localScale;
-            var punchTween = system.CreatePunchTween(system.GB.transform);
+            var punchTween = system.CreatePunchTween();
             punchTween.OnComplete(() =>
             {
                 var position = system.GB.transform.position;
@@ -104,6 +109,7 @@ public class MoveLogic
                         size = size,
                     }
                 );
+                EventBus.Publish(new EditBuildingEvent());
             });
             system.KillMoveTween();
             InputHandler.OnMouseLeftClick -= EndMoveBuilding;
